@@ -1,12 +1,13 @@
-import PlayH5p from "./components/PlayH5p";
+import React from "react";
+import PlayH5pGrid from "./components/PlayH5pGrid";
 import "./styles.css";
+import h5pData from "./h5pPaths.json";
 
 export default function App() {
   return (
     <div className="App">
       <h1>H5P Standalone in React</h1>
-      <h2>For or Since</h2>
-      <PlayH5p h5pJsonPath="./h5p/advent" />
+      <PlayH5pGrid h5pData={h5pData} />
     </div>
   );
 }
