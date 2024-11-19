@@ -6,7 +6,7 @@ export default function App() {
     <div className="App">
       <h1>H5P Standalone in React</h1>
       <h2>For or Since</h2>
-      <PlayH5p h5pJsonPath="./h5p/example" />
+      <PlayH5p h5pJsonPath="./h5p/advent" />
     </div>
   );
 }
