@@ -1,3 +1,4 @@
+// App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import PlayH5pGrid from "./components/PlayH5pGrid";
@@ -8,11 +9,10 @@ import Contact from "./components/contact";
 import Login from "./components/Login";
 import "./styles.css";
 import logo from "./logo.svg";
-import h5pData from "./h5pPaths.json";
 
 export default function App() {
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <div className="App">
         {/* Banner */}
         <header className="banner">
@@ -32,7 +32,7 @@ export default function App() {
 
         {/* Routes */}
         <Routes>
-          <Route path="/" element={<PlayH5pGrid h5pData={h5pData} />} />
+          <Route path="/" element={<PlayH5pGrid />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/License" element={<License />} />

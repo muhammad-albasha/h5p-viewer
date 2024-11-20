@@ -1,3 +1,4 @@
+// Popup.js
 import React, { useRef } from "react";
 
 const Popup = ({ content, onClose, infoText }) => {
@@ -8,13 +9,10 @@ const Popup = ({ content, onClose, infoText }) => {
     if (h5pContainer.current.requestFullscreen) {
       h5pContainer.current.requestFullscreen();
     } else if (h5pContainer.current.mozRequestFullScreen) {
-      // Für Firefox
       h5pContainer.current.mozRequestFullScreen();
     } else if (h5pContainer.current.webkitRequestFullscreen) {
-      // Für Safari
       h5pContainer.current.webkitRequestFullscreen();
     } else if (h5pContainer.current.msRequestFullscreen) {
-      // Für IE/Edge
       h5pContainer.current.msRequestFullscreen();
     }
   };
@@ -26,7 +24,6 @@ const Popup = ({ content, onClose, infoText }) => {
         ref={fullscreenContainer}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button */}
         <button className="close-btn" onClick={onClose} title="Schließen">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +42,6 @@ const Popup = ({ content, onClose, infoText }) => {
           </svg>
         </button>
 
-        {/* Layout: H5P Content + Info Text */}
         <div className="popup-layout">
           <div className="popup-h5p-content" ref={h5pContainer}>
             {content}
