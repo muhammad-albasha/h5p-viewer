@@ -4,7 +4,7 @@
     "h5pJsonPath": "./h5p/adventCalendar",
     "previewImage": "./images/advent.jpg",
     "name": "Advent Calendar",
-    "category": "Tools",
+    "category": "Werkzeuge",
     "info": "Das Advent Calendar-H5P zeigt interaktive Inhalte zu Weihnachten an."
   },
   {
@@ -12,7 +12,7 @@
     "h5pJsonPath": "./h5p/dialog-cards",
     "previewImage": "./images/dialog.jpg",
     "name": "Dialog-cards",
-    "category": "Game",
+    "category": "Spiel",
     "info": "Das Game enthält interaktive Dialog-Karten."
   },
   {
@@ -20,7 +20,7 @@
     "h5pJsonPath": "./h5p/content-virtual-tour-360",
     "previewImage": "./images/360.jpg",
     "name": "Virtual Tour 360",
-    "category": "Tools",
+    "category": "Werkzeuge",
     "info": "Das Virtual Tour 360-H5P zeigt eine virtuelle Tour in 360° an."
   },
   {
@@ -28,7 +28,7 @@
     "h5pJsonPath": "./h5p/drag-and-drop",
     "previewImage": "./images/drag.jpg",
     "name": "Drag and Drop",
-    "category": "Game",
+    "category": "Spiel",
     "info": "Das Drag and Drop-H5P zeigt ein interaktives Drag and Drop-Spiel an."
   }
 ]

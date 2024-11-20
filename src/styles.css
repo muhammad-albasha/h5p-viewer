@@ -158,6 +158,39 @@ body {
   flex-wrap: wrap;
   gap: 16px;
   justify-content: center;
+  max-height: 405px; /* Maximale Höhe des Containers */
+  overflow-y: auto; /* Scrollbar für vertikales Scrollen */
+  padding: 10px;
+  /* border: 1px solid #ccc;
+  background-color: #f9f9f9; */
+  border-radius: 8px; /* Optional: Abgerundete Ecken */
+}
+
+/* Für moderne Browser mit scrollbar-color */
+.container {
+  scrollbar-color: #95b73c #f4f4f4; /* Grün für die Scrollleiste, Grau für den Hintergrund */
+  scrollbar-width: thin; /* Dünne Scrollleiste */
+}
+
+/* Für WebKit-basierte Browser (Chrome, Edge, Safari) */
+.container::-webkit-scrollbar {
+  width: 8px; /* Breite der Scrollleiste */
+  height: 8px; /* Höhe der Scrollleiste für horizontales Scrollen */
+}
+
+.container::-webkit-scrollbar-track {
+  background: #f4f4f4; /* Hintergrund der Scrollleiste */
+  border-radius: 8px; /* Abgerundete Ecken */
+}
+
+.container::-webkit-scrollbar-thumb {
+  background-color: #95b73c; /* Farbe des Scrollbars */
+  border-radius: 8px; /* Abgerundete Ecken */
+  border: 2px solid #f4f4f4; /* Optional: Abstandsrand */
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+  background-color: #7aa02f; /* Dunkleres Grün bei Hover */
 }
 
 .play-h5p-box {
