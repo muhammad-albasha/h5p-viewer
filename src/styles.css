@@ -295,3 +295,26 @@ body {
   color: #555;
   line-height: 1.5;
 }
+
+.fullscreen-btn {
+  background-color: #95b73c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.fullscreen-btn:hover {
+  background-color: #7aa02f;
+}
+
+.fullscreen-btn svg {
+  width: 20px;
+  height: 20px;
+}
