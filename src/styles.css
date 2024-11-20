@@ -10,6 +10,19 @@ body {
   text-align: center;
 }
 
+@import url("https://fonts.googleapis.com/css2?family=Monoton&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rock+Salt&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Damion&family=Monoton&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rock+Salt&display=swap");
+.banner-title {
+  font-family: "Damion", cursive;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 50px;
+  color: #95b73c;
+  font-weight: bold;
+  margin: 10px;
+  text-align: center;
+}
+
 /* Banner */
 .banner {
   background-color: #95b73c;
@@ -52,7 +65,7 @@ body {
   color: white;
   text-decoration: none;
   font-weight: bold;
-  font-size: 24px; /* Vergrößert die Schrift */
+  font-size: 20px; /* Vergrößert die Schrift */
   line-height: 1.5; /* Erhöht die vertikale Ausrichtung */
 }
 
@@ -62,13 +75,13 @@ body {
 
 /* Filter */
 .filter-container {
-  margin: 20px;
+  margin: 5px;
 }
 
 .filter-container input {
-  width: 60%;
+  width: 50%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #95b73c;
   border-radius: 8px;
   font-size: 16px;
 }
@@ -89,17 +102,6 @@ body {
   justify-content: center; /* Zentriert die Links horizontal */
   gap: 20px; /* Abstand zwischen den Links */
   margin-bottom: 30px;
-}
-
-.nav a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.nav a:hover {
-  text-decoration: underline;
 }
 
 /* About Section */
@@ -317,4 +319,60 @@ body {
 .fullscreen-btn svg {
   width: 20px;
   height: 20px;
+}
+
+.login-container {
+  background: #ffffff;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+/* Title */
+.login-title {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Input Fields */
+.login-input {
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+}
+
+.login-input:focus {
+  border-color: #95b73c;
+  box-shadow: 0 0 5px rgba(149, 183, 60, 0.5);
+}
+
+/* Button */
+.login-button {
+  padding: 10px 15px;
+  background-color: #95b73c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #7aa02f;
 }

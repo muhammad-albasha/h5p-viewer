@@ -5,6 +5,7 @@ import About from "./components/About";
 import License from "./components/license";
 import Impressum from "./components/Impressum";
 import Contact from "./components/contact";
+import Login from "./components/Login";
 import "./styles.css";
 import logo from "./logo.svg";
 import h5pData from "./h5pPaths.json";
@@ -21,8 +22,9 @@ export default function App() {
               <img src={logo} alt="Logo" />
             </div>
             <nav className="nav">
-              <Link to="/">Home</Link>
-              <Link to="/about">About</Link>
+              <Link to="/">Startseite</Link>
+              <Link to="/about">Über</Link>
+              <Link to="/login">Anmelden</Link>
             </nav>
           </div>
         </header>
@@ -32,6 +34,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<PlayH5pGrid h5pData={h5pData} />} />
           <Route path="/about" element={<About />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/License" element={<License />} />
           <Route path="/Impressum" element={<Impressum />} />
           <Route path="/Contact" element={<Contact />} />
