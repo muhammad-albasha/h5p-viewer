@@ -112,12 +112,10 @@ body {
 
 .about-section h2 {
   margin: 0;
-  color: #333;
 }
 
 .about-section p {
   margin: 10px 0 0;
-  color: #666;
 }
 
 /* Footer Navigation */
@@ -145,12 +143,10 @@ body {
 
 .about-section h2 {
   margin: 0;
-  color: #333;
 }
 
 .about-section p {
   margin: 10px 0 0;
-  color: #666;
 }
 
 .container {
@@ -408,4 +404,39 @@ body {
 
 .login-button:hover {
   background-color: #7aa02f;
+}
+
+.about-section {
+  margin: 0 auto; /* Zentriert den gesamten Bereich */
+  width: 60%; /* Breite des Containers */
+  padding: 50px; /* Innenabstand */
+  background-color: #f9f9f9; /* Hintergrundfarbe */
+  text-align: justify; /* Blocksätze für den Text */
+  display: flex; /* Flexbox für Zentrierung */
+  flex-direction: column; /* Inhalt bleibt vertikal gestapelt */
+  align-items: center; /* Zentriert den Inhalt horizontal */
+}
+
+.license-title {
+  font-size: 24px; /* Schriftgröße des Titels */
+  font-weight: bold; /* Fettdruck */
+  color: #95b73c; /* Textfarbe */
+  margin-bottom: 20px; /* Abstand unter dem Titel */
+  text-align: center; /* Zentrierter Titel */
+  width: 100%; /* Titel nimmt den gesamten Container ein */
+}
+
+.license-text {
+  font-size: 14px; /* Schriftgröße des Textes */
+  line-height: 1.8; /* Zeilenabstand für bessere Lesbarkeit */
+  color: #000000; /* Textfarbe */
+  text-align: justify; /* Blocksätze für den Text */
+  width: 100%; /* Text nimmt die gesamte Breite des Containers ein */
+  max-width: 800px; /* Optional: Maximalbreite für bessere Lesbarkeit */
+}
+
+.Link {
+  text-decoration: none;
+  color: #95b73c;
+  font-weight: bold;
 }

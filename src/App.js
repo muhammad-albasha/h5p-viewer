@@ -1,12 +1,10 @@
-// App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import PlayH5pGrid from "./components/PlayH5pGrid";
 import About from "./components/About";
 import License from "./components/license";
-import Impressum from "./components/Impressum";
 import Contact from "./components/contact";
-import Login from "./components/Login";
+// import Login from "./components/Login";
 import "./styles.css";
 import logo from "./logo.svg";
 
@@ -34,9 +32,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<PlayH5pGrid />} />
           <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
+          {/* <Route path="/login" element={<Login />} /> */}
           <Route path="/License" element={<License />} />
-          <Route path="/Impressum" element={<Impressum />} />
           <Route path="/Contact" element={<Contact />} />
         </Routes>
 
@@ -44,7 +41,13 @@ export default function App() {
         <footer className="footer">
           <nav>
             <Link to="/License">Lizenz</Link>
-            <Link to="/Impressum">Impressum</Link>
+            <a
+              href="https://www.uni-wuppertal.de/de/impressum"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Impressum
+            </a>
             <Link to="/Contact">Kontakt</Link>
           </nav>
         </footer>
