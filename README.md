@@ -1,70 +1,61 @@
-# Getting Started with Create React App
+# H5P Viewer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Introduction
 
-## Available Scripts
+The **H5P Viewer** is a React-based application designed to facilitate the viewing of H5P content. It features a user-friendly interface and allows for navigation between different sections, including About, Login, License, Impressum, and Contact.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- **Play H5P Grid**: View interactive H5P content in a grid layout.
+- **About Section**: Learn more about the application.
+- **Login Functionality**: Securely log in to access personalized features.
+- **License and Impressum**: Details about the application licensing and legal information.
+- **Contact Page**: Get in touch with the developers.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Project Structure
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```plaintext
+.
+├── App.js
+├── components
+│   ├── About.jsx
+│   ├── contact.jsx
+│   ├── Impressum.jsx
+│   ├── license.jsx
+│   ├── Login.jsx
+│   ├── PlayH5p.jsx
+│   ├── PlayH5pGrid.jsx
+│   └── Popup.jsx
+├── styles.css
+├── logo.svg
+└── README.md
+```
 
-### `npm test`
+## Usage
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Clone this repository.
+2. Install the dependencies using `npm install`.
+3. Run the application with `npm start`.
+4. Access the application in your browser at `http://localhost:3000`.
 
-### `npm run build`
+## Routes
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- `/`: Displays the **Play H5P Grid**.
+- `/about`: About section with details about the application.
+- `/login`: Login functionality for users.
+- `/License`: Licensing information.
+- `/Impressum`: Legal information.
+- `/Contact`: Contact page.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Development
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- This application uses React Router for seamless navigation.
+- Components are modular and designed to ensure scalability and maintainability.
 
-### `npm run eject`
+## License
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Refer to the [License](./components/license.jsx) page for licensing details.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Contact
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+For any inquiries or issues, please visit the [Contact](./components/contact.jsx) page.
