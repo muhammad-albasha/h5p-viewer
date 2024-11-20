@@ -10,10 +10,9 @@ body {
   text-align: center;
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Monoton&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rock+Salt&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Damion&family=Monoton&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rock+Salt&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Damion&family=Julee&family=Monoton&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rock+Salt&display=swap");
 .banner-title {
-  font-family: "Damion", cursive;
+  font-family: "Julee", cursive;
   font-weight: 400;
   font-style: normal;
   font-size: 50px;
@@ -181,8 +180,9 @@ body {
 }
 
 .play-h5p-box h3 {
-  background-color: rgba(0, 0, 0, 0.6); /* Dunkler Hintergrund für den Text */
+  background-color: #94b73ce2;
   padding: 8px 16px;
+  font-size: 12px;
   border-radius: 4px;
 }
 
