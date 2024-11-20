@@ -4,69 +4,23 @@
     "h5pJsonPath": "./h5p/advent",
     "previewImage": "./images/advent.jpg",
     "name": "Advent",
-    "category": "Holiday"
+    "category": "Holiday",
+    "info": "Das Advent-H5P zeigt interaktive Inhalte zu Weihnachten an."
   },
   {
     "id": 2,
     "h5pJsonPath": "./h5p/advent",
     "previewImage": "./images/advent.jpg",
     "name": "Christmas",
-    "category": "Wochenplan"
+    "category": "Holiday",
+    "info": "Das Christmas-H5P enthält festliche Quiz und Aktivitäten."
   },
   {
     "id": 3,
     "h5pJsonPath": "./h5p/advent",
     "previewImage": "./images/advent.jpg",
     "name": "New Year",
-    "category": "Seasonal"
-  },
-  {
-    "id": 4,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg",
-    "name": "Advent",
-    "category": "Holiday"
-  },
-  {
-    "id": 5,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg",
-    "name": "Christmas",
-    "category": "Holiday"
-  },
-  {
-    "id": 6,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg",
-    "name": "New Year",
-    "category": "Seasonal"
-  },
-  {
-    "id": 7,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg",
-    "name": "Advent",
-    "category": "Holiday"
-  },
-  {
-    "id": 8,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg",
-    "name": "Christmas",
-    "category": "Holiday"
-  },
-  {
-    "id": 9,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg",
-    "name": "New Year",
-    "category": "Seasonal"
-  },
-  {
-    "id": 10,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg",
-    "name": "Advent",
-    "category": "Holiday"
+    "category": "Seasonal",
+    "info": "Das New Year-H5P bietet spannende Aktivitäten für den Jahreswechsel."
   }
 ]

@@ -18,8 +18,8 @@ const PlayH5pGrid = ({ h5pData }) => {
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleBoxClick = (content) => {
-    setCurrentContent(content);
+  const handleBoxClick = (content, infoText) => {
+    setCurrentContent({ content, infoText });
     setIsPopupOpen(true);
   };
 
@@ -67,7 +67,10 @@ const PlayH5pGrid = ({ h5pData }) => {
               backgroundPosition: "center",
             }}
             onClick={() =>
-              handleBoxClick(<PlayH5p h5pJsonPath={item.h5pJsonPath} />)
+              handleBoxClick(
+                <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
+                item.info // Info aus JSON abrufen
+              )
             }
           >
             <h3>{item.name}</h3>
@@ -76,7 +79,13 @@ const PlayH5pGrid = ({ h5pData }) => {
       </div>
 
       {/* Popup */}
-      {isPopupOpen && <Popup content={currentContent} onClose={closePopup} />}
+      {isPopupOpen && (
+        <Popup
+          content={currentContent.content}
+          infoText={currentContent.infoText}
+          onClose={closePopup}
+        />
+      )}
     </>
   );
 };
