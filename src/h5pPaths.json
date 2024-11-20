@@ -2,101 +2,71 @@
   {
     "id": 1,
     "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
+    "previewImage": "./images/advent.jpg",
+    "name": "Advent",
+    "category": "Holiday"
   },
   {
     "id": 2,
     "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
+    "previewImage": "./images/advent.jpg",
+    "name": "Christmas",
+    "category": "Wochenplan"
   },
   {
     "id": 3,
     "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
+    "previewImage": "./images/advent.jpg",
+    "name": "New Year",
+    "category": "Seasonal"
   },
   {
     "id": 4,
     "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
+    "previewImage": "./images/advent.jpg",
+    "name": "Advent",
+    "category": "Holiday"
   },
   {
     "id": 5,
     "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
+    "previewImage": "./images/advent.jpg",
+    "name": "Christmas",
+    "category": "Holiday"
   },
   {
     "id": 6,
     "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
+    "previewImage": "./images/advent.jpg",
+    "name": "New Year",
+    "category": "Seasonal"
   },
   {
     "id": 7,
     "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
+    "previewImage": "./images/advent.jpg",
+    "name": "Advent",
+    "category": "Holiday"
   },
   {
     "id": 8,
     "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
+    "previewImage": "./images/advent.jpg",
+    "name": "Christmas",
+    "category": "Holiday"
   },
   {
     "id": 9,
     "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
+    "previewImage": "./images/advent.jpg",
+    "name": "New Year",
+    "category": "Seasonal"
   },
   {
     "id": 10,
     "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
-  },
-  {
-    "id": 11,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
-  },
-  {
-    "id": 12,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
-  },
-  {
-    "id": 13,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
-  },
-  {
-    "id": 14,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
-  },
-  {
-    "id": 15,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
-  },
-  {
-    "id": 16,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
-  },
-  {
-    "id": 17,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
-  },
-  {
-    "id": 18,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
-  },
-  {
-    "id": 19,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
-  },
-  {
-    "id": 20,
-    "h5pJsonPath": "./h5p/advent",
-    "previewImage": "./images/advent.jpg"
+    "previewImage": "./images/advent.jpg",
+    "name": "Advent",
+    "category": "Holiday"
   }
 ]
