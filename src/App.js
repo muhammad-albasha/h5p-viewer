@@ -22,7 +22,7 @@ export default function App() {
             <nav className="nav">
               <Link to="/">Startseite</Link>
               <Link to="/about">Über</Link>
-              <Link to="/login">Anmelden</Link>
+              {/* <Link to="/login">Anmelden</Link> */}
             </nav>
           </div>
         </header>
