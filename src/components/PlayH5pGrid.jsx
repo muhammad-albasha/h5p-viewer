@@ -69,7 +69,7 @@ const PlayH5pGrid = () => {
             key={item.id}
             style={{
               backgroundImage: `url(${
-                process.env.PUBLIC_URL + item.previewImage.replace("./", "/")
+                process.env.PUBLIC_URL + item.previewImage
               })`,
               backgroundSize: "cover",
               backgroundPosition: "center",

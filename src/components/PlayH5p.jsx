@@ -10,7 +10,7 @@ function PlayH5p({ h5pJsonPath }) {
     const baseUrl = process.env.PUBLIC_URL || "";
 
     const options = {
-      h5pJsonPath: `${baseUrl}/${h5pJsonPath.replace("./", "")}`,
+      h5pJsonPath: `${baseUrl}/${h5pJsonPath}`,
       frameJs: `${baseUrl}/assets/frame.bundle.js`,
       frameCss: `${baseUrl}/assets/h5p.css`,
     };
