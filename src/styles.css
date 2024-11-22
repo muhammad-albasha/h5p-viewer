@@ -154,9 +154,11 @@ body {
   flex-wrap: wrap;
   gap: 16px;
   justify-content: center; /* Zentriert die Boxen */
-  margin-left: 255px; /* Platz für das Fakultätsmenü */
+  margin-left: 360px; /* Platz für das Fakultätsmenü */
   padding: 20px;
-  max-width: calc(70% - 100px); /* Breite basierend auf Menübreite */
+  max-width: calc(55% - 100px); /* Breite basierend auf Menübreite */
+  max-height: 400px; /* Maximale Höhe für den Container */
+  overflow-y: auto; /* Vertikaler Scrollbalken bei Überlauf */
   border: 1px solid #ccc; /* Optional: Rahmen für den Container */
   background-color: #f9f9f9; /* Hintergrundfarbe */
   border-radius: 8px; /* Optional: Abgerundete Ecken */
@@ -190,7 +192,7 @@ body {
 }
 
 .play-h5p-box {
-  flex: 0 1 calc(15% - 16px); /* Maximal 5 Boxen pro Zeile */
+  flex: 0 1 calc(20% - 16px); /* Maximal 5 Boxen pro Zeile */
   aspect-ratio: 1; /* Gleiche Höhe und Breite */
   box-sizing: border-box;
   padding: 8px;
@@ -409,7 +411,7 @@ body {
 
 .about-section {
   margin: 0 auto; /* Zentriert den gesamten Bereich */
-  width: 60%; /* Breite des Containers */
+  width: 55%; /* Breite des Containers */
   padding: 50px; /* Innenabstand */
   background-color: #f9f9f9; /* Hintergrundfarbe */
   text-align: justify; /* Blocksätze für den Text */
@@ -445,7 +447,7 @@ body {
 .faculty-menu {
   position: fixed; /* Fixiert das Menü auf der linken Seite */
   top: 120px; /* Abstand von oben */
-  left: 0;
+  left: 5;
   height: 74%; /* Volle Höhe des Viewports */
   width: 220px; /* Breitere Box für lesbare Inhalte */
   background-color: #ffffff; /* Weißer Hintergrund */

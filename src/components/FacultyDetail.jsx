@@ -4,7 +4,7 @@ import PlayH5p from "./PlayH5p";
 import Popup from "./Popup";
 
 const FacultyDetail = () => {
-  const { id } = useParams();
+  const { name } = useParams(); // Fakultätsname aus der URL
   const [h5pData, setH5pData] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentContent, setCurrentContent] = useState(null);
@@ -17,14 +17,14 @@ const FacultyDetail = () => {
       .then((response) => response.json())
       .then((data) => {
         const filteredData = data.filter(
-          (item) => item.facultyId === parseInt(id)
+          (item) => item.facultyName === decodeURIComponent(name) // Name entschlüsseln
         );
         setH5pData(filteredData);
       })
       .catch((error) =>
         console.error("Fehler beim Abrufen der H5P-Daten:", error)
       );
-  }, [id]);
+  }, [name]);
 
   const categories = ["All", ...new Set(h5pData.map((item) => item.category))];
 
@@ -46,7 +46,7 @@ const FacultyDetail = () => {
 
   return (
     <div>
-      <h2>Inhalte für Fakultät {id}</h2>
+      <h2>{decodeURIComponent(name)}</h2>
 
       {/* Suchleiste */}
       <div className="filter-container">

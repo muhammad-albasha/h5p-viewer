@@ -29,7 +29,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<PlayH5pGrid />} />
           <Route path="/about" element={<About />} />
-          <Route path="/faculty/:id" element={<FacultyDetail />} />
+          <Route path="/faculty/:name" element={<FacultyDetail />} />
           <Route path="/Datenschutz" element={<Datenschutz />} />
           <Route path="/Contact" element={<Contact />} />
         </Routes>

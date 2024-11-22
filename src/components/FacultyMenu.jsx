@@ -6,7 +6,6 @@ const FacultyMenu = () => {
   const jsonPath = `${process.env.PUBLIC_URL}/faculties.json`;
 
   useEffect(() => {
-    // Abrufen der Fakultätsdaten von der JSON-Datei
     const fetchFaculties = async () => {
       try {
         const response = await fetch(jsonPath);
@@ -29,7 +28,9 @@ const FacultyMenu = () => {
       <ul>
         {faculties.map((faculty) => (
           <li key={faculty.id}>
-            <Link to={`/faculty/${faculty.id}`}>{faculty.name}</Link>
+            <Link to={`/faculty/${encodeURIComponent(faculty.name)}`}>
+              {faculty.name}
+            </Link>
           </li>
         ))}
       </ul>
