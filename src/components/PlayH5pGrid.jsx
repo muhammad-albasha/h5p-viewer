@@ -39,29 +39,6 @@ const PlayH5pGrid = () => {
 
   return (
     <>
-      <div className="filter-container">
-        <input
-          type="text"
-          placeholder="Suchen Sie nach H5P-Inhalten..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-
-      <div className="category-filter">
-        {categories.map((category) => (
-          <button
-            key={category}
-            className={`category-button ${
-              selectedCategory === category ? "active" : ""
-            }`}
-            onClick={() => setSelectedCategory(category)}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
       <div className="container">
         {filteredData.map((item) => (
           <div
@@ -84,6 +61,30 @@ const PlayH5pGrid = () => {
             <h3>{item.name}</h3>
           </div>
         ))}
+      </div>
+      <div className="filter">
+        <div className="filter-container">
+          <input
+            type="text"
+            placeholder="Suchen"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        <div className="category-filter">
+          {categories.map((category) => (
+            <button
+              key={category}
+              className={`category-button ${
+                selectedCategory === category ? "active" : ""
+              }`}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
       </div>
 
       {isPopupOpen && (

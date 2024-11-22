@@ -16,6 +16,7 @@ export default function App() {
         <header className="banner">
           <div className="banner-top">
             <FacultyMenu />
+            <p className="banner-title">H5P-Viewer</p>
             <div className="banner-logo">
               <img src={logo} alt="Logo" />
             </div>
@@ -25,11 +26,10 @@ export default function App() {
             </nav>
           </div>
         </header>
-        <p className="banner-title">H5P-Viewer</p>
         <Routes>
           <Route path="/" element={<PlayH5pGrid />} />
           <Route path="/about" element={<About />} />
-          <Route path="/faculty/:name" element={<FacultyDetail />} />
+          <Route path="/:name" element={<FacultyDetail />} />
           <Route path="/Datenschutz" element={<Datenschutz />} />
           <Route path="/Contact" element={<Contact />} />
         </Routes>

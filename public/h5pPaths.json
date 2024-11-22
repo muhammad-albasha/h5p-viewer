@@ -14,7 +14,7 @@
     "previewImage": "/images/dialog.jpg",
     "name": "Dialog-cards",
     "facultyName": "Wirtschaftswissenschaften",
-    "category": "Spiel",
+    "category": "Spiele",
     "info": "Das Game enthält interaktive Dialog-Karten."
   },
   {
@@ -23,7 +23,7 @@
     "previewImage": "/images/360.jpg",
     "name": "Virtual Tour 360",
     "facultyName": "Maschinenbau",
-    "category": "Werkzeuge",
+    "category": "Other",
     "info": "Das Virtual Tour 360-H5P zeigt eine virtuelle Tour in 360° an."
   },
   {
@@ -31,7 +31,7 @@
     "h5pJsonPath": "/h5p/drag-and-drop",
     "previewImage": "/images/drag.jpg",
     "name": "Drag and Drop",
-    "category": "Spiel",
+    "category": "Spiele",
     "info": "Das Drag and Drop-H5P zeigt ein interaktives Drag and Drop-Spiel an."
   },
   {
@@ -39,7 +39,7 @@
     "h5pJsonPath": "/h5p/drag-and-drop",
     "previewImage": "/images/drag.jpg",
     "name": "Drag and Drop",
-    "category": "Spiel",
+    "category": "Spiele",
     "info": "Das Drag and Drop-H5P zeigt ein interaktives Drag and Drop-Spiel an."
   },
   {
@@ -57,7 +57,7 @@
     "previewImage": "/images/dialog.jpg",
     "name": "Dialog-cards",
     "facultyName": "Wirtschaftswissenschaften",
-    "category": "Spiel",
+    "category": "Spiele",
     "info": "Das Game enthält interaktive Dialog-Karten."
   },
   {
@@ -74,7 +74,7 @@
     "h5pJsonPath": "/h5p/drag-and-drop",
     "previewImage": "/images/drag.jpg",
     "name": "Drag and Drop",
-    "category": "Spiel",
+    "category": "Spiele",
     "info": "Das Drag and Drop-H5P zeigt ein interaktives Drag and Drop-Spiel an."
   },
   {
@@ -82,7 +82,7 @@
     "h5pJsonPath": "/h5p/drag-and-drop",
     "previewImage": "/images/drag.jpg",
     "name": "Drag and Drop",
-    "category": "Spiel",
+    "category": "Spiele",
     "info": "Das Drag and Drop-H5P zeigt ein interaktives Drag and Drop-Spiel an."
   },
   {
@@ -90,7 +90,7 @@
     "h5pJsonPath": "/h5p/drag-and-drop",
     "previewImage": "/images/drag.jpg",
     "name": "Drag and Drop",
-    "category": "Spiel",
+    "category": "Spiele",
     "info": "Das Drag and Drop-H5P zeigt ein interaktives Drag and Drop-Spiel an."
   },
   {
@@ -108,7 +108,7 @@
     "previewImage": "/images/dialog.jpg",
     "name": "Dialog-cards",
     "facultyName": "Wirtschaftswissenschaften",
-    "category": "Spiel",
+    "category": "Spiele",
     "info": "Das Game enthält interaktive Dialog-Karten."
   },
   {
@@ -125,7 +125,7 @@
     "h5pJsonPath": "/h5p/drag-and-drop",
     "previewImage": "/images/drag.jpg",
     "name": "Drag and Drop",
-    "category": "Spiel",
+    "category": "Spiele",
     "info": "Das Drag and Drop-H5P zeigt ein interaktives Drag and Drop-Spiel an."
   },
   {
@@ -133,7 +133,7 @@
     "h5pJsonPath": "/h5p/drag-and-drop",
     "previewImage": "/images/drag.jpg",
     "name": "Drag and Drop",
-    "category": "Spiel",
+    "category": "Spiele",
     "info": "Das Drag and Drop-H5P zeigt ein interaktives Drag and Drop-Spiel an."
   },
   {
@@ -151,7 +151,7 @@
     "previewImage": "/images/dialog.jpg",
     "name": "Dialog-cards",
     "facultyName": "Wirtschaftswissenschaften",
-    "category": "Spiel",
+    "category": "Spiele",
     "info": "Das Game enthält interaktive Dialog-Karten."
   },
   {
@@ -168,7 +168,50 @@
     "h5pJsonPath": "/h5p/drag-and-drop",
     "previewImage": "/images/drag.jpg",
     "name": "Drag and Drop",
-    "category": "Spiel",
+    "category": "Spiele",
+    "info": "Das Drag and Drop-H5P zeigt ein interaktives Drag and Drop-Spiel an."
+  },
+  {
+    "id": 21,
+    "h5pJsonPath": "/h5p/drag-and-drop",
+    "previewImage": "/images/drag.jpg",
+    "name": "Drag and Drop",
+    "category": "Spiele",
+    "info": "Das Drag and Drop-H5P zeigt ein interaktives Drag and Drop-Spiel an."
+  },
+  {
+    "id": 22,
+    "h5pJsonPath": "/h5p/adventCalendar",
+    "previewImage": "/images/advent.jpg",
+    "name": "Advent Calendar",
+    "facultyName": "Informatik",
+    "category": "Werkzeuge",
+    "info": "Das Advent Calendar-H5P zeigt interaktive Inhalte zu Weihnachten an."
+  },
+  {
+    "id": 23,
+    "h5pJsonPath": "/h5p/dialog-cards",
+    "previewImage": "/images/dialog.jpg",
+    "name": "Dialog-cards",
+    "facultyName": "Wirtschaftswissenschaften",
+    "category": "Spiele",
+    "info": "Das Game enthält interaktive Dialog-Karten."
+  },
+  {
+    "id": 24,
+    "h5pJsonPath": "/h5p/content-virtual-tour-360",
+    "previewImage": "/images/360.jpg",
+    "name": "Virtual Tour 360",
+    "facultyName": "Maschinenbau",
+    "category": "Werkzeuge",
+    "info": "Das Virtual Tour 360-H5P zeigt eine virtuelle Tour in 360° an."
+  },
+  {
+    "id": 25,
+    "h5pJsonPath": "/h5p/drag-and-drop",
+    "previewImage": "/images/drag.jpg",
+    "name": "Drag and Drop",
+    "category": "Spiele",
     "info": "Das Drag and Drop-H5P zeigt ein interaktives Drag and Drop-Spiel an."
   }
 ]

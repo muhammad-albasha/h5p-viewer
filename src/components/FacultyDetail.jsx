@@ -8,16 +8,17 @@ const FacultyDetail = () => {
   const [h5pData, setH5pData] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentContent, setCurrentContent] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
+  // H5P-Daten laden
   useEffect(() => {
     const baseUrl = process.env.PUBLIC_URL || "";
     fetch(`${baseUrl}/h5pPaths.json`)
       .then((response) => response.json())
       .then((data) => {
         const filteredData = data.filter(
-          (item) => item.facultyName === decodeURIComponent(name) // Name entschlüsseln
+          (item) => item.facultyName === decodeURIComponent(name) // Filter nach Fakultät
         );
         setH5pData(filteredData);
       })
@@ -45,35 +46,39 @@ const FacultyDetail = () => {
   };
 
   return (
-    <div>
-      <h2>{decodeURIComponent(name)}</h2>
+    <>
+      {/* Header mit Fakultätsnamen */}
+      <h2 style={{ textAlign: "center", color: "#61862e" }}>
+        {decodeURIComponent(name)}
+      </h2>
 
-      {/* Suchleiste */}
-      <div className="filter-container">
-        <input
-          type="text"
-          placeholder="Suchen Sie nach H5P-Inhalten..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      {/* Filter-Bereich */}
+      <div className="filter">
+        <div className="filter-container">
+          <input
+            type="text"
+            placeholder="Suchen"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        <div className="category-filter">
+          {categories.map((category) => (
+            <button
+              key={category}
+              className={`category-button ${
+                selectedCategory === category ? "active" : ""
+              }`}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Kategorie-Filter */}
-      <div className="category-filter">
-        {categories.map((category) => (
-          <button
-            key={category}
-            className={`category-button ${
-              selectedCategory === category ? "active" : ""
-            }`}
-            onClick={() => setSelectedCategory(category)}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
-      {/* Inhalte */}
+      {/* H5P-Boxen */}
       <div className="container">
         {filteredData.map((item) => (
           <div
@@ -98,7 +103,7 @@ const FacultyDetail = () => {
         ))}
       </div>
 
-      {/* Popup */}
+      {/* Popup für H5P-Inhalte */}
       {isPopupOpen && (
         <Popup
           content={currentContent.content}
@@ -106,7 +111,7 @@ const FacultyDetail = () => {
           onClose={closePopup}
         />
       )}
-    </div>
+    </>
   );
 };
 

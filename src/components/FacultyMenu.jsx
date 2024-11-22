@@ -24,11 +24,11 @@ const FacultyMenu = () => {
 
   return (
     <div className="faculty-menu">
-      <h3>Fakultäten</h3>
+      <h3>Fachbereich</h3>
       <ul>
         {faculties.map((faculty) => (
           <li key={faculty.id}>
-            <Link to={`/faculty/${encodeURIComponent(faculty.name)}`}>
+            <Link to={`/${encodeURIComponent(faculty.name)}`}>
               {faculty.name}
             </Link>
           </li>
