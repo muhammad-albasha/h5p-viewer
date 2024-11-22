@@ -4,6 +4,7 @@
     "h5pJsonPath": "/h5p/adventCalendar",
     "previewImage": "/images/advent.jpg",
     "name": "Advent Calendar",
+    "facultyId": 1,
     "category": "Werkzeuge",
     "info": "Das Advent Calendar-H5P zeigt interaktive Inhalte zu Weihnachten an."
   },
@@ -12,6 +13,7 @@
     "h5pJsonPath": "/h5p/dialog-cards",
     "previewImage": "/images/dialog.jpg",
     "name": "Dialog-cards",
+    "facultyId": 2,
     "category": "Spiel",
     "info": "Das Game enthält interaktive Dialog-Karten."
   },

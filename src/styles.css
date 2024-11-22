@@ -153,12 +153,12 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-  justify-content: center;
-  max-height: 405px; /* Maximale Höhe des Containers */
-  overflow-y: auto; /* Scrollbar für vertikales Scrollen */
-  padding: 10px;
-  /* border: 1px solid #ccc;
-  background-color: #f9f9f9; */
+  justify-content: center; /* Zentriert die Boxen */
+  margin-left: 255px; /* Platz für das Fakultätsmenü */
+  padding: 20px;
+  max-width: calc(70% - 100px); /* Breite basierend auf Menübreite */
+  border: 1px solid #ccc; /* Optional: Rahmen für den Container */
+  background-color: #f9f9f9; /* Hintergrundfarbe */
   border-radius: 8px; /* Optional: Abgerundete Ecken */
 }
 
@@ -190,8 +190,8 @@ body {
 }
 
 .play-h5p-box {
-  flex: 0 1 calc(10% - 16px);
-  aspect-ratio: 1;
+  flex: 0 1 calc(15% - 16px); /* Maximal 5 Boxen pro Zeile */
+  aspect-ratio: 1; /* Gleiche Höhe und Breite */
   box-sizing: border-box;
   padding: 8px;
   border: 1px solid #ccc;
@@ -215,6 +215,7 @@ body {
   border-radius: 4px;
 }
 
+/* Hover-Effekt für Boxen */
 .play-h5p-box:hover {
   background-color: #e0e0e0;
 }
@@ -438,5 +439,52 @@ body {
 .Link {
   text-decoration: none;
   color: #95b73c;
+  font-weight: bold;
+}
+
+.faculty-menu {
+  position: fixed; /* Fixiert das Menü auf der linken Seite */
+  top: 120px; /* Abstand von oben */
+  left: 0;
+  height: 74%; /* Volle Höhe des Viewports */
+  width: 220px; /* Breitere Box für lesbare Inhalte */
+  background-color: #ffffff; /* Weißer Hintergrund */
+  padding: 15px; /* Mehr Padding für ein sauberes Design */
+  /* border-right: 2px solid #95b73c; */
+  border-radius: 0 8px 8px 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Schatten für Tiefe */
+}
+
+.faculty-menu h3 {
+  color: #61862e; /* Dunkleres Grün */
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.faculty-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.faculty-menu li {
+  margin: 10px 0;
+}
+
+.faculty-menu li a {
+  text-decoration: none;
+  color: #333333; /* Dunkle Schriftfarbe */
+  font-size: 16px;
+  display: block; /* Blockelement für bessere Klickbarkeit */
+  padding: 8px 12px; /* Mehr Innenabstand für Komfort */
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.faculty-menu li a:hover {
+  background-color: #95b73c;
+  color: #ffffff; /* Weiße Schrift beim Hover */
   font-weight: bold;
 }
