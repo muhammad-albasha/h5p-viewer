@@ -1,10 +1,10 @@
 import React from "react";
 
-const License = () => {
+const Datenschutz = () => {
   return (
     <div className="about-section">
-      <h2 className="license-title">Lizenz</h2>
-      <p className="license-text">
+      <h2 className="Datenschutz-title">Datenschutz</h2>
+      <p className="Datenschutz-text">
         <span style={{ fontWeight: "bold" }}>MIT License</span>
         <br></br> Copyright (c) 2024{" "}
         <span style={{ fontWeight: "bold" }}>Muhammad Albasha</span>
@@ -30,4 +30,4 @@ const License = () => {
   );
 };
 
-export default License;
+export default Datenschutz;

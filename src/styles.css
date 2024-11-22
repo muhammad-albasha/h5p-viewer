@@ -417,7 +417,7 @@ body {
   align-items: center; /* Zentriert den Inhalt horizontal */
 }
 
-.license-title {
+.Datenschutz-title {
   font-size: 24px; /* Schriftgröße des Titels */
   font-weight: bold; /* Fettdruck */
   color: #95b73c; /* Textfarbe */
@@ -426,7 +426,7 @@ body {
   width: 100%; /* Titel nimmt den gesamten Container ein */
 }
 
-.license-text {
+.Datenschutz-text {
   font-size: 14px; /* Schriftgröße des Textes */
   line-height: 1.8; /* Zeilenabstand für bessere Lesbarkeit */
   color: #000000; /* Textfarbe */

@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import PlayH5pGrid from "./components/PlayH5pGrid";
 import About from "./components/About";
-import License from "./components/license";
+import Datenschutz from "./components/Datenschutz";
 import Contact from "./components/contact";
 // import Login from "./components/Login";
 import "./styles.css";
@@ -21,7 +21,7 @@ export default function App() {
             </div>
             <nav className="nav">
               <Link to="/">Startseite</Link>
-              <Link to="/about">Über</Link>
+              <Link to="/about">Über uns</Link>
               {/* <Link to="/login">Anmelden</Link> */}
             </nav>
           </div>
@@ -33,14 +33,14 @@ export default function App() {
           <Route path="/" element={<PlayH5pGrid />} />
           <Route path="/about" element={<About />} />
           {/* <Route path="/login" element={<Login />} /> */}
-          <Route path="/License" element={<License />} />
+          <Route path="/Datenschutz" element={<Datenschutz />} />
           <Route path="/Contact" element={<Contact />} />
         </Routes>
 
         {/* Footer */}
         <footer className="footer">
           <nav>
-            <Link to="/License">Lizenz</Link>
+            <Link to="/Datenschutz">Datenschutz</Link>
             <a
               href="https://www.uni-wuppertal.de/de/impressum"
               target="_blank"
