@@ -3,8 +3,12 @@ import React from "react";
 const About = () => {
   return (
     <div className="about-section">
-      <h2>Über die Plattform</h2>
-      <p></p>
+      <h2>Über uns</h2>
+      <p>
+        {/* Diese Seite ist ein Prototyo */}
+        Diese Seite ist ein Prototyp für die Anzeige von H5P-Inhalten. Die
+        Inhalte werden von H5P bereitgestellt.
+      </p>
     </div>
   );
 };
