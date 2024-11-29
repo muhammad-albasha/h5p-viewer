@@ -449,13 +449,13 @@ body {
 
 .faculty-menu {
   position: absolute;
-  top: 120px;
-  left: 5px;
-  height: 74%;
+  top: 145px;
+  left: 0;
+  height: 72%;
   width: 310px;
   background-color: #ffffff;
   padding: 15px;
-  border-radius: 8px;
+  border-radius: 0 8px 8px 0;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
 }
@@ -520,17 +520,23 @@ body {
   font-weight: bold;
 }
 
+.facName {
+  font-size: 24px;
+  font-weight: bold;
+  color: #95b73c;
+}
+
 .filter {
   position: absolute;
-  right: 5px;
-  top: 120px;
+  right: 0;
+  top: 145px;
   width: 345px;
   background-color: #ffffff;
-  border-radius: 8px;
+  border-radius: 8px 0 0 8px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   padding: 15px;
   /* z-index: 1000; */
-  height: 74%;
+  height: 72%;
   overflow-y: auto;
 }
 
@@ -594,4 +600,168 @@ body {
 .category-button.active {
   background-color: #61862e;
   font-weight: bold;
+}
+
+/* Neuer Top-Banner */
+.top-banner {
+  background-color: #f4f4f4;
+  color: #333;
+  padding: 5px 5px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Kontrast-Button im Top-Banner */
+.contrast-toggle {
+  color: black;
+  margin-right: 10px;
+  border: none;
+  padding: 5px 5px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Kontrastmodus-Stile */
+.contrast-mode .banner {
+  background-color: black;
+  color: white;
+}
+
+.contrast-mode .banner-title {
+  color: white;
+}
+
+.contrast-mode .nav a {
+  color: white;
+}
+
+.contrast-mode .footer {
+  background-color: black;
+  color: white;
+}
+
+.contrast-mode .footer nav a {
+  color: white;
+}
+
+.contrast-mode .faculty-menu .faculty-menu h3 {
+  background-color: black;
+  color: white;
+}
+
+.contrast-mode .faculty-menu li a {
+  color: white;
+}
+
+.contrast-mode .faculty-menu li a:hover {
+  background-color: white;
+  color: black;
+}
+
+/* Kontrastmodus für allgemeine Buttons */
+.contrast-mode .category-button,
+.contrast-mode .login-button,
+.contrast-mode .fullscreen-btn {
+  background-color: white;
+  color: black;
+}
+
+.contrast-mode .category-button:hover,
+.contrast-mode .login-button:hover,
+.contrast-mode .fullscreen-btn:hover {
+  background-color: #ccc;
+}
+
+/* Allgemeiner Übergang für einen weicheren Wechsel */
+/* Kontrastmodus */
+.contrast-mode .banner,
+.contrast-mode .footer,
+.contrast-mode .faculty-menu,
+.contrast-mode .filter {
+  background-color: black;
+  color: white;
+}
+
+/* Navigation Links im Kontrastmodus */
+.contrast-mode .nav a,
+.contrast-mode .footer nav a {
+  color: white;
+}
+
+.contrast-mode .nav a:hover,
+.contrast-mode .footer nav a:hover {
+  text-decoration: underline;
+  color: #ccc;
+}
+
+/* Buttons im Kontrastmodus */
+.contrast-mode .category-button,
+.contrast-mode .login-button,
+.contrast-mode .fullscreen-btn {
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+}
+
+.contrast-mode .category-button:hover,
+.contrast-mode .login-button:hover,
+.contrast-mode .fullscreen-btn:hover {
+  background-color: #333;
+}
+
+/* Popup im Kontrastmodus */
+.contrast-mode .popup-content {
+  background-color: black;
+  color: white;
+}
+
+/* Filter und Sidebar im Kontrastmodus */
+.contrast-mode .filter-container input {
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+}
+
+.contrast-mode .faculty-menu li a:hover {
+  background-color: white;
+  color: black;
+}
+
+/* Kontrastmodus für H5P-Boxen */
+.contrast-mode .play-h5p-box {
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+}
+
+.contrast-mode .play-h5p-box h3 {
+  background-color: black;
+}
+
+.icon-contrast {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.contrast-toggle {
+  display: flex;
+  align-items: center;
+  color: black;
+  border: none;
+  padding: 5px 5px;
+  cursor: pointer;
+  font-size: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.contrast-mode .faculty-menu h3 {
+  color: white; /* Ändert die Textfarbe auf Weiß */
+}
+
+/* Kontrastmodus für Fakultätsname (h2) */
+.contrast-mode h2 {
+  color: black; /* Ändert die Textfarbe auf Weiß */
 }

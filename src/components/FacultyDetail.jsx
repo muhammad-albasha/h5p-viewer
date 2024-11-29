@@ -47,10 +47,7 @@ const FacultyDetail = () => {
 
   return (
     <>
-      {/* Header mit Fakultätsnamen */}
-      <h2 style={{ textAlign: "center", color: "#61862e" }}>
-        {decodeURIComponent(name)}
-      </h2>
+      <h2 className="facName">{decodeURIComponent(name)}</h2>
 
       {/* Filter-Bereich */}
       <div className="filter">
