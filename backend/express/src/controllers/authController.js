@@ -5,18 +5,17 @@ import User from "../models/user.js";
 const { sign, verify } = jwt; // Extrahieren der Funktionen
 
 export async function login(req, res) {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ where: { username } });
-    if (!user) return res.status(401).send("Benutzername oder Passwort falsch");
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(401).send("Email oder Passwort falsch");
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(401).send("Benutzername oder Passwort falsch");
+    if (!isMatch) return res.status(401).send("Email oder Passwort falsch");
 
     const token = sign(
-      { id: user.id, username: user.username },
+      { id: user.id, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );

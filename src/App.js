@@ -1,20 +1,43 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  Navigate,
+} from "react-router-dom";
 import PlayH5pGrid from "./components/PlayH5pGrid";
 import About from "./components/About";
 import Datenschutz from "./components/Datenschutz";
 import Contact from "./components/contact";
 import FacultyMenu from "./components/FacultyMenu";
 import FacultyDetail from "./components/FacultyDetail";
+import Login from "./components/Login";
 import "./styles.css";
 import logo from "./logo.svg";
-import Login from "./components/Login";
+
+// Funktion für geschützte Routen
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  return token ? children : <Navigate to="/Login" />;
+};
 
 export default function App() {
   const [isContrast, setIsContrast] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsAuthenticated(!!token); // Token prüfen, um Authentifizierungsstatus zu setzen
+  }, []);
 
   const toggleContrast = () => {
     setIsContrast(!isContrast);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Token entfernen
+    setIsAuthenticated(false);
   };
 
   return (
@@ -67,7 +90,13 @@ export default function App() {
             <nav className="nav">
               <Link to="/">Startseite</Link>
               <Link to="/about">Über uns</Link>
-              <Link to="/Login">Anmelden</Link>
+              {!isAuthenticated ? (
+                <Link to="/Login">Anmelden</Link>
+              ) : (
+                <button className="contrast-toggle" onClick={handleLogout}>
+                  Abmelden
+                </button>
+              )}
             </nav>
           </div>
         </header>
@@ -76,10 +105,18 @@ export default function App() {
         <Routes>
           <Route path="/" element={<PlayH5pGrid />} />
           <Route path="/about" element={<About />} />
-          <Route path="/:name" element={<FacultyDetail />} />
+          <Route path="/Login" element={<Login />} />
+          <Route
+            path="/protected"
+            element={
+              <ProtectedRoute>
+                <FacultyDetail />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/Datenschutz" element={<Datenschutz />} />
           <Route path="/Contact" element={<Contact />} />
-          <Route path="/Login" element={<Login />} />
+          <Route path="/:name" element={<FacultyDetail />} />
         </Routes>
 
         {/* Footer */}

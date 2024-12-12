@@ -765,3 +765,9 @@ body {
 .contrast-mode h2 {
   color: black; /* Ändert die Textfarbe auf Weiß */
 }
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
