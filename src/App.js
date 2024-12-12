@@ -8,6 +8,7 @@ import FacultyMenu from "./components/FacultyMenu";
 import FacultyDetail from "./components/FacultyDetail";
 import "./styles.css";
 import logo from "./logo.svg";
+import Login from "./components/Login";
 
 export default function App() {
   const [isContrast, setIsContrast] = useState(false);
@@ -66,6 +67,7 @@ export default function App() {
             <nav className="nav">
               <Link to="/">Startseite</Link>
               <Link to="/about">Über uns</Link>
+              <Link to="/Login">Anmelden</Link>
             </nav>
           </div>
         </header>
@@ -77,6 +79,7 @@ export default function App() {
           <Route path="/:name" element={<FacultyDetail />} />
           <Route path="/Datenschutz" element={<Datenschutz />} />
           <Route path="/Contact" element={<Contact />} />
+          <Route path="/Login" element={<Login />} />
         </Routes>
 
         {/* Footer */}
