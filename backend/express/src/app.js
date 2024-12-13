@@ -1,6 +1,7 @@
 import express, { json } from "express";
 import sequelize from "./models/index.js";
 import authRoutes from "./routes/authRoutes.js";
+import dataRoutes from "./routes/dataRoutes.js";
 import dotenv from "dotenv";
 import cors from "cors";
 
@@ -12,6 +13,7 @@ app.use(json());
 
 // Routen
 app.use("/auth", authRoutes);
+app.use("/api", dataRoutes);
 
 // Synchronisieren mit der Datenbank
 sequelize

@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 
 const FacultyMenu = () => {
   const [faculties, setFaculties] = useState([]);
-  const jsonPath = `${process.env.PUBLIC_URL}/faculties.json`;
 
   useEffect(() => {
     const fetchFaculties = async () => {
       try {
-        const response = await fetch(jsonPath);
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/faculties`
+        );
         if (!response.ok) {
           throw new Error(`HTTP-Fehler: ${response.status}`);
         }
@@ -20,7 +21,7 @@ const FacultyMenu = () => {
     };
 
     fetchFaculties();
-  }, [jsonPath]);
+  }, []);
 
   return (
     <div className="faculty-menu">

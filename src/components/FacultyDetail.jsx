@@ -4,24 +4,17 @@ import PlayH5p from "./PlayH5p";
 import Popup from "./Popup";
 
 const FacultyDetail = () => {
-  const { name } = useParams(); // Fakultätsname aus der URL
+  const { name } = useParams();
   const [h5pData, setH5pData] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentContent, setCurrentContent] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  // H5P-Daten laden
   useEffect(() => {
-    const baseUrl = process.env.PUBLIC_URL || "";
-    fetch(`${baseUrl}/h5pPaths.json`)
+    fetch(`/api/h5pData?facultyId=${encodeURIComponent(name)}`)
       .then((response) => response.json())
-      .then((data) => {
-        const filteredData = data.filter(
-          (item) => item.facultyName === decodeURIComponent(name) // Filter nach Fakultät
-        );
-        setH5pData(filteredData);
-      })
+      .then((data) => setH5pData(data))
       .catch((error) =>
         console.error("Fehler beim Abrufen der H5P-Daten:", error)
       );
@@ -49,7 +42,6 @@ const FacultyDetail = () => {
     <>
       <h2 className="facName">{decodeURIComponent(name)}</h2>
 
-      {/* Filter-Bereich */}
       <div className="filter">
         <div className="filter-container">
           <input
@@ -75,19 +67,11 @@ const FacultyDetail = () => {
         </div>
       </div>
 
-      {/* H5P-Boxen */}
       <div className="container">
         {filteredData.map((item) => (
           <div
             className="play-h5p-box"
             key={item.id}
-            style={{
-              backgroundImage: `url(${
-                process.env.PUBLIC_URL + item.previewImage
-              })`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
             onClick={() =>
               handleBoxClick(
                 <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
@@ -100,7 +84,6 @@ const FacultyDetail = () => {
         ))}
       </div>
 
-      {/* Popup für H5P-Inhalte */}
       {isPopupOpen && (
         <Popup
           content={currentContent.content}
