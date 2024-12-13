@@ -70,6 +70,20 @@ body {
   line-height: 1.5;
 }
 
+.nav button {
+  background-color: transparent;
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.nav button:hover {
+  text-decoration: underline;
+}
+
 .nav a:hover {
   text-decoration: underline;
 }

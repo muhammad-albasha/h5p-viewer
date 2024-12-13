@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function Login({ setAuthenticated }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -25,8 +25,9 @@ export default function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("token", data.token); // Speichern des Tokens
-        navigate("/"); // Weiterleitung zur Startseite
+        localStorage.setItem("token", data.token);
+        setAuthenticated(true); // Authentifizierungsstatus setzen
+        navigate("/");
       } else {
         const errorMessage = await response.text();
         setError(errorMessage || "Anmeldung fehlgeschlagen.");

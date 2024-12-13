@@ -28,7 +28,7 @@ export default function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token); // Token prüfen, um Authentifizierungsstatus zu setzen
+    setIsAuthenticated(!!token); // Authentifizierungsstatus basierend auf Token setzen
   }, []);
 
   const toggleContrast = () => {
@@ -37,7 +37,7 @@ export default function App() {
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Token entfernen
-    setIsAuthenticated(false);
+    setIsAuthenticated(false); // Authentifizierungsstatus zurücksetzen
   };
 
   return (
@@ -45,22 +45,7 @@ export default function App() {
       <div className={`App ${isContrast ? "contrast-mode" : ""}`}>
         <header className="top-banner">
           <button className="contrast-toggle" onClick={toggleContrast}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="icon-contrast"
-            >
-              <circle cx="12" cy="12" r="10" fill="black"></circle>
-              <path d="M12 2a10 10 0 0 1 0 20z" fill="white"></path>
-            </svg>
-            {isContrast ? "Kontrast" : "Kontrast"}
+            {isContrast ? "Kontrast deaktivieren" : "Kontrast aktivieren"}
           </button>
           <button
             className="contrast-toggle"
@@ -93,7 +78,7 @@ export default function App() {
               {!isAuthenticated ? (
                 <Link to="/Login">Anmelden</Link>
               ) : (
-                <button className="contrast-toggle" onClick={handleLogout}>
+                <button className="contrast-toggnavle" onClick={handleLogout}>
                   Abmelden
                 </button>
               )}
@@ -105,7 +90,10 @@ export default function App() {
         <Routes>
           <Route path="/" element={<PlayH5pGrid />} />
           <Route path="/about" element={<About />} />
-          <Route path="/Login" element={<Login />} />
+          <Route
+            path="/Login"
+            element={<Login setAuthenticated={setIsAuthenticated} />}
+          />
           <Route
             path="/protected"
             element={
