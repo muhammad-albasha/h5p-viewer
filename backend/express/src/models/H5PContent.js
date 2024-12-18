@@ -21,7 +21,7 @@ const H5PContent = sequelize.define("H5PContent", {
     type: DataTypes.STRING,
   },
   info: {
-    type: DataTypes.TEXT("long"), // "long" entspricht LONGTEXT
+    type: DataTypes.TEXT("long"),
   },
   facultyId: {
     type: DataTypes.INTEGER,
