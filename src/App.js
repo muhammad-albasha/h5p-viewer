@@ -28,7 +28,7 @@ export default function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token); // Authentifizierungsstatus basierend auf Token setzen
+    setIsAuthenticated(!!token);
   }, []);
 
   const toggleContrast = () => {
@@ -36,8 +36,8 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Token entfernen
-    setIsAuthenticated(false); // Authentifizierungsstatus zurücksetzen
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
   };
 
   return (
