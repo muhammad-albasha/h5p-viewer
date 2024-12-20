@@ -1,6 +1,7 @@
 import { Router } from "express";
 import Faculty from "../models/faculty.js";
 import H5PContent from "../models/H5PContent.js";
+import { authenticateToken } from "../middleware/authMiddleware.js";
 
 const router = Router();
 
@@ -30,12 +31,30 @@ router.get("/h5pData", async (req, res) => {
   const { facultyId } = req.query;
 
   try {
-    const query = facultyId ? { where: { facultyId } } : {}; // Leerer Query-Filter, falls kein facultyId vorhanden
+    const query = facultyId ? { where: { facultyId } } : {};
 
     const h5pData = await H5PContent.findAll(query);
     res.json(h5pData);
   } catch (error) {
     console.error("Fehler beim Abrufen der H5P-Daten:", error);
+    res.status(500).send(error.message);
+  }
+});
+
+router.post("/faculties", authenticateToken, async (req, res) => {
+  const { name } = req.body;
+
+  if (!name) {
+    return res
+      .status(400)
+      .json({ error: "Name der Fakultät ist erforderlich" });
+  }
+
+  try {
+    const newFaculty = await Faculty.create({ name });
+    res.status(201).json(newFaculty);
+  } catch (error) {
+    console.error("Fehler beim Hinzufügen der Fakultät:", error);
     res.status(500).send(error.message);
   }
 });
