@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../models/user.js";
 
-const { sign, verify } = jwt; // Extrahieren der Funktionen
+const { sign, verify } = jwt;
 
 export async function login(req, res) {
   const { email, password } = req.body;

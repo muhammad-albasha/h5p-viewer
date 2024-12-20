@@ -28,7 +28,7 @@ sequelize
   .sync()
   .then(() => {
     console.log("Datenbank verbunden");
-    app.listen(3000, () => console.log("Server läuft auf Port 3000"));
+    app.listen(3500, () => console.log("Server läuft auf Port 3000"));
   })
   .catch((error) => {
     console.error("Fehler beim Verbinden mit der Datenbank:", error);
