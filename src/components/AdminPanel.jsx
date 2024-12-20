@@ -1,26 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import AddH5PForm from "./AddH5PForm";
 
 const AdminPanel = () => {
   const [isH5PFormVisible, setIsH5PFormVisible] = useState(false);
   const [isFacultyFormVisible, setIsFacultyFormVisible] = useState(false);
-  const [faculties, setFaculties] = useState([]);
-
-  useEffect(() => {
-    const fetchFaculties = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/faculties`
-        );
-        const data = await response.json();
-        setFaculties(data);
-      } catch (error) {
-        console.error("Fehler beim Abrufen der Fakultäten:", error);
-      }
-    };
-
-    fetchFaculties();
-  }, []);
 
   const handleFacultySubmit = async (e) => {
     e.preventDefault();
@@ -42,8 +25,6 @@ const AdminPanel = () => {
       );
 
       if (response.ok) {
-        const newFaculty = await response.json();
-        setFaculties((prevFaculties) => [...prevFaculties, newFaculty]);
         form.reset();
         setIsFacultyFormVisible(false);
       } else {
@@ -86,14 +67,6 @@ const AdminPanel = () => {
       {isH5PFormVisible && (
         <AddH5PForm onAdd={(newContent) => console.log(newContent)} />
       )}
-
-      <div>
-        <ul>
-          {faculties.map((faculty) => (
-            <li key={faculty.id}>{faculty.name}</li>
-          ))}
-        </ul>
-      </div>
     </div>
   );
 };
