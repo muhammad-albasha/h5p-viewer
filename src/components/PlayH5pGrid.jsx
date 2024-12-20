@@ -1,4 +1,3 @@
-// PlayH5pGrid.js
 import React, { useState, useEffect } from "react";
 import PlayH5p from "./PlayH5p";
 import Popup from "./Popup";
@@ -10,13 +9,17 @@ const PlayH5pGrid = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  // Fetch h5pData from public/h5pPaths.json
+  // Fetch h5pData from the backend
   useEffect(() => {
-    const baseUrl = process.env.PUBLIC_URL || "";
-    fetch(`${baseUrl}/h5pPaths.json`)
-      .then((response) => response.json())
+    fetch(`${process.env.REACT_APP_API_URL}/api/h5pData`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch H5P data");
+        }
+        return response.json();
+      })
       .then((data) => setH5pData(data))
-      .catch((error) => console.error("Error fetching h5pData:", error));
+      .catch((error) => console.error("Error fetching H5P data:", error));
   }, []);
 
   const categories = ["All", ...new Set(h5pData.map((item) => item.category))];
@@ -45,9 +48,7 @@ const PlayH5pGrid = () => {
             className="play-h5p-box"
             key={item.id}
             style={{
-              backgroundImage: `url(${
-                process.env.PUBLIC_URL + item.previewImage
-              })`,
+              backgroundImage: `url(/images/${item.previewImage})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}

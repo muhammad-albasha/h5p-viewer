@@ -28,14 +28,11 @@ router.get("/faculties-with-h5p", async (req, res) => {
 
 router.get("/h5pData", async (req, res) => {
   const { facultyId } = req.query;
-  if (!facultyId) {
-    return res.status(400).send("facultyId ist erforderlich");
-  }
 
   try {
-    const h5pData = await H5PContent.findAll({
-      where: { facultyId },
-    });
+    const query = facultyId ? { where: { facultyId } } : {}; // Leerer Query-Filter, falls kein facultyId vorhanden
+
+    const h5pData = await H5PContent.findAll(query);
     res.json(h5pData);
   } catch (error) {
     console.error("Fehler beim Abrufen der H5P-Daten:", error);
