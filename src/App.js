@@ -46,7 +46,7 @@ export default function App() {
       <div className={`App ${isContrast ? "contrast-mode" : ""}`}>
         <header className="top-banner">
           <button className="contrast-toggle" onClick={toggleContrast}>
-            {isContrast ? "Kontrast deaktivieren" : "Kontrast aktivieren"}
+            {isContrast ? "Kontrast" : "Kontrast"}
           </button>
           <button
             className="contrast-toggle"
