@@ -4,7 +4,7 @@ import PlayH5p from "./PlayH5p";
 import Popup from "./Popup";
 
 const FacultyDetail = () => {
-  const { name } = useParams();
+  const { name } = useParams(); // Fakultätsname aus der URL
   const [h5pData, setH5pData] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentContent, setCurrentContent] = useState(null);
@@ -12,12 +12,41 @@ const FacultyDetail = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   useEffect(() => {
-    fetch(`/api/h5pData?facultyId=${encodeURIComponent(name)}`)
-      .then((response) => response.json())
-      .then((data) => setH5pData(data))
-      .catch((error) =>
-        console.error("Fehler beim Abrufen der H5P-Daten:", error)
-      );
+    const fetchFacultyData = async () => {
+      try {
+        // Abrufen der Fakultäten
+        const facultyResponse = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/faculties`
+        );
+        if (!facultyResponse.ok) {
+          throw new Error(`HTTP-Fehler: ${facultyResponse.status}`);
+        }
+        const faculties = await facultyResponse.json();
+
+        // Passende Fakultät anhand des Namens finden
+        const matchedFaculty = faculties.find(
+          (f) => f.name === decodeURIComponent(name)
+        );
+        if (!matchedFaculty) {
+          console.error("Keine passende Fakultät gefunden");
+          return;
+        }
+
+        // H5P-Daten für die Fakultät abrufen
+        const h5pResponse = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/h5pData?facultyId=${matchedFaculty.id}`
+        );
+        if (!h5pResponse.ok) {
+          throw new Error(`HTTP-Fehler: ${h5pResponse.status}`);
+        }
+        const h5pData = await h5pResponse.json();
+        setH5pData(h5pData);
+      } catch (error) {
+        console.error("Fehler beim Abrufen der Daten:", error);
+      }
+    };
+
+    fetchFacultyData();
   }, [name]);
 
   const categories = ["All", ...new Set(h5pData.map((item) => item.category))];
@@ -72,6 +101,11 @@ const FacultyDetail = () => {
           <div
             className="play-h5p-box"
             key={item.id}
+            style={{
+              backgroundImage: `url(${process.env.PUBLIC_URL}/images/${item.previewImage})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
             onClick={() =>
               handleBoxClick(
                 <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
