@@ -78,6 +78,7 @@ const AdminPanel = () => {
         <form onSubmit={handleFacultySubmit} className="add-faculty-form">
           <div>
             <label htmlFor="faculty-name">Fachbereich: </label>
+            <br /> <br />
             <input type="text" name="name" id="faculty-name" required />
           </div>
           <button type="submit" className="admin-button">
