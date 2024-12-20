@@ -15,6 +15,7 @@ import FacultyDetail from "./components/FacultyDetail";
 import Login from "./components/Login";
 import "./styles.css";
 import logo from "./logo.svg";
+import AdminPanel from "./components/AdminPanel";
 
 // Funktion für geschützte Routen
 const ProtectedRoute = ({ children }) => {
@@ -75,12 +76,15 @@ export default function App() {
             <nav className="nav">
               <Link to="/">Startseite</Link>
               <Link to="/about">Über uns</Link>
-              {!isAuthenticated ? (
-                <Link to="/Login">Anmelden</Link>
+              {isAuthenticated ? (
+                <>
+                  <Link to="/admin">Verwaltung</Link>
+                  <button className="contrast-toggle" onClick={handleLogout}>
+                    Abmelden
+                  </button>
+                </>
               ) : (
-                <button className="contrast-toggnavle" onClick={handleLogout}>
-                  Abmelden
-                </button>
+                <Link to="/Login">Anmelden</Link>
               )}
             </nav>
           </div>
@@ -95,10 +99,10 @@ export default function App() {
             element={<Login setAuthenticated={setIsAuthenticated} />}
           />
           <Route
-            path="/protected"
+            path="/admin"
             element={
               <ProtectedRoute>
-                <FacultyDetail />
+                <AdminPanel />
               </ProtectedRoute>
             }
           />
