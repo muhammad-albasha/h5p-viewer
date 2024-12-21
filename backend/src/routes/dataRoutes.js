@@ -172,4 +172,74 @@ router.post(
   }
 );
 
+router.delete("/h5pContent/:id", authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const content = await H5PContent.findByPk(id);
+    if (!content) {
+      return res.status(404).send("H5P-Inhalt nicht gefunden.");
+    }
+
+    // Entferne Dateien vom Server
+    try {
+      fs.rmSync(`public/${content.h5pJsonPath}`, {
+        recursive: true,
+        force: true,
+      });
+      fs.unlinkSync(`public/${content.previewImage}`);
+    } catch (fileError) {
+      console.error("Fehler beim Entfernen der Dateien:", fileError);
+    }
+
+    await content.destroy();
+    res.status(200).send("H5P-Inhalt erfolgreich entfernt.");
+  } catch (error) {
+    res.status(500).send("Fehler beim Entfernen des H5P-Inhalts.");
+  }
+});
+
+router.delete("/faculties/:id", authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    // Hole alle zugehörigen H5P-Inhalte
+    const h5pContents = await H5PContent.findAll({ where: { facultyId: id } });
+
+    // Lösche die Dateien der H5P-Inhalte
+    h5pContents.forEach((content) => {
+      // Lösche H5P-Verzeichnisse
+      const h5pDir = path.join(__dirname, `../public/${content.h5pJsonPath}`);
+      const imagePath = path.join(
+        __dirname,
+        `../public/${content.previewImage}`
+      );
+      try {
+        if (fs.existsSync(h5pDir)) {
+          fs.rmSync(h5pDir, { recursive: true, force: true });
+          console.log(`H5P-Verzeichnis gelöscht: ${h5pDir}`);
+        }
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+          console.log(`Bilddatei gelöscht: ${imagePath}`);
+        }
+      } catch (fileError) {
+        console.error("Fehler beim Löschen von Dateien:", fileError);
+      }
+    });
+
+    // Lösche die Fakultät aus der Datenbank (zusammen mit ihren H5P-Inhalten)
+    const result = await Faculty.destroy({ where: { id } });
+
+    if (result) {
+      res
+        .status(200)
+        .send("Fachbereich und zugehörige H5P-Inhalte erfolgreich entfernt.");
+    } else {
+      res.status(404).send("Fachbereich nicht gefunden.");
+    }
+  } catch (error) {
+    console.error("Fehler beim Entfernen des Fachbereichs:", error);
+    res.status(500).send("Fehler beim Entfernen des Fachbereichs.");
+  }
+});
+
 export default router;
