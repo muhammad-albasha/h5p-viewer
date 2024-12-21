@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import FacultyMenu from "./FacultyMenu"; // Import der Fakultät-Menü-Komponente
 import PlayH5p from "./PlayH5p";
 import Popup from "./Popup";
 
@@ -69,6 +70,9 @@ const FacultyDetail = () => {
 
   return (
     <>
+      {/* Fakultät-Menü */}
+      <FacultyMenu />
+
       <h2 className="facName">{decodeURIComponent(name)}</h2>
 
       <div className="filter">

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
@@ -78,9 +79,7 @@ export default function App() {
               {isAuthenticated ? (
                 <>
                   <Link to="/admin">Verwaltung</Link>
-                  <button className="contrast-toggle" onClick={handleLogout}>
-                    Abmelden
-                  </button>
+                  <a onClick={handleLogout}>Abmelden</a>
                 </>
               ) : (
                 <Link to="/Login">Anmelden</Link>
@@ -95,7 +94,7 @@ export default function App() {
             path="/"
             element={
               <>
-                <FacultyMenu /> {/* Nur auf der Startseite */}
+                <FacultyMenu />
                 <PlayH5pGrid />
               </>
             }

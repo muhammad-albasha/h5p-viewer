@@ -57,7 +57,7 @@ body {
   align-items: center;
   justify-content: center;
   flex-grow: 1;
-  margin-right: 240px;
+  margin-right: 18%;
   margin-top: 30px;
   gap: 20px;
   margin-bottom: 30px;
@@ -69,15 +69,18 @@ body {
   font-weight: bold;
   font-size: 20px;
   line-height: 1.5;
+  cursor: pointer;
 }
 
 .nav button {
   background-color: transparent;
   color: white;
+  text-decoration: none;
   font-weight: bold;
   border: none;
   cursor: pointer;
   font-size: 20px;
+  line-height: 1.5;
   transition: background-color 0.3s ease;
 }
 
@@ -127,8 +130,10 @@ body {
 }
 
 .about-section {
-  margin: 0 280px;
-  width: 60%;
+  position: relative;
+  top: 200px;
+  margin: 0 12%;
+  width: 70%;
   padding: 50px;
   background-color: #f9f9f9;
   text-align: justify;
@@ -146,14 +151,16 @@ body {
 }
 
 .container {
+  position: relative;
+  top: 150px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   justify-content: flex-start;
-  margin-left: 286px;
+  margin-left: 20%;
   padding: 10px;
-  max-width: calc(67% - 100px);
-  max-height: 600px;
+  max-width: calc(66% - 105px);
+  max-height: 6container00px;
   overflow-y: auto;
   background-color: #ffffff;
   border-radius: 8px;
@@ -193,7 +200,7 @@ body {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  position: relative;
+  /* position: relative; */
   overflow: hidden;
   color: white;
   font-weight: bold;
@@ -258,6 +265,7 @@ body {
 
 .category-filter {
   margin: 10px;
+  margin-top: 20px;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -338,6 +346,8 @@ body {
 }
 
 .login-container {
+  position: relative;
+  top: 150px;
   background: #ffffff;
   padding: 20px 30px;
   border-radius: 12px;
@@ -414,10 +424,10 @@ body {
 }
 
 .faculty-menu {
-  position: absolute;
-  top: 145px;
+  position: fixed;
+  top: 17%;
   left: 0;
-  height: 75%;
+  height: 76%;
   width: 250px;
   background-color: #ffffff;
   padding: 15px;
@@ -478,19 +488,22 @@ body {
 }
 
 .facName {
+  position: relative;
+  top: 150px;
   font-size: 24px;
   font-weight: bold;
   color: #95b73c;
 }
 
 .filter {
-  position: absolute;
+  position: fixed;
+  margin-top: 1px;
   right: 0;
-  top: 145px;
+  top: 17%;
   width: 250px;
   background-color: #ffffff;
   padding: 15px;
-  height: 75%;
+  height: 76%;
   overflow-y: auto;
   scrollbar-color: #95b73c #f4f4f4;
   scrollbar-width: thin;
@@ -514,12 +527,16 @@ body {
 }
 
 .top-banner {
+  position: fixed;
+  width: 100%;
+  top: 0;
   background-color: #f4f4f4;
   color: #333;
   padding: 5px 5px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  z-index: 1000;
 }
 
 .contrast-toggle {
@@ -672,6 +689,8 @@ body {
 }
 
 .admin-panel {
+  position: relative;
+  top: 150px;
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -900,6 +919,9 @@ body {
 
 /* Banner */
 .banner {
+  top: 3.6%;
+  position: fixed;
+  width: 100%;
   background-color: #95b73c;
   color: white;
   padding: 10px;
@@ -907,10 +929,12 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 1000;
 }
 
 .banner-top {
   display: flex;
+  z-index: 1000;
   align-items: center;
   justify-content: space-between;
   width: 100%;
@@ -925,52 +949,6 @@ body {
 
 .banner-logo img {
   height: 80px;
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin: 10px 0;
-  margin-right: 250px;
-}
-
-.nav a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 18px;
-  line-height: 1.5;
-}
-
-.nav button {
-  background-color: transparent;
-  color: white;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  transition: background-color 0.3s ease;
-}
-
-.nav button:hover,
-.nav a:hover {
-  text-decoration: underline;
-}
-
-.container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin: 10px;
-  padding: 10px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  scrollbar-color: #95b73c #f4f4f4;
-  scrollbar-width: thin;
 }
 
 .container::-webkit-scrollbar {
@@ -988,17 +966,5 @@ body {
   border-radius: 8px;
 }
 
-.play-h5p-box {
-  flex: 0 1 calc(30% - 12px);
-  aspect-ratio: 1;
-  box-sizing: border-box;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.5);
+@media (max-width: 1200px) {
 }
