@@ -9,7 +9,6 @@ const AddH5PForm = ({ onAdd }) => {
   const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
-    // Fakultäten laden
     const fetchFaculties = async () => {
       try {
         const response = await fetch(
@@ -28,11 +27,6 @@ const AddH5PForm = ({ onAdd }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!h5pFile || !imageFile || !selectedFaculty || !category || !info) {
-      alert("Bitte füllen Sie alle Felder aus.");
-      return;
-    }
-
     const formData = new FormData();
     formData.append("h5pFile", h5pFile);
     formData.append("imageFile", imageFile);
@@ -46,13 +40,15 @@ const AddH5PForm = ({ onAdd }) => {
         {
           method: "POST",
           body: formData,
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
         }
       );
 
       if (response.ok) {
         const newContent = await response.json();
-        onAdd(newContent); // Neuer Inhalt zur Liste hinzufügen
-        // Felder zurücksetzen
+        onAdd(newContent);
         setSelectedFaculty("");
         setCategory("");
         setInfo("");

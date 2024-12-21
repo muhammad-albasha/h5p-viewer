@@ -34,7 +34,7 @@ const FacultyDetail = () => {
 
         // H5P-Daten für die Fakultät abrufen
         const h5pResponse = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/h5pData?facultyId=${matchedFaculty.id}`
+          `${process.env.REACT_APP_API_URL}/api/h5pContent?facultyId=${matchedFaculty.id}`
         );
         if (!h5pResponse.ok) {
           throw new Error(`HTTP-Fehler: ${h5pResponse.status}`);
@@ -102,7 +102,7 @@ const FacultyDetail = () => {
             className="play-h5p-box"
             key={item.id}
             style={{
-              backgroundImage: `url(${process.env.PUBLIC_URL}/images/${item.previewImage})`,
+              backgroundImage: `url(${item.previewImage})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}

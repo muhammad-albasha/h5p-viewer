@@ -11,7 +11,7 @@ const PlayH5pGrid = () => {
 
   // Fetch h5pData from the backend
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/h5pData`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/h5pContent`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch H5P data");
@@ -48,7 +48,7 @@ const PlayH5pGrid = () => {
             className="play-h5p-box"
             key={item.id}
             style={{
-              backgroundImage: `url(/images/${item.previewImage})`,
+              backgroundImage: `url(${item.previewImage})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}

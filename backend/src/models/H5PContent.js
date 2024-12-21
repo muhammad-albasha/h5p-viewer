@@ -13,6 +13,7 @@ const H5PContent = sequelize.define("H5PContent", {
   },
   category: {
     type: DataTypes.STRING,
+    allowNull: true,
   },
   previewImage: {
     type: DataTypes.STRING,
