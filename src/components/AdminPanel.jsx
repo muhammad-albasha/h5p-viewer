@@ -168,6 +168,7 @@ const AdminPanel = () => {
 
       {isRemoveFacultyVisible && (
         <div className="faculty-list">
+          <h3>Fachbereich</h3>
           <table className="data-table">
             <thead>
               <tr>
@@ -197,7 +198,7 @@ const AdminPanel = () => {
       {/* Entfernen von H5P-Inhalten */}
       {isRemoveH5PVisible && (
         <div className="h5p-list">
-          <h3>H5P-entfernen</h3>
+          <h3>H5P</h3>
           <table className="data-table">
             <thead>
               <tr>

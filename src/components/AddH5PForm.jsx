@@ -105,14 +105,14 @@ const AddH5PForm = ({ onAdd }) => {
       )}
 
       <div>
-        <label>Fakultät:</label>
+        <label>Fachbereich:</label>
         <select
           value={selectedFaculty}
           onChange={(e) => setSelectedFaculty(e.target.value)}
           required
         >
           <option value="" disabled>
-            Fakultät auswählen
+            Fachbereich auswählen
           </option>
           {faculties.map((faculty) => (
             <option key={faculty.id} value={faculty.id}>
