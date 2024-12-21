@@ -68,7 +68,6 @@ export default function App() {
 
         <header className={`banner ${isContrast ? "contrast-banner" : ""}`}>
           <div className="banner-top">
-            <FacultyMenu />
             <p className="banner-title">H5P-Viewer</p>
             <div className="banner-logo">
               <img src={logo} alt="Logo" />
@@ -92,7 +91,15 @@ export default function App() {
 
         {/* Routen */}
         <Routes>
-          <Route path="/" element={<PlayH5pGrid />} />
+          <Route
+            path="/"
+            element={
+              <>
+                <FacultyMenu /> {/* Nur auf der Startseite */}
+                <PlayH5pGrid />
+              </>
+            }
+          />
           <Route path="/about" element={<About />} />
           <Route
             path="/Login"
