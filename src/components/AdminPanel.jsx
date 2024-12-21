@@ -10,7 +10,7 @@ const AdminPanel = () => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    const token = localStorage.getItem("token"); // Token aus dem lokalen Speicher abrufen
+    const token = localStorage.getItem("token");
 
     if (!token) {
       setNotification("Nicht authentifiziert. Bitte melden Sie sich an.");
@@ -22,9 +22,7 @@ const AdminPanel = () => {
         `${process.env.REACT_APP_API_URL}/api/faculties`,
         {
           method: "POST",
-          body: JSON.stringify({
-            name: formData.get("name"),
-          }),
+          body: JSON.stringify({ name: formData.get("name") }),
           headers: {
             "Content-Type": "application/json",
             Authorization: token,
@@ -60,34 +58,52 @@ const AdminPanel = () => {
           </button>
         </div>
       )}
+
+      {/* Navigationsbereich */}
       <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
         <button
-          onClick={() => setIsH5PFormVisible((prev) => !prev)}
+          onClick={() => {
+            setIsH5PFormVisible(true);
+            setIsFacultyFormVisible(false);
+          }}
           className="admin-button"
         >
-          {isH5PFormVisible ? "Abbrechen" : "Neu H5P-Inhalt"}
+          Neu H5P-Inhalt
         </button>
         <button
-          onClick={() => setIsFacultyFormVisible((prev) => !prev)}
+          onClick={() => {
+            setIsFacultyFormVisible(true);
+            setIsH5PFormVisible(false);
+          }}
           className="admin-button"
         >
-          {isFacultyFormVisible ? "Abbrechen" : "Neu Fachbereich"}
+          Neu Fachbereich
         </button>
       </div>
+
+      {/* Formularbereiche */}
+      {isH5PFormVisible && (
+        <AddH5PForm
+          onAdd={(newContent) => {
+            console.log(newContent);
+            setNotification("H5P-Inhalt erfolgreich hinzugefügt!");
+            setIsH5PFormVisible(false); // Nach Abschluss schließen
+          }}
+        />
+      )}
+
       {isFacultyFormVisible && (
         <form onSubmit={handleFacultySubmit} className="add-faculty-form">
           <div>
-            <label htmlFor="faculty-name">Fachbereich: </label>
-            <br /> <br />
+            <label htmlFor="faculty-name">Fachbereich:</label>
+            <br />
+            <br />
             <input type="text" name="name" id="faculty-name" required />
           </div>
           <button type="submit" className="admin-button">
             Hinzufügen
           </button>
         </form>
-      )}
-      {isH5PFormVisible && (
-        <AddH5PForm onAdd={(newContent) => console.log(newContent)} />
       )}
     </div>
   );

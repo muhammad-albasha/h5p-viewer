@@ -854,3 +854,20 @@ body {
 .faculty-list li:last-child {
   border-bottom: none;
 }
+
+.progress-bar {
+  width: 100%;
+  background-color: #f3f3f3;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress {
+  background-color: #95b73c;
+  height: 100%;
+  transition: width 0.2s ease;
+}

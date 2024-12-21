@@ -7,6 +7,9 @@ const AddH5PForm = ({ onAdd }) => {
   const [info, setInfo] = useState("");
   const [h5pFile, setH5pFile] = useState(null);
   const [imageFile, setImageFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0); // Fortschritt der Animation
+  const [notification, setNotification] = useState("");
 
   useEffect(() => {
     const fetchFaculties = async () => {
@@ -24,8 +27,24 @@ const AddH5PForm = ({ onAdd }) => {
     fetchFaculties();
   }, []);
 
+  const animateProgress = () => {
+    setProgress(0);
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        const nextProgress = prev + 5; // Fortschritt um 5% erhöhen
+        if (nextProgress >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return nextProgress;
+      });
+    }, 200); // Alle 200 ms aktualisieren
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setUploading(true);
+    animateProgress();
 
     const formData = new FormData();
     formData.append("h5pFile", h5pFile);
@@ -49,21 +68,42 @@ const AddH5PForm = ({ onAdd }) => {
       if (response.ok) {
         const newContent = await response.json();
         onAdd(newContent);
+        setNotification("H5P-Inhalt erfolgreich hinzugefügt!");
+
+        // Felder zurücksetzen
         setSelectedFaculty("");
         setCategory("");
         setInfo("");
         setH5pFile(null);
         setImageFile(null);
+        e.target.reset();
       } else {
-        console.error("Fehler beim Hinzufügen des H5P-Inhalts");
+        const errorMessage = await response.text();
+        setNotification(`Fehler: ${errorMessage}`);
       }
     } catch (error) {
       console.error("Fehler beim Hochladen:", error);
+      setNotification("Fehler beim Hinzufügen des H5P-Inhalts.");
+    } finally {
+      setUploading(false);
+      setProgress(100); // Fortschritt auf 100% setzen
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="add-h5p-form">
+      {notification && (
+        <div className="notification">
+          {notification}
+          <button
+            onClick={() => setNotification("")}
+            className="close-notification"
+          >
+            &times;
+          </button>
+        </div>
+      )}
+
       <div>
         <label>Fakultät:</label>
         <select
@@ -116,7 +156,16 @@ const AddH5PForm = ({ onAdd }) => {
           required
         ></textarea>
       </div>
-      <button type="submit">Hinzufügen</button>
+
+      <button type="submit" disabled={uploading}>
+        {uploading ? "Hochladen..." : "Hinzufügen"}
+      </button>
+      {/* Prozessleiste */}
+      {uploading && (
+        <div className="progress-bar">
+          <div className="progress" style={{ width: `${progress}%` }}></div>
+        </div>
+      )}
     </form>
   );
 };
