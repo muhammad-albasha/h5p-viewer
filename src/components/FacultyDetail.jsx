@@ -12,9 +12,9 @@ const FacultyDetail = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   useEffect(() => {
-    const fetchFacultyData = async () => {
+    const fetchH5PDataForFaculty = async () => {
       try {
-        // Abrufen der Fakultäten
+        // Abrufen der Fakultät, um die ID zu ermitteln
         const facultyResponse = await fetch(
           `${process.env.REACT_APP_API_URL}/api/faculties`
         );
@@ -42,11 +42,11 @@ const FacultyDetail = () => {
         const h5pData = await h5pResponse.json();
         setH5pData(h5pData);
       } catch (error) {
-        console.error("Fehler beim Abrufen der Daten:", error);
+        console.error("Fehler beim Abrufen der H5P-Daten:", error);
       }
     };
 
-    fetchFacultyData();
+    fetchH5PDataForFaculty();
   }, [name]);
 
   const categories = ["All", ...new Set(h5pData.map((item) => item.category))];
@@ -97,25 +97,29 @@ const FacultyDetail = () => {
       </div>
 
       <div className="container">
-        {filteredData.map((item) => (
-          <div
-            className="play-h5p-box"
-            key={item.id}
-            style={{
-              backgroundImage: `url(${item.previewImage})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-            onClick={() =>
-              handleBoxClick(
-                <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
-                item.info
-              )
-            }
-          >
-            <h3>{item.name}</h3>
-          </div>
-        ))}
+        {filteredData.length > 0 ? (
+          filteredData.map((item) => (
+            <div
+              className="play-h5p-box"
+              key={item.id}
+              style={{
+                backgroundImage: `url(${item.previewImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+              onClick={() =>
+                handleBoxClick(
+                  <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
+                  item.info
+                )
+              }
+            >
+              <h3>{item.name}</h3>
+            </div>
+          ))
+        ) : (
+          <p>Keine H5P-Inhalte für diese Fakultät verfügbar.</p>
+        )}
       </div>
 
       {isPopupOpen && (

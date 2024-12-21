@@ -33,7 +33,11 @@ router.get("/faculties-with-h5p", async (req, res) => {
 
 router.get("/h5pContent", async (req, res) => {
   try {
-    const h5pData = await H5PContent.findAll();
+    const { facultyId } = req.query;
+
+    // H5P-Daten basierend auf facultyId filtern, falls vorhanden
+    const whereCondition = facultyId ? { facultyId } : {};
+    const h5pData = await H5PContent.findAll({ where: whereCondition });
 
     const baseUrl = `${req.protocol}://${req.get("host")}`;
     const formattedData = h5pData.map((item) => ({
