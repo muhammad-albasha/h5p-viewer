@@ -5,7 +5,6 @@ const AdminPanel = () => {
   const [isH5PFormVisible, setIsH5PFormVisible] = useState(false);
   const [isFacultyFormVisible, setIsFacultyFormVisible] = useState(false);
   const [isRemoveFacultyVisible, setIsRemoveFacultyVisible] = useState(false);
-  const [isRemoveH5PVisible, setIsRemoveH5PVisible] = useState(false);
   const [notification, setNotification] = useState("");
   const [faculties, setFaculties] = useState([]);
   const [h5pContents, setH5pContents] = useState([]);
@@ -37,6 +36,42 @@ const AdminPanel = () => {
     fetchData();
   }, []);
 
+  const handleAddFaculty = async (e) => {
+    e.preventDefault();
+    const facultyName = e.target.name.value;
+
+    if (!facultyName.trim()) {
+      setNotification("Bitte geben Sie einen gültigen Namen ein.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/faculties`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+          body: JSON.stringify({ name: facultyName }),
+        }
+      );
+
+      if (response.ok) {
+        const newFaculty = await response.json();
+        setFaculties([...faculties, newFaculty]);
+        setNotification("Fakultät erfolgreich hinzugefügt!");
+        e.target.reset();
+        setIsFacultyFormVisible(false);
+      } else {
+        setNotification("Fehler beim Hinzufügen der Fakultät.");
+      }
+    } catch (error) {
+      setNotification("Netzwerkfehler beim Hinzufügen der Fakultät.");
+    }
+  };
+
   const handleRemoveFaculty = async (id) => {
     try {
       const response = await fetch(
@@ -48,7 +83,7 @@ const AdminPanel = () => {
       );
 
       if (response.ok) {
-        setNotification("Fachbereich erfolgreich entfernt!");
+        setNotification("Fakultät erfolgreich entfernt!");
         setFaculties(faculties.filter((faculty) => faculty.id !== id));
       } else {
         setNotification("Fehler beim Entfernen des Fachbereichs.");
@@ -58,32 +93,10 @@ const AdminPanel = () => {
     }
   };
 
-  const handleRemoveH5P = async (id) => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/h5pContent/${id}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: localStorage.getItem("token") },
-        }
-      );
-
-      if (response.ok) {
-        setNotification("H5P-Inhalt erfolgreich entfernt!");
-        setH5pContents(h5pContents.filter((content) => content.id !== id));
-      } else {
-        setNotification("Fehler beim Entfernen des H5P-Inhalts.");
-      }
-    } catch (error) {
-      setNotification("Fehler beim Entfernen des H5P-Inhalts.");
-    }
-  };
-
   const resetAllSections = () => {
     setIsH5PFormVisible(false);
     setIsFacultyFormVisible(false);
     setIsRemoveFacultyVisible(false);
-    setIsRemoveH5PVisible(false);
   };
 
   return (
@@ -101,7 +114,7 @@ const AdminPanel = () => {
         </div>
       )}
 
-      {/* Navigationsbereich */}
+      {/* Navigation */}
       <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
         <button
           onClick={() => {
@@ -130,18 +143,9 @@ const AdminPanel = () => {
         >
           Fachbereich entfernen
         </button>
-        <button
-          onClick={() => {
-            resetAllSections();
-            setIsRemoveH5PVisible(!isRemoveH5PVisible);
-          }}
-          className="admin-button"
-        >
-          H5P-Inhalt entfernen
-        </button>
       </div>
 
-      {/* Formularbereiche */}
+      {/* Formulare */}
       {isH5PFormVisible && (
         <AddH5PForm
           onAdd={(newContent) => {
@@ -153,10 +157,9 @@ const AdminPanel = () => {
       )}
 
       {isFacultyFormVisible && (
-        <form className="add-faculty-form">
+        <form className="add-faculty-form" onSubmit={handleAddFaculty}>
           <div>
             <label htmlFor="faculty-name">Fachbereich:</label>
-            <br />
             <br />
             <input type="text" name="name" id="faculty-name" required />
           </div>
@@ -166,70 +169,23 @@ const AdminPanel = () => {
         </form>
       )}
 
+      {/* Entfernen von Fakultäten */}
       {isRemoveFacultyVisible && (
         <div className="faculty-list">
-          <h3>Fachbereich</h3>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Aktionen</th>
-              </tr>
-            </thead>
-            <tbody>
-              {faculties.map((faculty) => (
-                <tr key={faculty.id}>
-                  <td>{faculty.name}</td>
-                  <td>
-                    <button
-                      onClick={() => handleRemoveFaculty(faculty.id)}
-                      className="remove-button"
-                    >
-                      Entfernen
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Entfernen von H5P-Inhalten */}
-      {isRemoveH5PVisible && (
-        <div className="h5p-list">
-          <h3>H5P</h3>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Kategorie</th>
-                <th>Fakultät</th>
-                <th>Aktionen</th>
-              </tr>
-            </thead>
-            <tbody>
-              {h5pContents.map((content) => (
-                <tr key={content.id}>
-                  <td>{content.name}</td>
-                  <td>{content.category || "Keine Kategorie"}</td>
-                  <td>
-                    {faculties.find(
-                      (faculty) => faculty.id === content.facultyId
-                    )?.name || "Unbekannt"}
-                  </td>
-                  <td>
-                    <button
-                      onClick={() => handleRemoveH5P(content.id)}
-                      className="remove-button"
-                    >
-                      Entfernen
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <h3>Fachbereiche</h3>
+          <ul>
+            {faculties.map((faculty) => (
+              <li key={faculty.id}>
+                {faculty.name}
+                <button
+                  onClick={() => handleRemoveFaculty(faculty.id)}
+                  className="remove-button"
+                >
+                  Entfernen
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
