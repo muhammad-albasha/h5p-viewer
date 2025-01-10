@@ -8,6 +8,7 @@ const AdminPanel = () => {
   const [notification, setNotification] = useState("");
   const [faculties, setFaculties] = useState([]);
   const [h5pContents, setH5pContents] = useState([]);
+  const [isRemoveH5PVisible, setIsRemoveH5PVisible] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -93,10 +94,32 @@ const AdminPanel = () => {
     }
   };
 
+  const handleRemoveH5P = async (id) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/h5pContent/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: localStorage.getItem("token") },
+        }
+      );
+
+      if (response.ok) {
+        setNotification("H5P-Inhalt erfolgreich entfernt!");
+        setH5pContents(h5pContents.filter((content) => content.id !== id));
+      } else {
+        setNotification("Fehler beim Entfernen des H5P-Inhalts.");
+      }
+    } catch (error) {
+      setNotification("Fehler beim Entfernen des H5P-Inhalts.");
+    }
+  };
+
   const resetAllSections = () => {
     setIsH5PFormVisible(false);
     setIsFacultyFormVisible(false);
     setIsRemoveFacultyVisible(false);
+    setIsRemoveH5PVisible(false);
   };
 
   return (
@@ -143,6 +166,15 @@ const AdminPanel = () => {
         >
           Fachbereich entfernen
         </button>
+        <button
+          onClick={() => {
+            resetAllSections();
+            setIsRemoveH5PVisible(!isRemoveH5PVisible);
+          }}
+          className="admin-button"
+        >
+          H5P-Inhalt entfernen
+        </button>
       </div>
 
       {/* Formulare */}
@@ -186,6 +218,43 @@ const AdminPanel = () => {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+      {/* Entfernen von H5P-Inhalten */}
+      {isRemoveH5PVisible && (
+        <div className="h5p-list">
+          <h3>H5P</h3>
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Kategorie</th>
+                <th>Fakultät</th>
+                <th>Aktionen</th>
+              </tr>
+            </thead>
+            <tbody>
+              {h5pContents.map((content) => (
+                <tr key={content.id}>
+                  <td>{content.name}</td>
+                  <td>{content.category || "Keine Kategorie"}</td>
+                  <td>
+                    {faculties.find(
+                      (faculty) => faculty.id === content.facultyId
+                    )?.name || "Unbekannt"}
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => handleRemoveH5P(content.id)}
+                      className="remove-button"
+                    >
+                      Entfernen
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
