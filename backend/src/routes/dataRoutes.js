@@ -242,4 +242,45 @@ router.delete("/faculties/:id", authenticateToken, async (req, res) => {
   }
 });
 
+// PUT /faculties/:id
+router.put("/faculties/:id", authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ error: "Name ist erforderlich" });
+  }
+
+  try {
+    const faculty = await Faculty.findByPk(id);
+    if (!faculty) return res.status(404).json({ error: "Nicht gefunden" });
+
+    faculty.name = name;
+    await faculty.save();
+    res.status(200).json(faculty);
+  } catch (error) {
+    res.status(500).json({ error: "Interner Serverfehler" });
+  }
+});
+
+// PUT /h5pContent/:id
+router.put("/h5pContent/:id", authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { name, category, info } = req.body;
+
+  try {
+    const content = await H5PContent.findByPk(id);
+    if (!content) return res.status(404).json({ error: "Nicht gefunden" });
+
+    if (name) content.name = name;
+    if (category) content.category = category;
+    if (info) content.info = info;
+
+    await content.save();
+    res.status(200).json(content);
+  } catch (error) {
+    res.status(500).json({ error: "Interner Serverfehler" });
+  }
+});
+
 export default router;

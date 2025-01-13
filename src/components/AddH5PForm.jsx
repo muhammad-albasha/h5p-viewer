@@ -92,17 +92,7 @@ const AddH5PForm = ({ onAdd }) => {
 
   return (
     <form onSubmit={handleSubmit} className="add-h5p-form">
-      {notification && (
-        <div className="notification">
-          {notification}
-          <button
-            onClick={() => setNotification("")}
-            className="close-notification"
-          >
-            &times;
-          </button>
-        </div>
-      )}
+      {notification && <div className="notification">{notification}</div>}
 
       <div>
         <label>Fachbereich:</label>
