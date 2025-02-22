@@ -70,30 +70,46 @@ const PlayH5pGrid = () => {
       </div>
 
       {/* Inhalts-Grid */}
-      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        {filteredData.map((item) => (
-          <div
-            key={item.id}
-            className="col"
-            onClick={() =>
-              handleBoxClick(
-                <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
-                item.info
-              )
-            }
-            style={{
-              backgroundImage: `url(${item.previewImage})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              cursor: "pointer",
-              minHeight: "200px",
-            }}
-          >
-            <div className="h-100 d-flex align-items-end p-3 bg-dark bg-opacity-50 text-white">
-              <h5 className="mb-0">{item.name}</h5>
-            </div>
+      {/* Scrollbarer Inhaltsbereich */}
+      <div className="row flex-grow-1 overflow-auto">
+        <div className="col-12">
+          <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3">
+            {filteredData.map((item) => (
+              <div key={item.id} className="col" style={{ minWidth: "150px" }}>
+                <div
+                  className="card h-100 shadow-sm"
+                  onClick={() =>
+                    handleBoxClick(
+                      <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
+                      item.info
+                    )
+                  }
+                >
+                  <div
+                    className="card-img-top"
+                    style={{
+                      height: "150px",
+                      backgroundImage: `url(${item.previewImage})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
+                  >
+                    <div className="image-overlay" />
+                  </div>
+                  <div className="card-body p-3">
+                    <h5 className="card-title fs-6 mb-2">{item.name}</h5>
+                    <p className="card-text text-muted small mb-2">
+                      {item.info.substring(0, 50)}...
+                    </p>
+                    <button className="btn btn-link p-0 small">
+                      Mehr erfahren →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
 
       {isPopupOpen && (

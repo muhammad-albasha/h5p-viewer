@@ -1,77 +1,71 @@
-// Popup.js
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 const Popup = ({ content, onClose, infoText }) => {
-  const fullscreenContainer = useRef(null);
   const h5pContainer = useRef(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const handleFullscreenH5P = () => {
-    if (h5pContainer.current.requestFullscreen) {
-      h5pContainer.current.requestFullscreen();
-    } else if (h5pContainer.current.mozRequestFullScreen) {
-      h5pContainer.current.mozRequestFullScreen();
-    } else if (h5pContainer.current.webkitRequestFullscreen) {
-      h5pContainer.current.webkitRequestFullscreen();
-    } else if (h5pContainer.current.msRequestFullscreen) {
-      h5pContainer.current.msRequestFullscreen();
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      if (h5pContainer.current.requestFullscreen) {
+        h5pContainer.current.requestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
     }
   };
 
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () =>
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, []);
+
   return (
     <div className="popup-overlay" onClick={onClose}>
-      <div
-        className="popup-content"
-        ref={fullscreenContainer}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button className="close-btn" onClick={onClose} title="Schließen">
+      <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+        <button className="close-btn" onClick={onClose} aria-label="Schließen">
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="feather feather-x"
           >
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
+            <path d="M18 6L6 18M6 6l12 12" />
           </svg>
         </button>
 
         <div className="popup-layout">
-          <div className="popup-h5p-content" ref={h5pContainer}>
+          <div className="h5p-wrapper" ref={h5pContainer}>
             {content}
           </div>
-          <div className="popup-info">
-            <h3>Information</h3>
-            <p>{infoText}</p>
+          <div className="info-panel">
+            <h3>Infos</h3>
+            <div className="info-content">
+              <p>{infoText}</p>
+            </div>
             <button
-              className="fullscreen-btn"
-              onClick={handleFullscreenH5P}
-              title="H5P im Vollbildmodus anzeigen"
+              className={`fullscreen-toggle ${isFullscreen ? "active" : ""}`}
+              onClick={toggleFullscreen}
             >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="feather feather-maximize"
               >
-                <path d="M8 3H5a2 2 0 0 0-2 2v3"></path>
-                <path d="M16 3h3a2 2 0 0 1 2 2v3"></path>
-                <path d="M8 21H5a2 2 0 0 1-2-2v-3"></path>
-                <path d="M16 21h3a2 2 0 0 0 2-2v-3"></path>
+                {isFullscreen ? (
+                  <path d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-5l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                ) : (
+                  <path d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-5l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                )}
               </svg>
-              Vollbildmodus
+              {isFullscreen ? "Vollbild beenden" : "Vollbild aktivieren"}
             </button>
           </div>
         </div>

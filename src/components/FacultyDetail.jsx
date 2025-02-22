@@ -56,72 +56,92 @@ const FacultyDetail = () => {
   };
 
   return (
-    <div className="container-fluid">
-      {/* Header-Bereich mit Titel und Suche */}
-      <div className="row align-items-center mb-4">
-        <div className="col-md-8">
-          <h2 className="mb-3 mb-md-0">{decodeURIComponent(name)}</h2>
-        </div>
-      </div>
-
-      {/* Such- und Filterbereich */}
-      <div className="row mb-4">
-        <div className="col-12 col-md-8 mb-3 mb-md-0">
-          <input
-            type="text"
-            placeholder="Suchen..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="form-control"
-          />
-        </div>
-      </div>
-
-      <div className="row mb-4">
+    <div className="container-fluid vh-100 d-flex flex-column">
+      {/* Header und Filterbereich */}
+      <div className="row flex-shrink-0">
         <div className="col-12">
-          <div className="d-flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <button
-                key={category}
-                className={`btn btn-sm ${
-                  selectedCategory === category
-                    ? "btn-primary"
-                    : "btn-outline-primary"
-                }`}
-                onClick={() => setSelectedCategory(category)}
-              >
-                {category}
-              </button>
+          <div className="row justify-content-center mb-4">
+            <div className="col-md-8 text-center">
+              <h2>{decodeURIComponent(name)}</h2>
+            </div>
+          </div>
+
+          <div className="row justify-content-center mb-4">
+            <div className="col-md-8">
+              <input
+                type="text"
+                placeholder="Suchen..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="form-control mx-auto"
+                style={{ maxWidth: "600px" }}
+              />
+            </div>
+          </div>
+
+          <div className="row justify-content-center mb-4">
+            <div className="col-md-10">
+              <div className="d-flex flex-wrap justify-content-center gap-2">
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    className={`btn btn-sm ${
+                      selectedCategory === category
+                        ? "btn-primary"
+                        : "btn-outline-primary"
+                    }`}
+                    onClick={() => setSelectedCategory(category)}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Scrollbarer Grid-Bereich */}
+      <div className="row flex-grow-1 overflow-hidden mb-5">
+        <div className="col-12 h-100">
+          <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 g-4 h-100">
+            {filteredData.map((item) => (
+              <div key={item.id} className="col">
+                <div
+                  className="card h-100 shadow-sm"
+                  onClick={() =>
+                    handleBoxClick(
+                      <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
+                      item.info
+                    )
+                  }
+                >
+                  <div
+                    className="card-img-top"
+                    style={{
+                      height: "200px",
+                      backgroundImage: `url(${item.previewImage})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      position: "relative",
+                    }}
+                  >
+                    <div className="image-overlay" />
+                  </div>
+                  <div className="card-body">
+                    <h5 className="card-title">{item.name}</h5>
+                    <div className="card-text small text-muted">
+                      {item.info.substring(0, 80)}...
+                    </div>
+                    <button className="btn btn-link p-0 small">
+                      Mehr erfahren →
+                    </button>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
-      </div>
-
-      {/* Inhalts-Grid */}
-      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        {filteredData.map((item) => (
-          <div
-            key={item.id}
-            className="col"
-            onClick={() =>
-              handleBoxClick(
-                <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
-                item.info
-              )
-            }
-            style={{
-              backgroundImage: `url(${item.previewImage})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              cursor: "pointer",
-              minHeight: "200px",
-            }}
-          >
-            <div className="h-100 d-flex align-items-end p-3 bg-dark bg-opacity-50 text-white">
-              <h5 className="mb-0">{item.name}</h5>
-            </div>
-          </div>
-        ))}
       </div>
 
       {isPopupOpen && (

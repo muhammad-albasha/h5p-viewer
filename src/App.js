@@ -60,7 +60,7 @@ export default function App() {
         <div
           className="bg-white d-flex justify-content-end align-items-center"
           style={{
-            width: "calc(100% - 70px)",
+            width: "calc(100% - 40px)",
             margin: 0,
             padding: "0 1rem",
           }}
@@ -98,7 +98,7 @@ export default function App() {
           className="navbar navbar-expand-lg navbar-dark shadow-sm p-2"
           style={{
             backgroundColor: "#89ba17",
-            width: "calc(100% - 70px)",
+            width: "calc(100% - 40px)",
             margin: 0,
           }}
         >
@@ -179,7 +179,7 @@ export default function App() {
           className="d-flex justify-content-start align-items-center"
           style={{
             backgroundColor: "#e0e0e0",
-            width: "calc(100% - 70px)",
+            width: "calc(100% - 40px)",
             margin: 0,
             padding: "0.3rem 1rem",
           }}
@@ -196,7 +196,11 @@ export default function App() {
         <div className="flex-grow-1 d-flex flex-column">
           <div
             className="mt-4 mx-auto"
-            style={{ maxWidth: "1100px", width: "100%" }}
+            style={{
+              maxWidth: "1400px",
+              width: "100%",
+              marginBottom: "5rem", // Hier den Abstand hinzufügen
+            }}
           >
             <Routes>
               <Route
