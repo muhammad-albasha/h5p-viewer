@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import FacultyMenu from "./FacultyMenu"; // Import der Fakultät-Menü-Komponente
 import PlayH5p from "./PlayH5p";
 import Popup from "./Popup";
 
 const FacultyDetail = () => {
-  const { name } = useParams(); // Fakultätsname aus der URL
+  const { name } = useParams();
   const [h5pData, setH5pData] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentContent, setCurrentContent] = useState(null);
@@ -15,35 +14,23 @@ const FacultyDetail = () => {
   useEffect(() => {
     const fetchH5PDataForFaculty = async () => {
       try {
-        // Abrufen der Fakultät, um die ID zu ermitteln
         const facultyResponse = await fetch(
           `${process.env.REACT_APP_API_URL}/api/faculties`
         );
-        if (!facultyResponse.ok) {
-          throw new Error(`HTTP-Fehler: ${facultyResponse.status}`);
-        }
         const faculties = await facultyResponse.json();
-
-        // Passende Fakultät anhand des Namens finden
         const matchedFaculty = faculties.find(
           (f) => f.name === decodeURIComponent(name)
         );
-        if (!matchedFaculty) {
-          console.error("Keine passende Fakultät gefunden");
-          return;
-        }
 
-        // H5P-Daten für die Fakultät abrufen
-        const h5pResponse = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/h5pContent?facultyId=${matchedFaculty.id}`
-        );
-        if (!h5pResponse.ok) {
-          throw new Error(`HTTP-Fehler: ${h5pResponse.status}`);
+        if (matchedFaculty) {
+          const h5pResponse = await fetch(
+            `${process.env.REACT_APP_API_URL}/api/h5pContent?facultyId=${matchedFaculty.id}`
+          );
+          const h5pData = await h5pResponse.json();
+          setH5pData(h5pData);
         }
-        const h5pData = await h5pResponse.json();
-        setH5pData(h5pData);
       } catch (error) {
-        console.error("Fehler beim Abrufen der H5P-Daten:", error);
+        console.error("Fehler beim Abrufen der Daten:", error);
       }
     };
 
@@ -69,61 +56,72 @@ const FacultyDetail = () => {
   };
 
   return (
-    <>
-      {/* Fakultät-Menü */}
-      <FacultyMenu />
-
-      <h2 className="facName">{decodeURIComponent(name)}</h2>
-
-      <div className="filter">
-        <div className="filter-container">
-          <input
-            type="text"
-            placeholder="Suchen"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        <div className="category-filter">
-          {categories.map((category) => (
-            <button
-              key={category}
-              className={`category-button ${
-                selectedCategory === category ? "active" : ""
-              }`}
-              onClick={() => setSelectedCategory(category)}
-            >
-              {category}
-            </button>
-          ))}
+    <div className="container-fluid">
+      {/* Header-Bereich mit Titel und Suche */}
+      <div className="row align-items-center mb-4">
+        <div className="col-md-8">
+          <h2 className="mb-3 mb-md-0">{decodeURIComponent(name)}</h2>
         </div>
       </div>
 
-      <div className="container">
-        {filteredData.length > 0 ? (
-          filteredData.map((item) => (
-            <div
-              className="play-h5p-box"
-              key={item.id}
-              style={{
-                backgroundImage: `url(${item.previewImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-              onClick={() =>
-                handleBoxClick(
-                  <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
-                  item.info
-                )
-              }
-            >
-              <h3>{item.name}</h3>
+      {/* Such- und Filterbereich */}
+      <div className="row mb-4">
+        <div className="col-12 col-md-8 mb-3 mb-md-0">
+          <input
+            type="text"
+            placeholder="Suchen..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="form-control"
+          />
+        </div>
+      </div>
+
+      <div className="row mb-4">
+        <div className="col-12">
+          <div className="d-flex flex-wrap gap-2">
+            {categories.map((category) => (
+              <button
+                key={category}
+                className={`btn btn-sm ${
+                  selectedCategory === category
+                    ? "btn-primary"
+                    : "btn-outline-primary"
+                }`}
+                onClick={() => setSelectedCategory(category)}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Inhalts-Grid */}
+      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {filteredData.map((item) => (
+          <div
+            key={item.id}
+            className="col"
+            onClick={() =>
+              handleBoxClick(
+                <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
+                item.info
+              )
+            }
+            style={{
+              backgroundImage: `url(${item.previewImage})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              cursor: "pointer",
+              minHeight: "200px",
+            }}
+          >
+            <div className="h-100 d-flex align-items-end p-3 bg-dark bg-opacity-50 text-white">
+              <h5 className="mb-0">{item.name}</h5>
             </div>
-          ))
-        ) : (
-          <p>Keine H5P-Inhalte für diese Fakultät verfügbar.</p>
-        )}
+          </div>
+        ))}
       </div>
 
       {isPopupOpen && (
@@ -133,7 +131,7 @@ const FacultyDetail = () => {
           onClose={closePopup}
         />
       )}
-    </>
+    </div>
   );
 };
 

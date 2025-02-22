@@ -9,17 +9,11 @@ const PlayH5pGrid = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  // Fetch h5pData from the backend
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/api/h5pContent`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch H5P data");
-        }
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => setH5pData(data))
-      .catch((error) => console.error("Error fetching H5P data:", error));
+      .catch(console.error);
   }, []);
 
   const categories = ["All", ...new Set(h5pData.map((item) => item.category))];
@@ -41,51 +35,65 @@ const PlayH5pGrid = () => {
   };
 
   return (
-    <>
-      <div className="container">
+    <div className="container-fluid">
+      {/* Such- und Filterbereich */}
+      <div className="row mb-4">
+        <div className="col-12 col-md-8 mb-3 mb-md-0">
+          <input
+            type="text"
+            placeholder="Suchen..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="form-control"
+          />
+        </div>
+      </div>
+
+      <div className="row mb-4">
+        <div className="col-12">
+          <div className="d-flex flex-wrap gap-2">
+            {categories.map((category) => (
+              <button
+                key={category}
+                className={`btn btn-sm ${
+                  selectedCategory === category
+                    ? "btn-primary"
+                    : "btn-outline-primary"
+                }`}
+                onClick={() => setSelectedCategory(category)}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Inhalts-Grid */}
+      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         {filteredData.map((item) => (
           <div
-            className="play-h5p-box"
             key={item.id}
-            style={{
-              backgroundImage: `url(${item.previewImage})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
+            className="col"
             onClick={() =>
               handleBoxClick(
                 <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
                 item.info
               )
             }
+            style={{
+              backgroundImage: `url(${item.previewImage})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              cursor: "pointer",
+              minHeight: "200px",
+            }}
           >
-            <h3>{item.name}</h3>
+            <div className="h-100 d-flex align-items-end p-3 bg-dark bg-opacity-50 text-white">
+              <h5 className="mb-0">{item.name}</h5>
+            </div>
           </div>
         ))}
-      </div>
-      <div className="filter">
-        <div className="filter-container">
-          <input
-            type="text"
-            placeholder="Suchen"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        <div className="category-filter">
-          {categories.map((category) => (
-            <button
-              key={category}
-              className={`category-button ${
-                selectedCategory === category ? "active" : ""
-              }`}
-              onClick={() => setSelectedCategory(category)}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
       </div>
 
       {isPopupOpen && (
@@ -95,7 +103,7 @@ const PlayH5pGrid = () => {
           onClose={closePopup}
         />
       )}
-    </>
+    </div>
   );
 };
 
