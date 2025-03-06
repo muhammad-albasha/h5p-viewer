@@ -7,7 +7,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Card from "react-bootstrap/Card";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const FacultyMenu = () => {
+const FacultyMenu = ({ isContrast }) => {
   const [faculties, setFaculties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -56,7 +56,16 @@ const FacultyMenu = () => {
   }
 
   return (
-    <Card className="shadow-sm faculty-menu">
+    <Card
+      className="shadow-sm faculty-menu"
+      // Wenn isContrast true ist, überschreiben wir die CSS-Variablen,
+      // sodass bg-primary (welches var(--primary-color) nutzt) schwarz wird.
+      style={
+        isContrast
+          ? { "--primary-color": "#000", "--primary-hover": "#000" }
+          : {}
+      }
+    >
       <Card.Header className="bg-primary text-white">
         <h3 className="mb-0">Fachbereiche</h3>
       </Card.Header>
@@ -78,12 +87,7 @@ const FacultyMenu = () => {
 };
 
 FacultyMenu.propTypes = {
-  faculties: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-    })
-  ),
+  isContrast: PropTypes.bool,
 };
 
 export default FacultyMenu;

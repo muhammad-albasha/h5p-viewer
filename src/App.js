@@ -48,39 +48,22 @@ export default function App() {
   return (
     <Router basename={process.env.PUBLIC_URL}>
       {/* Oberstes Wrapper-Element für Sticky-Footer */}
-      <div
-        className={`d-flex flex-column min-vh-100 ${
-          isContrast ? "contrast-mode" : ""
-        }`}
-      >
-        {/*
-          1) Weißes Top-Banner (Uni Wuppertal, Webmail, Kontrast)
-             mit "width: calc(100% - 70px)" damit rechts 70px frei bleiben
-        */}
+      <div className={`d-flex flex-column min-vh-100`}>
+        {/* Weißes Top-Banner */}
         <div
           className="bg-white d-flex justify-content-end align-items-center"
           style={{
-            width: "calc(100% - 40px)",
             margin: 0,
             padding: "0 1rem",
           }}
         >
           <button
             className="btn btn-link text-dark me-2"
-            onClick={() =>
-              window.open("https://www.uni-wuppertal.de", "_blank")
-            }
+            onClick={() => window.open("", "_blank")}
           >
-            Universität Wuppertal
+            Leichte Sprache
           </button>
-          <button
-            className="btn btn-link text-dark me-2"
-            onClick={() =>
-              window.open("https://webmail.uni-wuppertal.de", "_blank")
-            }
-          >
-            Webmail
-          </button>
+          <button className="btn btn-link text-dark me-2">Schriftgröße</button>
           <button
             className="btn btn-link text-dark"
             style={{ minWidth: "100px" }}
@@ -90,17 +73,11 @@ export default function App() {
           </button>
         </div>
 
-        {/*
-          2) Grüner Banner (Logo-Banner)
-             mit "width: calc(100% - 70px)" -> rechts 70px Abstand
-        */}
+        {/* Grüner Banner */}
         <nav
-          className="navbar navbar-expand-lg navbar-dark shadow-sm p-2"
-          style={{
-            backgroundColor: "#89ba17",
-            width: "calc(100% - 40px)",
-            margin: 0,
-          }}
+          className={`navbar navbar-expand-lg navbar-dark shadow-sm p-2 ${
+            isContrast ? "contrast-mode" : "green-mode"
+          }`}
         >
           <div className="container-fluid">
             {/* Logo / Brand */}
@@ -113,9 +90,6 @@ export default function App() {
                 className="d-inline-block align-text-center me-2"
                 style={{ marginLeft: "50px" }}
               />
-              {/*
-                <span className="fw-bold">H5P-Viewer</span>
-              */}
             </Link>
 
             {/* Toggler (mobil) */}
@@ -171,15 +145,11 @@ export default function App() {
           </div>
         </nav>
 
-        {/*
-          3) Schmaler grauer Banner unter dem grünen Banner,
-             links "H5P-Viewer" mit 40px Margin
-        */}
+        {/* Schmaler grauer */}
         <div
           className="d-flex justify-content-start align-items-center"
           style={{
             backgroundColor: "#e0e0e0",
-            width: "calc(100% - 40px)",
             margin: 0,
             padding: "0.3rem 1rem",
           }}
@@ -189,17 +159,13 @@ export default function App() {
           </span>
         </div>
 
-        {/*
-          4) Hauptinhalt zentriert in max. 1100px.
-             Sticky-Footer => flex-grow-1 + footer mt-auto
-        */}
         <div className="flex-grow-1 d-flex flex-column">
           <div
             className="mt-4 mx-auto"
             style={{
               maxWidth: "1400px",
               width: "100%",
-              marginBottom: "5rem", // Hier den Abstand hinzufügen
+              marginBottom: "5rem",
             }}
           >
             <Routes>
@@ -207,14 +173,14 @@ export default function App() {
                 path="/"
                 element={
                   <div className="row">
-                    {/* Linke Spalte für FacultyMenu */}
+                    {/* Linke Spalte */}
                     <div className="col-md-3 mb-4">
-                      <FacultyMenu />
+                      <FacultyMenu isContrast={isContrast} />
                     </div>
 
-                    {/* Rechte Spalte für Content */}
+                    {/* Rechte Spalte */}
                     <div className="col-md-9">
-                      <PlayH5pGrid />
+                      <PlayH5pGrid isContrast={isContrast} />
                     </div>
                   </div>
                 }
@@ -228,7 +194,7 @@ export default function App() {
                 path="/admin"
                 element={
                   <ProtectedRoute>
-                    <AdminPanel />
+                    <AdminPanel isContrast={isContrast} />
                   </ProtectedRoute>
                 }
               />

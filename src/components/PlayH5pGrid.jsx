@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PlayH5p from "./PlayH5p";
 import Popup from "./Popup";
 
-const PlayH5pGrid = () => {
+const PlayH5pGrid = ({ isContrast }) => {
   const [h5pData, setH5pData] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentContent, setCurrentContent] = useState(null);
@@ -35,7 +35,14 @@ const PlayH5pGrid = () => {
   };
 
   return (
-    <div className="container-fluid">
+    <div
+      className="container-fluid"
+      style={
+        isContrast
+          ? { "--primary-color": "#000", "--primary-hover": "#000" }
+          : {}
+      }
+    >
       {/* Such- und Filterbereich */}
       <div className="row mb-4">
         <div className="col-12 col-md-8 mb-3 mb-md-0">
@@ -70,7 +77,6 @@ const PlayH5pGrid = () => {
       </div>
 
       {/* Inhalts-Grid */}
-      {/* Scrollbarer Inhaltsbereich */}
       <div className="row flex-grow-1 overflow-auto">
         <div className="col-12">
           <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3">

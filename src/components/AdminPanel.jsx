@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AddH5PForm from "./AddH5PForm";
 
-const AdminPanel = () => {
+const AdminPanel = ({ isContrast }) => {
   const [faculties, setFaculties] = useState([]);
   const [h5pContents, setH5pContents] = useState([]);
   const [editFaculty, setEditFaculty] = useState(null);
@@ -149,12 +149,23 @@ const AdminPanel = () => {
   };
 
   return (
-    <div className="admin-panel">
+    <div
+      className="admin-panel"
+      style={
+        isContrast
+          ? { "--primary-color": "#000", "--primary-hover": "#000" }
+          : {}
+      }
+    >
       {/* Fachbereiche */}
       <div className="section">
-        <h3>Fachbereiche</h3>
+        <h3 style={{ color: isContrast ? "#000" : "#2c3e50" }}>Fachbereiche</h3>
         <button
           className="add-button"
+          style={{
+            background: "var(--primary-color)",
+            color: "#fff",
+          }}
           onClick={() => setIsFacultyFormVisible(!isFacultyFormVisible)}
         >
           +
@@ -230,16 +241,33 @@ const AdminPanel = () => {
             }}
           >
             <input name="name" placeholder="Fachbereich Name" required />
-            <button type="submit">Hinzufügen</button>
+            <button
+              type="submit"
+              style={{
+                background: "var(--primary-color)",
+                color: "#fff",
+                border: "none",
+                padding: "0.5rem 1rem",
+                borderRadius: "6px",
+                cursor: "pointer",
+                marginLeft: "0.5rem",
+              }}
+            >
+              Hinzufügen
+            </button>
           </form>
         )}
       </div>
 
       {/* H5P-Inhalte */}
       <div className="section">
-        <h3>H5P-Inhalte</h3>
+        <h3 style={{ color: isContrast ? "#000" : "#2c3e50" }}>H5P-Inhalte</h3>
         <button
           className="add-button"
+          style={{
+            background: "var(--primary-color)",
+            color: "#fff",
+          }}
           onClick={() => setIsH5PFormVisible(!isH5PFormVisible)}
         >
           +

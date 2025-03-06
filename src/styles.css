@@ -1,7 +1,13 @@
 /* Beispiel: Abgrenzung für den Kontrastmodus */
+
+.green-mode {
+  background-color: #89ba17;
+  color: #fff;
+}
+
 .contrast-mode {
-  background-color: #000; /* Schwarzer Hintergrund */
-  color: #fff; /* Weiße Schrift */
+  background-color: #000;
+  color: #fff;
 }
 .faculty-menu {
   min-width: 250px;
@@ -262,8 +268,8 @@
   background: #89ba17;
   color: white;
   border: none;
-  width: 32px;
-  height: 32px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   font-size: 1.2rem;
   cursor: pointer;
@@ -305,7 +311,7 @@ form {
   display: grid;
   gap: 1rem;
   padding: 1rem;
-  border: 1px solid #eee;
+  /* border: 1px solid #eee; */
   border-radius: 6px;
 }
 
