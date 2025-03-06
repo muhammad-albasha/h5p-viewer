@@ -23,20 +23,14 @@ app.use(json());
 console.log("Static Path für H5P:", path.join(__dirname, "../public/h5p"));
 app.use("/h5p", express.static(path.join(__dirname, "../public/h5p")));
 
-console.log(
-  "Static Path für Assets:",
-  path.join(__dirname, "../public/assets")
-);
+console.log("Static Path für Assets:", path.join(__dirname, "../public/assets"));
 app.use("/assets", express.static(path.join(__dirname, "../public/assets")));
 
-console.log(
-  "Static Path für Images:",
-  path.join(__dirname, "../public/images")
-);
+console.log("Static Path für Images:", path.join(__dirname, "../public/images"));
 app.use("/images", express.static(path.join(__dirname, "../public/images")));
 
 // API-Routen
-app.use("/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api", dataRoutes);
 
 // Server und Datenbank initialisieren

@@ -15,7 +15,7 @@ const AddH5PForm = ({ onAdd }) => {
     const fetchFaculties = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/faculties`
+          `${process.env.REACT_APP_API_URL}/faculties`
         );
         const data = await response.json();
         setFaculties(data);
@@ -55,7 +55,7 @@ const AddH5PForm = ({ onAdd }) => {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/h5pContent`,
+        `${process.env.REACT_APP_API_URL}/h5pContent`,
         {
           method: "POST",
           body: formData,

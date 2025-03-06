@@ -13,10 +13,10 @@ const AdminPanel = ({ isContrast }) => {
     const fetchData = async () => {
       try {
         const facultyRes = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/faculties`
+          `${process.env.REACT_APP_API_URL}/faculties`
         );
         const h5pRes = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/h5pContent`
+          `${process.env.REACT_APP_API_URL}/h5pContent`
         );
 
         setFaculties(await facultyRes.json());
@@ -32,7 +32,7 @@ const AdminPanel = ({ isContrast }) => {
   const addFaculty = async (name) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/faculties`,
+        `${process.env.REACT_APP_API_URL}/faculties`,
         {
           method: "POST",
           headers: {
@@ -55,7 +55,7 @@ const AdminPanel = ({ isContrast }) => {
   const removeFaculty = async (id) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/faculties/${id}`,
+        `${process.env.REACT_APP_API_URL}/faculties/${id}`,
         {
           method: "DELETE",
           headers: { Authorization: localStorage.getItem("token") },
@@ -73,7 +73,7 @@ const AdminPanel = ({ isContrast }) => {
   const editFacultyHandler = async (id, name) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/faculties/${id}`,
+        `${process.env.REACT_APP_API_URL}/faculties/${id}`,
         {
           method: "PUT",
           headers: {
@@ -105,7 +105,7 @@ const AdminPanel = ({ isContrast }) => {
   const removeH5PContent = async (id) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/h5pContent/${id}`,
+        `${process.env.REACT_APP_API_URL}/h5pContent/${id}`,
         {
           method: "DELETE",
           headers: { Authorization: localStorage.getItem("token") },
@@ -123,7 +123,7 @@ const AdminPanel = ({ isContrast }) => {
   const editH5PContentHandler = async (id, updates) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/h5pContent/${id}`,
+        `${process.env.REACT_APP_API_URL}/h5pContent/${id}`,
         {
           method: "PUT",
           headers: {

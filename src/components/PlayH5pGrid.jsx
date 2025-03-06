@@ -10,7 +10,7 @@ const PlayH5pGrid = ({ isContrast }) => {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/h5pContent`)
+    fetch(`${process.env.REACT_APP_API_URL}/h5pContent`)
       .then((response) => response.json())
       .then((data) => setH5pData(data))
       .catch(console.error);

@@ -16,7 +16,7 @@ const FacultyMenu = ({ isContrast }) => {
     const fetchFaculties = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/faculties`
+          `${process.env.REACT_APP_API_URL}/faculties`
         );
 
         if (!response.ok) {
@@ -67,7 +67,7 @@ const FacultyMenu = ({ isContrast }) => {
       }
     >
       <Card.Header className="bg-primary text-white">
-        <h3 className="mb-0">Fachbereiche</h3>
+        <h3 className="mb-0">Themen</h3>
       </Card.Header>
       <ListGroup variant="flush">
         {faculties.map((faculty) => (

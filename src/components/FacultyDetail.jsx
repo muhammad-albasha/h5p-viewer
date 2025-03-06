@@ -15,7 +15,7 @@ const FacultyDetail = () => {
     const fetchH5PDataForFaculty = async () => {
       try {
         const facultyResponse = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/faculties`
+          `${process.env.REACT_APP_API_URL}/faculties`
         );
         const faculties = await facultyResponse.json();
         const matchedFaculty = faculties.find(
@@ -24,7 +24,7 @@ const FacultyDetail = () => {
 
         if (matchedFaculty) {
           const h5pResponse = await fetch(
-            `${process.env.REACT_APP_API_URL}/api/h5pContent?facultyId=${matchedFaculty.id}`
+            `${process.env.REACT_APP_API_URL}/h5pContent?facultyId=${matchedFaculty.id}`
           );
           const h5pData = await h5pResponse.json();
           setH5pData(h5pData);

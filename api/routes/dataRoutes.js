@@ -31,11 +31,10 @@ router.get("/faculties-with-h5p", async (req, res) => {
   }
 });
 
+// H5P-Daten abrufen und Pfade anpassen
 router.get("/h5pContent", async (req, res) => {
   try {
     const { facultyId } = req.query;
-
-    // H5P-Daten basierend auf facultyId filtern, falls vorhanden
     const whereCondition = facultyId ? { facultyId } : {};
     const h5pData = await H5PContent.findAll({ where: whereCondition });
 
@@ -43,7 +42,8 @@ router.get("/h5pContent", async (req, res) => {
     const formattedData = h5pData.map((item) => ({
       ...item.toJSON(),
       previewImage: `${baseUrl}/${item.previewImage}`,
-      h5pJsonPath: `${baseUrl}/${item.h5pJsonPath}`,
+      // Vollständiger Pfad wird zusammengebaut:
+      h5pJsonPath: `${baseUrl}/h5p/public/h5p/${item.h5pJsonPath}`,
     }));
 
     res.json(formattedData);
@@ -53,15 +53,12 @@ router.get("/h5pContent", async (req, res) => {
   }
 });
 
+// Neue Fakultät hinzufügen
 router.post("/faculties", authenticateToken, async (req, res) => {
   const { name } = req.body;
-
   if (!name) {
-    return res
-      .status(400)
-      .json({ error: "Name der Fakultät ist erforderlich" });
+    return res.status(400).json({ error: "Name der Fakultät ist erforderlich" });
   }
-
   try {
     const newFaculty = await Faculty.create({ name });
     res.status(201).json(newFaculty);
@@ -95,6 +92,7 @@ const ensureDirectory = (dir) => {
 
 const upload = multer({ storage: h5pStorage });
 
+// H5P-Inhalt hochladen und speichern
 router.post(
   "/h5pContent",
   authenticateToken,
@@ -133,37 +131,30 @@ router.post(
       // Bild verschieben
       const imageDir = `public/images`;
       ensureDirectory(imageDir);
-
       const imageDest = path.join(imageDir, imageFile.filename);
-
       try {
         fs.renameSync(imageFile.path, imageDest);
         console.log("Bild erfolgreich verschoben nach:", imageDest);
       } catch (error) {
         console.error("Fehler beim Verschieben des Bildes:", error);
-        return res
-          .status(500)
-          .json({ error: "Fehler beim Speichern des Bildes." });
+        return res.status(500).json({ error: "Fehler beim Speichern des Bildes." });
       }
 
-      // Datenbankeintrag erstellen
+      // Datenbankeintrag erstellen – Speichern nur des Ordnernamens (z. B. "1691234567890")
       try {
         const newContent = await H5PContent.create({
           name: path.basename(h5pFile.originalname, ".h5p"),
           category: req.body.category,
           previewImage: `images/${imageFile.filename}`, // Pfad relativ zu `public/`
-          h5pJsonPath: h5pDir.replace("public/", ""), // Pfad relativ zu `public/`
+          h5pJsonPath: path.basename(h5pDir), // Nur der Ordnername wird gespeichert
           info: req.body.info,
           facultyId: req.body.facultyId,
         });
-
         console.log("Neuer Inhalt gespeichert:", newContent);
         res.status(201).json(newContent);
       } catch (error) {
         console.error("Fehler beim Erstellen des Datenbankeintrags:", error);
-        res
-          .status(500)
-          .json({ error: "Fehler beim Speichern in der Datenbank." });
+        res.status(500).json({ error: "Fehler beim Speichern in der Datenbank." });
       }
     } catch (error) {
       console.error("Fehler beim Verarbeiten der Anfrage:", error);
@@ -172,6 +163,7 @@ router.post(
   }
 );
 
+// H5P-Inhalt löschen
 router.delete("/h5pContent/:id", authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
@@ -179,18 +171,12 @@ router.delete("/h5pContent/:id", authenticateToken, async (req, res) => {
     if (!content) {
       return res.status(404).send("H5P-Inhalt nicht gefunden.");
     }
-
-    // Entferne Dateien vom Server
     try {
-      fs.rmSync(`public/${content.h5pJsonPath}`, {
-        recursive: true,
-        force: true,
-      });
+      fs.rmSync(`public/${content.h5pJsonPath}`, { recursive: true, force: true });
       fs.unlinkSync(`public/${content.previewImage}`);
     } catch (fileError) {
       console.error("Fehler beim Entfernen der Dateien:", fileError);
     }
-
     await content.destroy();
     res.status(200).send("H5P-Inhalt erfolgreich entfernt.");
   } catch (error) {
@@ -198,20 +184,14 @@ router.delete("/h5pContent/:id", authenticateToken, async (req, res) => {
   }
 });
 
+// Fakultät löschen inkl. zugehöriger H5P-Inhalte
 router.delete("/faculties/:id", authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
-    // Hole alle zugehörigen H5P-Inhalte
     const h5pContents = await H5PContent.findAll({ where: { facultyId: id } });
-
-    // Lösche die Dateien der H5P-Inhalte
     h5pContents.forEach((content) => {
-      // Lösche H5P-Verzeichnisse
       const h5pDir = path.join(__dirname, `../public/${content.h5pJsonPath}`);
-      const imagePath = path.join(
-        __dirname,
-        `../public/${content.previewImage}`
-      );
+      const imagePath = path.join(__dirname, `../public/${content.previewImage}`);
       try {
         if (fs.existsSync(h5pDir)) {
           fs.rmSync(h5pDir, { recursive: true, force: true });
@@ -225,14 +205,9 @@ router.delete("/faculties/:id", authenticateToken, async (req, res) => {
         console.error("Fehler beim Löschen von Dateien:", fileError);
       }
     });
-
-    // Lösche die Fakultät aus der Datenbank (zusammen mit ihren H5P-Inhalten)
     const result = await Faculty.destroy({ where: { id } });
-
     if (result) {
-      res
-        .status(200)
-        .send("Fachbereich und zugehörige H5P-Inhalte erfolgreich entfernt.");
+      res.status(200).send("Fachbereich und zugehörige H5P-Inhalte erfolgreich entfernt.");
     } else {
       res.status(404).send("Fachbereich nicht gefunden.");
     }
@@ -242,19 +217,16 @@ router.delete("/faculties/:id", authenticateToken, async (req, res) => {
   }
 });
 
-// PUT /faculties/:id
+// Fakultät bearbeiten
 router.put("/faculties/:id", authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-
   if (!name) {
     return res.status(400).json({ error: "Name ist erforderlich" });
   }
-
   try {
     const faculty = await Faculty.findByPk(id);
     if (!faculty) return res.status(404).json({ error: "Nicht gefunden" });
-
     faculty.name = name;
     await faculty.save();
     res.status(200).json(faculty);
@@ -263,19 +235,16 @@ router.put("/faculties/:id", authenticateToken, async (req, res) => {
   }
 });
 
-// PUT /h5pContent/:id
+// H5P-Inhalt bearbeiten
 router.put("/h5pContent/:id", authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { name, category, info } = req.body;
-
   try {
     const content = await H5PContent.findByPk(id);
     if (!content) return res.status(404).json({ error: "Nicht gefunden" });
-
     if (name) content.name = name;
     if (category) content.category = category;
     if (info) content.info = info;
-
     await content.save();
     res.status(200).json(content);
   } catch (error) {

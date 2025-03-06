@@ -5,46 +5,54 @@ function PlayH5p({ h5pJsonPath }) {
   const h5pContainer = useRef(null);
 
   useEffect(() => {
-    console.log("H5P JSON Path:", h5pJsonPath);
+    let adjustedPath = h5pJsonPath;
 
-    // Initiale Optionen mit CDN-Ressourcen
-    let options = {
-      h5pJsonPath,
+    if (
+      window.location.protocol === "https:" &&
+      adjustedPath.startsWith("http:")
+    ) {
+      adjustedPath = adjustedPath.replace("http:", "https:");
+    }
+    adjustedPath = adjustedPath.replace(/(\/h5p\/public\/h5p\/)h5p\//, "$1");
+
+    adjustedPath = adjustedPath.replace(/^http:\/\//, "https://");
+
+    console.log("H5P JSON Path:", adjustedPath);
+
+    const options = {
+      h5pJsonPath: adjustedPath,
       frameJs:
         "https://cdn.jsdelivr.net/npm/h5p-standalone/dist/frame.bundle.js",
       frameCss:
         "https://cdn.jsdelivr.net/npm/h5p-standalone/dist/styles/h5p.css",
     };
 
-    // Überprüfen, ob die CDN-Ressourcen verfügbar sind
+    // Überprüfe, ob die CDN-CSS-Datei geladen werden kann; verwende andernfalls lokale Fallbacks.
     fetch(options.frameCss)
       .then((response) => {
         if (!response.ok) {
           console.warn(
             "CDN-Ressourcen nicht verfügbar, lokaler Fallback wird verwendet."
           );
-
-          // Fallback auf lokale Dateien
-          options = {
-            ...options,
+          return {
             frameJs: `${process.env.PUBLIC_URL}/assets/frame.bundle.js`,
             frameCss: `${process.env.PUBLIC_URL}/assets/h5p.css`,
           };
         }
+        return {};
       })
       .catch(() => {
         console.error(
           "Fehler beim Laden der CDN-Ressourcen. Lokaler Fallback wird verwendet."
         );
-        options = {
-          ...options,
+        return {
           frameJs: `${process.env.PUBLIC_URL}/assets/frame.bundle.js`,
           frameCss: `${process.env.PUBLIC_URL}/assets/h5p.css`,
         };
       })
-      .finally(() => {
-        // Initialisiere H5P mit den aktualisierten Optionen
-        new H5P(h5pContainer.current, options)
+      .then((fallbackOptions) => {
+        const finalOptions = { ...options, ...fallbackOptions };
+        new H5P(h5pContainer.current, finalOptions)
           .then((res) => {
             console.log("H5P erfolgreich geladen:", res);
           })
