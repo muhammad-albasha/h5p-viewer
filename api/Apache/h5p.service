@@ -1,0 +1,15 @@
+# /etc/systemd/system/h5p.service
+[Unit]
+Description=H5P Express JS Application
+After=network.target
+
+[Service]
+User=vclass
+WorkingDirectory=/var/www/app/h5p/api
+# Lädt die Umgebungsvariablen aus der .env-Datei im Arbeitsverzeichnis
+EnvironmentFile=/var/www/app/h5p/api/.env
+ExecStart=/usr/bin/node /var/www/app/h5p/api/app.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
