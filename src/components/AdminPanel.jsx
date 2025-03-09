@@ -19,6 +19,8 @@ const AdminPanel = ({ isContrast }) => {
           `${process.env.REACT_APP_API_URL}/h5pContent`
         );
 
+        // Neue Einträge sollen oben erscheinen, deshalb können wir hier
+        // auch die Reihenfolge gegebenenfalls umkehren, falls gewünscht.
         setFaculties(await facultyRes.json());
         setH5pContents(await h5pRes.json());
       } catch (error) {
@@ -45,7 +47,8 @@ const AdminPanel = ({ isContrast }) => {
 
       if (response.ok) {
         const newFaculty = await response.json();
-        setFaculties([...faculties, newFaculty]);
+        // Neue Fakultät oben einfügen:
+        setFaculties([newFaculty, ...faculties]);
       }
     } catch (error) {
       console.error("Fehler beim Hinzufügen eines Fachbereichs:", error);
@@ -98,8 +101,9 @@ const AdminPanel = ({ isContrast }) => {
     }
   };
 
+  // Neue H5P-Inhalte werden oben eingefügt:
   const addH5PContent = (newContent) => {
-    setH5pContents([...h5pContents, newContent]);
+    setH5pContents([newContent, ...h5pContents]);
   };
 
   const removeH5PContent = async (id) => {
@@ -173,13 +177,16 @@ const AdminPanel = ({ isContrast }) => {
         <table className="data-table">
           <thead>
             <tr>
+              <th>ID</th>
               <th>Name</th>
               <th>Aktionen</th>
             </tr>
           </thead>
           <tbody>
-            {faculties.map((faculty) => (
+            {faculties.map((faculty, index) => (
               <tr key={faculty.id}>
+                {/* Frontend-ID als fortlaufende Nummer */}
+                <td>{index + 1}</td>
                 <td>
                   {editFaculty?.id === faculty.id ? (
                     <input
@@ -275,6 +282,7 @@ const AdminPanel = ({ isContrast }) => {
         <table className="data-table">
           <thead>
             <tr>
+              <th>ID</th>
               <th>Name</th>
               <th>Kategorie</th>
               <th>Info</th>
@@ -282,8 +290,9 @@ const AdminPanel = ({ isContrast }) => {
             </tr>
           </thead>
           <tbody>
-            {h5pContents.map((content) => (
+            {h5pContents.map((content, index) => (
               <tr key={content.id}>
+                <td>{index + 1}</td>
                 <td>
                   {editH5PContent?.id === content.id ? (
                     <input
