@@ -56,59 +56,52 @@ const FacultyDetail = () => {
   };
 
   return (
-    <div className="container-fluid vh-100 d-flex flex-column">
+    <div className="container-fluid" style={{ minHeight: "100vh" }}>
       {/* Header und Filterbereich */}
-      <div className="row flex-shrink-0">
-        <div className="col-12">
-          <div className="row justify-content-center mb-4">
-            <div className="col-md-8 text-center">
-              <h2>{decodeURIComponent(name)}</h2>
-            </div>
-          </div>
-
-          <div className="row justify-content-center mb-4">
-            <div className="col-md-8">
-              <input
-                type="text"
-                placeholder="Suchen..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="form-control mx-auto"
-                style={{ maxWidth: "600px" }}
-              />
-            </div>
-          </div>
-
-          <div className="row justify-content-center mb-4">
-            <div className="col-md-10">
-              <div className="d-flex flex-wrap justify-content-center gap-2">
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    className={`btn btn-sm ${
-                      selectedCategory === category
-                        ? "btn-primary"
-                        : "btn-outline-primary"
-                    }`}
-                    onClick={() => setSelectedCategory(category)}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
+      <div className="row my-4">
+        <div className="col-md-8 mx-auto text-center">
+          <h2>{decodeURIComponent(name)}</h2>
         </div>
       </div>
 
-      {/* Scrollbarer Grid-Bereich */}
-      <div className="row flex-grow-1 overflow-hidden mb-5">
-        <div className="col-12 h-100">
-          <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 g-4 h-100">
+      <div className="row mb-4">
+        <div className="col-md-8 mx-auto">
+          <input
+            type="text"
+            placeholder="Suchen..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="form-control"
+          />
+        </div>
+      </div>
+
+      <div className="row mb-4">
+        <div className="col-md-10 mx-auto d-flex flex-wrap gap-2 justify-content-center">
+          {categories.map((category) => (
+            <button
+              key={category}
+              className={`btn btn-sm ${
+                selectedCategory === category
+                  ? "btn-primary"
+                  : "btn-outline-primary"
+              }`}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Grid-Bereich */}
+      <div className="row mb-5">
+        <div className="col-12">
+          <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-5 g-4">
             {filteredData.map((item) => (
               <div key={item.id} className="col">
                 <div
-                  className="card h-100 shadow-sm"
+                  className="card custom-card shadow-sm"
                   onClick={() =>
                     handleBoxClick(
                       <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
@@ -128,12 +121,22 @@ const FacultyDetail = () => {
                   >
                     <div className="image-overlay" />
                   </div>
-                  <div className="card-body">
+                  <div className="card-body text-center">
                     <h5 className="card-title">{item.name}</h5>
-                    <div className="card-text small text-muted">
-                      {item.info.substring(0, 80)}...
+                    {/* Hier ist der einzige Unterschied: text-start sorgt für linksbündigen Info-Text */}
+                    <div className="card-text small text-muted text-start">
+                      {item.info.substring(0, 60)}...
                     </div>
-                    <button className="btn btn-link p-0 small">
+                    <button
+                      className="custom-link-button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBoxClick(
+                          <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
+                          item.info
+                        );
+                      }}
+                    >
                       Mehr erfahren →
                     </button>
                   </div>

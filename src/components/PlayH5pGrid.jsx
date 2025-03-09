@@ -102,12 +102,21 @@ const PlayH5pGrid = ({ isContrast }) => {
                   >
                     <div className="image-overlay" />
                   </div>
-                  <div className="card-body p-3">
-                    <h5 className="card-title fs-6 mb-2">{item.name}</h5>
-                    <p className="card-text text-muted small mb-2">
-                      {item.info.substring(0, 50)}...
-                    </p>
-                    <button className="btn btn-link p-0 small">
+                  <div className="card-body text-center">
+                    <h5 className="card-title">{item.name}</h5>
+                    <div className="card-text small text-muted text-start">
+                      {item.info.substring(0, 60)}...
+                    </div>
+                    <button
+                      className="custom-link-button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBoxClick(
+                          <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
+                          item.info
+                        );
+                      }}
+                    >
                       Mehr erfahren →
                     </button>
                   </div>

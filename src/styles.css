@@ -590,3 +590,48 @@ input[type="file"]::file-selector-button:hover {
     font-size: 1.5rem;
   }
 }
+
+/* Custom Card Style */
+.custom-card {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.custom-card .card-img-top {
+  object-fit: cover;
+  background-repeat: no-repeat;
+  height: 200px;
+}
+
+.custom-card .card-body {
+  flex: 1;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* Styling für den "Mehr erfahren" Button */
+.custom-link-button {
+  background: none;
+  border: none;
+  color: #89ba17;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  transition: color 0.2s;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.custom-link-button:hover {
+  color: #769f14;
+  text-decoration: none;
+}
