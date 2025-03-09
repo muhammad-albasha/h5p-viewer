@@ -8,57 +8,25 @@ function PlayH5p({ h5pJsonPath }) {
     let adjustedPath = h5pJsonPath;
 
     if (
+      process.env.NODE_ENV === "production" &&
       window.location.protocol === "https:" &&
       adjustedPath.startsWith("http:")
     ) {
       adjustedPath = adjustedPath.replace("http:", "https:");
     }
-    adjustedPath = adjustedPath.replace(/(\/h5p\/public\/h5p\/)h5p\//, "$1");
-
-    adjustedPath = adjustedPath.replace(/^http:\/\//, "https://");
-
-    console.log("H5P JSON Path:", adjustedPath);
 
     const options = {
       h5pJsonPath: adjustedPath,
-      frameJs:
-        "https://cdn.jsdelivr.net/npm/h5p-standalone/dist/frame.bundle.js",
-      frameCss:
-        "https://cdn.jsdelivr.net/npm/h5p-standalone/dist/styles/h5p.css",
+      frameJs: `${process.env.PUBLIC_URL}/assets/frame.bundle.js`,
+      frameCss: `${process.env.PUBLIC_URL}/assets/h5p.css`,
     };
 
-    // Überprüfe, ob die CDN-CSS-Datei geladen werden kann; verwende andernfalls lokale Fallbacks.
-    fetch(options.frameCss)
-      .then((response) => {
-        if (!response.ok) {
-          console.warn(
-            "CDN-Ressourcen nicht verfügbar, lokaler Fallback wird verwendet."
-          );
-          return {
-            frameJs: `${process.env.PUBLIC_URL}/assets/frame.bundle.js`,
-            frameCss: `${process.env.PUBLIC_URL}/assets/h5p.css`,
-          };
-        }
-        return {};
+    new H5P(h5pContainer.current, options)
+      .then((res) => {
+        console.log("H5P erfolgreich geladen:", res);
       })
-      .catch(() => {
-        console.error(
-          "Fehler beim Laden der CDN-Ressourcen. Lokaler Fallback wird verwendet."
-        );
-        return {
-          frameJs: `${process.env.PUBLIC_URL}/assets/frame.bundle.js`,
-          frameCss: `${process.env.PUBLIC_URL}/assets/h5p.css`,
-        };
-      })
-      .then((fallbackOptions) => {
-        const finalOptions = { ...options, ...fallbackOptions };
-        new H5P(h5pContainer.current, finalOptions)
-          .then((res) => {
-            console.log("H5P erfolgreich geladen:", res);
-          })
-          .catch((e) => {
-            console.error("Fehler beim Laden von H5P:", e);
-          });
+      .catch((e) => {
+        console.error("Fehler beim Laden von H5P:", e);
       });
   }, [h5pJsonPath]);
 

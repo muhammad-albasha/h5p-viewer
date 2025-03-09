@@ -1,0 +1,13 @@
+services:
+  database:
+    image: "mysql:latest"
+    environment:
+      MYSQL_ROOT_PASSWORD: "12345"
+      MYSQL_DATABASE: h5p
+
+    ports:
+      - "3306:3306"
+    restart: always
+
+volumes:
+  database_h5p:

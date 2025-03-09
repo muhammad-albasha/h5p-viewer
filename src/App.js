@@ -46,7 +46,13 @@ export default function App() {
   };
 
   return (
-    <Router basename={process.env.PUBLIC_URL}>
+    <Router
+      basename={process.env.PUBLIC_URL}
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
       {/* Oberstes Wrapper-Element für Sticky-Footer */}
       <div className={`d-flex flex-column min-vh-100`}>
         {/* Weißes Top-Banner */}

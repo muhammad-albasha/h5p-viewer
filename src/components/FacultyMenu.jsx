@@ -58,8 +58,6 @@ const FacultyMenu = ({ isContrast }) => {
   return (
     <Card
       className="shadow-sm faculty-menu"
-      // Wenn isContrast true ist, überschreiben wir die CSS-Variablen,
-      // sodass bg-primary (welches var(--primary-color) nutzt) schwarz wird.
       style={
         isContrast
           ? { "--primary-color": "#000", "--primary-hover": "#000" }

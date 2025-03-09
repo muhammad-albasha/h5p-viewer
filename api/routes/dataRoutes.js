@@ -31,7 +31,7 @@ router.get("/faculties-with-h5p", async (req, res) => {
   }
 });
 
-// H5P-Daten abrufen und Pfade anpassen
+// H5P-Daten abrufen
 router.get("/h5pContent", async (req, res) => {
   try {
     const { facultyId } = req.query;
@@ -42,8 +42,7 @@ router.get("/h5pContent", async (req, res) => {
     const formattedData = h5pData.map((item) => ({
       ...item.toJSON(),
       previewImage: `${baseUrl}/${item.previewImage}`,
-      // Vollständiger Pfad wird zusammengebaut:
-      h5pJsonPath: `${baseUrl}/h5p/public/h5p/${item.h5pJsonPath}`,
+      h5pJsonPath: `${baseUrl}/h5p/api/data/h5p/${item.h5pJsonPath}`,
     }));
 
     res.json(formattedData);
@@ -57,7 +56,9 @@ router.get("/h5pContent", async (req, res) => {
 router.post("/faculties", authenticateToken, async (req, res) => {
   const { name } = req.body;
   if (!name) {
-    return res.status(400).json({ error: "Name der Fakultät ist erforderlich" });
+    return res
+      .status(400)
+      .json({ error: "Name der Fakultät ist erforderlich" });
   }
   try {
     const newFaculty = await Faculty.create({ name });
@@ -68,7 +69,7 @@ router.post("/faculties", authenticateToken, async (req, res) => {
   }
 });
 
-// Storage-Konfiguration für Multer
+// Storage-Konfiguration
 const h5pStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = "uploads";
@@ -116,20 +117,29 @@ router.post(
       const imageFile = req.files.imageFile[0];
 
       // H5P-Datei entpacken
-      const h5pDir = `public/h5p/${Date.now()}`;
+      const h5pDir = `data/h5p/${Date.now()}`;
       ensureDirectory(h5pDir);
 
       try {
         console.log("Entpacken der H5P-Datei...");
         await extract(h5pFile.path, { dir: path.resolve(h5pDir) });
         console.log("Entpacken erfolgreich.");
+
+        // Lösche die hochgeladene .h5p-Datei nach erfolgreichem Entpacken
+        fs.unlink(h5pFile.path, (err) => {
+          if (err) {
+            console.error("Fehler beim Löschen der .h5p-Datei:", err);
+          } else {
+            console.log("Hochgeladene .h5p-Datei erfolgreich gelöscht.");
+          }
+        });
       } catch (error) {
         console.error("Fehler beim Entpacken der H5P-Datei:", error);
         return res.status(400).json({ error: "Ungültige H5P-Datei." });
       }
 
       // Bild verschieben
-      const imageDir = `public/images`;
+      const imageDir = `data/images`;
       ensureDirectory(imageDir);
       const imageDest = path.join(imageDir, imageFile.filename);
       try {
@@ -137,7 +147,9 @@ router.post(
         console.log("Bild erfolgreich verschoben nach:", imageDest);
       } catch (error) {
         console.error("Fehler beim Verschieben des Bildes:", error);
-        return res.status(500).json({ error: "Fehler beim Speichern des Bildes." });
+        return res
+          .status(500)
+          .json({ error: "Fehler beim Speichern des Bildes." });
       }
 
       // Datenbankeintrag erstellen – Speichern nur des Ordnernamens (z. B. "1691234567890")
@@ -154,7 +166,9 @@ router.post(
         res.status(201).json(newContent);
       } catch (error) {
         console.error("Fehler beim Erstellen des Datenbankeintrags:", error);
-        res.status(500).json({ error: "Fehler beim Speichern in der Datenbank." });
+        res
+          .status(500)
+          .json({ error: "Fehler beim Speichern in der Datenbank." });
       }
     } catch (error) {
       console.error("Fehler beim Verarbeiten der Anfrage:", error);
@@ -172,8 +186,23 @@ router.delete("/h5pContent/:id", authenticateToken, async (req, res) => {
       return res.status(404).send("H5P-Inhalt nicht gefunden.");
     }
     try {
-      fs.rmSync(`public/${content.h5pJsonPath}`, { recursive: true, force: true });
-      fs.unlinkSync(`public/${content.previewImage}`);
+      // Konstruiere den vollständigen Pfad zum entpackten H5P-Ordner
+      const h5pFolderPath = path.join("data", "h5p", content.h5pJsonPath);
+      if (fs.existsSync(h5pFolderPath)) {
+        fs.rmSync(h5pFolderPath, { recursive: true, force: true });
+        console.log(`H5P-Verzeichnis gelöscht: ${h5pFolderPath}`);
+      }
+
+      // Konstruiere den Pfad zum Vorschaubild
+      const imagePath = path.join(
+        "data",
+        "images",
+        path.basename(content.previewImage)
+      );
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+        console.log(`Bilddatei gelöscht: ${imagePath}`);
+      }
     } catch (fileError) {
       console.error("Fehler beim Entfernen der Dateien:", fileError);
     }
@@ -184,30 +213,38 @@ router.delete("/h5pContent/:id", authenticateToken, async (req, res) => {
   }
 });
 
-// Fakultät löschen inkl. zugehöriger H5P-Inhalte
+// Fakultät löschen
 router.delete("/faculties/:id", authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
     const h5pContents = await H5PContent.findAll({ where: { facultyId: id } });
-    h5pContents.forEach((content) => {
-      const h5pDir = path.join(__dirname, `../public/${content.h5pJsonPath}`);
-      const imagePath = path.join(__dirname, `../public/${content.previewImage}`);
-      try {
-        if (fs.existsSync(h5pDir)) {
-          fs.rmSync(h5pDir, { recursive: true, force: true });
-          console.log(`H5P-Verzeichnis gelöscht: ${h5pDir}`);
-        }
-        if (fs.existsSync(imagePath)) {
-          fs.unlinkSync(imagePath);
-          console.log(`Bilddatei gelöscht: ${imagePath}`);
-        }
-      } catch (fileError) {
-        console.error("Fehler beim Löschen von Dateien:", fileError);
+    for (const content of h5pContents) {
+      // Lösche H5P-Ordner
+      const h5pFolderPath = path.join(
+        __dirname,
+        "../data/h5p",
+        content.h5pJsonPath
+      );
+      if (fs.existsSync(h5pFolderPath)) {
+        fs.rmSync(h5pFolderPath, { recursive: true, force: true });
+        console.log(`H5P-Verzeichnis gelöscht: ${h5pFolderPath}`);
       }
-    });
+      // Lösche das Vorschaubild
+      const imagePath = path.join(
+        __dirname,
+        "../data/images",
+        path.basename(content.previewImage)
+      );
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+        console.log(`Bilddatei gelöscht: ${imagePath}`);
+      }
+    }
     const result = await Faculty.destroy({ where: { id } });
     if (result) {
-      res.status(200).send("Fachbereich und zugehörige H5P-Inhalte erfolgreich entfernt.");
+      res
+        .status(200)
+        .send("Fachbereich und zugehörige H5P-Inhalte erfolgreich entfernt.");
     } else {
       res.status(404).send("Fachbereich nicht gefunden.");
     }

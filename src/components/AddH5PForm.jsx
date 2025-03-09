@@ -8,7 +8,7 @@ const AddH5PForm = ({ onAdd }) => {
   const [h5pFile, setH5pFile] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0); // Fortschritt der Animation
+  const [progress, setProgress] = useState(0);
   const [notification, setNotification] = useState("");
 
   useEffect(() => {
@@ -31,14 +31,14 @@ const AddH5PForm = ({ onAdd }) => {
     setProgress(0);
     const interval = setInterval(() => {
       setProgress((prev) => {
-        const nextProgress = prev + 5; // Fortschritt um 5% erhöhen
+        const nextProgress = prev + 5;
         if (nextProgress >= 100) {
           clearInterval(interval);
           return 100;
         }
         return nextProgress;
       });
-    }, 200); // Alle 200 ms aktualisieren
+    }, 200);
   };
 
   const handleSubmit = async (e) => {
@@ -86,7 +86,7 @@ const AddH5PForm = ({ onAdd }) => {
       setNotification("Fehler beim Hinzufügen des H5P-Inhalts.");
     } finally {
       setUploading(false);
-      setProgress(100); // Fortschritt auf 100% setzen
+      setProgress(100);
     }
   };
 

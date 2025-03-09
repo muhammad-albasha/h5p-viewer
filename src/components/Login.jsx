@@ -19,14 +19,14 @@ export default function Login({ setAuthenticated }) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email, password }), // JSON-Body senden
+          body: JSON.stringify({ email, password }),
         }
       );
 
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("token", data.token);
-        setAuthenticated(true); // Authentifizierungsstatus setzen
+        setAuthenticated(true);
         navigate("/");
       } else {
         const errorMessage = await response.text();
