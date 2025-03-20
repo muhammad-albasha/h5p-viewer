@@ -52,6 +52,42 @@ router.get("/h5pContent", async (req, res) => {
   }
 });
 
+// GET einzelnes H5P Content Item
+router.get("/h5pContent/:id", async (req, res) => {
+  try {
+    const content = await H5PContent.findByPk(req.params.id);
+
+    if (!content) {
+      return res.status(404).json({
+        error: "Content nicht gefunden",
+      });
+    }
+
+    // URLs konstruieren
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
+
+    const formattedData = {
+      id: content.id,
+      name: content.name,
+      category: content.category,
+      info: content.info,
+      facultyId: content.facultyId,
+      createdAt: content.createdAt,
+      updatedAt: content.updatedAt,
+      previewImage: `${baseUrl}/${content.previewImage}`,
+      h5pJsonPath: `${baseUrl}/h5p/api/data/h5p/${content.h5pJsonPath}`,
+    };
+
+    res.json(formattedData);
+  } catch (error) {
+    console.error("Fehler beim Abrufen des Contents:", error);
+    res.status(500).json({
+      error: "Interner Serverfehler",
+      details: error.message,
+    });
+  }
+});
+
 // Neue Fakultät hinzufügen
 router.post("/faculties", authenticateToken, async (req, res) => {
   const { name } = req.body;

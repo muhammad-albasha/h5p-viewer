@@ -21,6 +21,7 @@ import Login from "./components/Login";
 import AdminPanel from "./components/AdminPanel";
 import LeichteSprache from "./components/LeichteSprache";
 import logo from "./logo.svg";
+import H5PContentPage from "./components/H5PContentPage";
 
 // ProtectedRoute: Nur authentifizierte Nutzer dürfen diese Route sehen
 const ProtectedRoute = ({ children }) => {
@@ -72,6 +73,7 @@ export default function App() {
       >
         {/* Weißes Top-Banner mit SVG-Symbolen */}
         <div
+          id="top-banner"
           className="bg-white d-flex justify-content-end align-items-center"
           style={{ padding: "0 1rem" }}
         >
@@ -219,6 +221,7 @@ export default function App() {
 
         {/* Schmaler grauer Banner */}
         <div
+          id="gray-banner"
           className="d-flex justify-content-start align-items-center"
           style={{
             backgroundColor: "#e0e0e0",
@@ -235,7 +238,7 @@ export default function App() {
           <div
             className="mt-4 mx-auto"
             style={{
-              maxWidth: "1400px",
+              // maxWidth: "1400px",
               width: "100%",
               marginBottom: "5rem",
             }}
@@ -271,6 +274,7 @@ export default function App() {
               <Route path="/Contact" element={<Contact />} />
               <Route path="/:name" element={<FacultyDetail />} />
               <Route path="/leichte-sprache" element={<LeichteSprache />} />
+              <Route path="/content" element={<H5PContentPage />} />
             </Routes>
           </div>
 
