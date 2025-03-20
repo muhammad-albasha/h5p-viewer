@@ -22,6 +22,7 @@ import AdminPanel from "./components/AdminPanel";
 import LeichteSprache from "./components/LeichteSprache";
 import logo from "./logo.svg";
 import H5PContentPage from "./components/H5PContentPage";
+import Impressum from "./components/Impressum";
 
 // ProtectedRoute: Nur authentifizierte Nutzer dürfen diese Route sehen
 const ProtectedRoute = ({ children }) => {
@@ -66,18 +67,16 @@ export default function App() {
 
   return (
     <Router basename={process.env.PUBLIC_URL}>
-      {/* Globaler Container mit dynamischer Schriftgröße */}
+      {/* Hinzugefügtes overflowX: "hidden" verhindert horizontalen Scroll */}
       <div
         className="d-flex flex-column min-vh-100"
-        style={{ fontSize: `${fontSize}px` }}
+        style={{ fontSize: `${fontSize}px`, overflowX: "hidden" }}
       >
-        {/* Weißes Top-Banner mit SVG-Symbolen */}
         <div
           id="top-banner"
           className="bg-white d-flex justify-content-end align-items-center"
           style={{ padding: "0 1rem" }}
         >
-          {/* Leichte Sprache: SVG-Symbol und Text */}
           <Link
             className="btn btn-link text-dark me-2 d-flex align-items-center"
             to="/leichte-sprache"
@@ -130,7 +129,6 @@ export default function App() {
             </button>
           </div>
 
-          {/* Kontrast: SVG-Symbol und Text */}
           <button
             className="btn btn-link text-dark d-flex align-items-center"
             style={{ minWidth: "100px" }}
@@ -151,7 +149,6 @@ export default function App() {
           </button>
         </div>
 
-        {/* Grüner Banner */}
         <nav
           className={`navbar navbar-expand-lg navbar-dark shadow-sm p-2 ${
             isContrast ? "contrast-mode" : "green-mode"
@@ -159,13 +156,13 @@ export default function App() {
         >
           <div className="container-fluid">
             <Link className="navbar-brand d-flex align-items-center" to="/">
+              {/* Entferntes marginLeft, damit das Logo nicht unnötig den Container erweitert */}
               <img
                 src={logo}
                 alt="Logo"
                 width="300"
                 height="100"
                 className="d-inline-block align-text-center me-2"
-                style={{ marginLeft: "50px" }}
               />
             </Link>
             <button
@@ -219,7 +216,6 @@ export default function App() {
           </div>
         </nav>
 
-        {/* Schmaler grauer Banner */}
         <div
           id="gray-banner"
           className="d-flex justify-content-start align-items-center"
@@ -233,12 +229,10 @@ export default function App() {
           </span>
         </div>
 
-        {/* Hauptinhalt */}
         <div className="flex-grow-1 d-flex flex-column">
           <div
             className="mt-4 mx-auto"
             style={{
-              // maxWidth: "1400px",
               width: "100%",
               marginBottom: "5rem",
             }}
@@ -275,10 +269,10 @@ export default function App() {
               <Route path="/:name" element={<FacultyDetail />} />
               <Route path="/leichte-sprache" element={<LeichteSprache />} />
               <Route path="/content" element={<H5PContentPage />} />
+              <Route path="/impressum" element={<Impressum />} />
             </Routes>
           </div>
 
-          {/* Footer */}
           <footer className="bg-light border-top py-3 mt-auto">
             <div className="d-flex flex-wrap justify-content-center">
               <Link
@@ -287,14 +281,20 @@ export default function App() {
               >
                 Datenschutz
               </Link>
-              <a
+              {/* <a
                 className="text-decoration-none text-secondary me-3"
                 href="https://www.uni-wuppertal.de/de/impressum"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Impressum
-              </a>
+              </a> */}
+              <Link
+                className="text-decoration-none text-secondary me-3"
+                to="/impressum"
+              >
+                Impressum
+              </Link>
               <Link
                 className="text-decoration-none text-secondary"
                 to="/Contact"

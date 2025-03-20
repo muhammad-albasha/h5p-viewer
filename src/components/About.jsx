@@ -2,7 +2,7 @@ import React from "react";
 
 const About = () => {
   return (
-    <div className="about-section">
+    <div className="container mt-4">
       <h2>Über uns</h2>
       <p>
         {/* Diese Seite ist ein Prototyo */}

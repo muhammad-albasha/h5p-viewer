@@ -2,7 +2,7 @@ import React from "react";
 
 const Contact = () => {
   return (
-    <div className="about-section">
+    <div className="container mt-4">
       <h2>Kontakt</h2>
       <p>
         Ansprechpartnerin:<br></br>{" "}
