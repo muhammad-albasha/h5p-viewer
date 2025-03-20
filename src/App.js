@@ -24,7 +24,6 @@ import logo from "./logo.svg";
 import H5PContentPage from "./components/H5PContentPage";
 import Impressum from "./components/Impressum";
 
-// ProtectedRoute: Nur authentifizierte Nutzer dürfen diese Route sehen
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
   return token ? children : <Navigate to="/Login" />;
@@ -36,13 +35,11 @@ export default function App() {
   // Standard-Fontgröße in Pixeln (hier 16px)
   const [fontSize, setFontSize] = useState(16);
 
-  // Beim ersten Laden: Token aus localStorage prüfen
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsAuthenticated(!!token);
   }, []);
 
-  // Globales Fetch-Override, um bei 401 (Unauthorized) automatisch auszuloggen
   useEffect(() => {
     const originalFetch = window.fetch;
     window.fetch = async (...args) => {
@@ -67,7 +64,6 @@ export default function App() {
 
   return (
     <Router basename={process.env.PUBLIC_URL}>
-      {/* Hinzugefügtes overflowX: "hidden" verhindert horizontalen Scroll */}
       <div
         className="d-flex flex-column min-vh-100"
         style={{ fontSize: `${fontSize}px`, overflowX: "hidden" }}
@@ -156,7 +152,6 @@ export default function App() {
         >
           <div className="container-fluid">
             <Link className="navbar-brand d-flex align-items-center" to="/">
-              {/* Entferntes marginLeft, damit das Logo nicht unnötig den Container erweitert */}
               <img
                 src={logo}
                 alt="Logo"
