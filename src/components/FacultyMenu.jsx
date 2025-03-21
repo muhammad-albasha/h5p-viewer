@@ -18,11 +18,9 @@ const FacultyMenu = ({ isContrast }) => {
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/faculties`
         );
-
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-
         const data = await response.json();
         setFaculties(data);
         setError(null);
@@ -33,7 +31,6 @@ const FacultyMenu = ({ isContrast }) => {
         setLoading(false);
       }
     };
-
     fetchFaculties();
   }, []);
 
@@ -56,15 +53,8 @@ const FacultyMenu = ({ isContrast }) => {
   }
 
   return (
-    <Card
-      className="shadow-sm faculty-menu"
-      style={
-        isContrast
-          ? { "--primary-color": "#000", "--primary-hover": "#000" }
-          : {}
-      }
-    >
-      <Card.Header className="bg-primary text-white">
+    <Card className="shadow-sm faculty-menu">
+      <Card.Header className="faculty-header">
         <h3 className="mb-0">Themen</h3>
       </Card.Header>
       <ListGroup variant="flush">

@@ -9,49 +9,6 @@
   background-color: #000;
   color: #fff;
 }
-.faculty-menu {
-  min-width: 250px;
-  max-width: 350px;
-  margin-bottom: 1rem;
-  margin-left: 1rem;
-  margin-right: 1rem;
-  border-radius: 8px;
-  transition: transform 0.2s;
-}
-
-.faculty-menu:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.faculty-link {
-  padding: 1rem 1.5rem;
-  font-weight: 500;
-  color: #2c3e50;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  border-left: 3px solid transparent;
-}
-
-.faculty-link:hover {
-  background-color: #f8f9fa;
-  color: #95b73c;
-  border-left-color: #95b73c;
-}
-
-.faculty-link.active {
-  background-color: #e8f0fe;
-  border-left-color: #95b73c;
-  font-weight: 600;
-}
-
-@media (max-width: 768px) {
-  .faculty-menu {
-    width: 100%;
-    max-width: none;
-    margin: 0 0 1rem 0;
-  }
-}
 
 /* Popup Overlay */
 .popup-overlay {
@@ -622,7 +579,7 @@ input[type="file"]::file-selector-button:hover {
 .custom-link-button {
   background: none;
   border: none;
-  color: #89ba17;
+  color: var(--primary-color);
   cursor: pointer;
   font-size: 0.95rem;
   font-weight: 500;
@@ -634,6 +591,201 @@ input[type="file"]::file-selector-button:hover {
 }
 
 .custom-link-button:hover {
-  color: #769f14;
+  color: var(--primary-hover);
   text-decoration: none;
+}
+
+/* Slider-Container mit ausreichend horizontalem Padding */
+.slider-container {
+  position: relative;
+  margin: 20px 0;
+  padding: 0 70px;
+}
+
+/* Slider-Track: Flex-Layout mit horizontalem Scrollen */
+.slider-track {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 20px 0;
+}
+
+/* Scrollbar ausblenden */
+.slider-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Feste Breite für jedes Card-Element */
+.slider-item {
+  flex: 0 0 200px;
+  margin-right: 20px;
+}
+
+/* Modernes Card-Design */
+.modern-card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.modern-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Neue flache, minimalistische Navigationsbuttons */
+.custom-slider-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.6);
+  border: 2px solid var(--primary-color);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.custom-slider-button:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.custom-slider-button.left {
+  left: 10px;
+}
+
+.custom-slider-button.right {
+  right: 10px;
+}
+
+.custom-search-input {
+  width: 100%;
+  max-width: 500px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: 2px solid var(--primary-color);
+  border-radius: 25px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  background: #fff;
+  outline: none;
+}
+
+.custom-search-input:focus {
+  border-color: var(--primary-hover);
+  box-shadow: 0 0 10px rgba(120, 155, 20, 0.3); /* Optional – kannst du beibehalten, da Weiß unverändert bleibt */
+}
+
+.custom-slider-button svg {
+  stroke: var(--primary-color);
+}
+
+/* Container für Filter-Buttons – zentriert */
+.custom-filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* Moderne Filter-Buttons */
+.custom-filter-button {
+  background: transparent;
+  border: 2px solid var(--primary-color);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 0.9rem;
+  color: var(--primary-color);
+  transition: background 0.3s, color 0.3s;
+  cursor: pointer;
+}
+
+.custom-filter-button:hover,
+.custom-filter-button.active {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+/* Modernes Styling für den FacultyMenu-Container */
+:root {
+  /* Standard: grün */
+  --primary-color: #89ba17;
+  --primary-hover: #769f14;
+}
+
+/* Basis-Styling für den FacultyMenu-Container */
+.faculty-menu {
+  background: #fff;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin: 1rem;
+}
+
+.faculty-menu:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Header: Hier wird der grüne Farbverlauf über Variablen gesetzt */
+.faculty-header {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-hover)
+  );
+  border-bottom: none;
+  padding: 1rem 1.5rem;
+}
+
+.faculty-header h3 {
+  margin: 0;
+  color: #fff; /* Weiß bleibt Weiß */
+  font-size: 1.25rem;
+}
+
+/* ListGroup Items & Links */
+.faculty-menu .list-group-item {
+  border: none;
+  border-bottom: 1px solid #eee;
+  transition: background 0.3s, color 0.3s;
+  padding: 0.8rem 1.5rem;
+  cursor: pointer;
+}
+
+.faculty-menu .list-group-item:last-child {
+  border-bottom: none;
+}
+
+.faculty-link {
+  color: #2c3e50;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.faculty-menu .list-group-item:hover,
+.faculty-menu .list-group-item.active {
+  background: #f8f9fa;
+  color: var(--primary-hover); /* Nutzt die Variable */
+}
+
+/* Kontrastmodus: Nur die grünen Variablen werden überschrieben – Weiß bleibt unverändert */
+/* In App.js wird im isContrast-Fall der Inline-Stil gesetzt:
+   style={ isContrast ? { "--primary-color": "#000", "--primary-hover": "#000" } : {} } */
+
+/* Responsive Anpassung */
+@media (max-width: 768px) {
+  .faculty-menu {
+    width: 100%;
+    margin: 0 0 1rem 0;
+  }
 }

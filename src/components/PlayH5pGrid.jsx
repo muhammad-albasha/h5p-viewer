@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PlayH5p from "./PlayH5p";
 import Popup from "./Popup";
 
@@ -8,6 +8,8 @@ const PlayH5pGrid = ({ isContrast }) => {
   const [currentContent, setCurrentContent] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const sliderRef = useRef(null);
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/h5pContent`)
@@ -34,6 +36,24 @@ const PlayH5pGrid = ({ isContrast }) => {
     setCurrentContent(null);
   };
 
+  const scrollLeft = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({
+        left: -300,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const scrollRight = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({
+        left: 300,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <div
       className="container-fluid"
@@ -43,31 +63,28 @@ const PlayH5pGrid = ({ isContrast }) => {
           : {}
       }
     >
-      {/* Such- und Filterbereich */}
+      {/* Such- und Filterbereich – zentriert */}
       <div className="row mb-4">
-        <div className="col-12 col-md-8 mb-3 mb-md-0">
+        <div className="col-12 d-flex justify-content-center">
           <input
             type="text"
             placeholder="Suchen..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="form-control"
+            className="custom-search-input"
           />
         </div>
       </div>
-
       <div className="row mb-4">
-        <div className="col-12">
-          <div className="d-flex flex-wrap gap-2">
+        <div className="col-12 d-flex justify-content-center">
+          <div className="custom-filter-container">
             {categories.map((category) => (
               <button
                 key={category}
-                className={`btn btn-sm ${
-                  selectedCategory === category
-                    ? "btn-primary"
-                    : "btn-outline-primary"
-                }`}
                 onClick={() => setSelectedCategory(category)}
+                className={`custom-filter-button ${
+                  selectedCategory === category ? "active" : ""
+                }`}
               >
                 {category}
               </button>
@@ -76,55 +93,88 @@ const PlayH5pGrid = ({ isContrast }) => {
         </div>
       </div>
 
-      {/* Inhalts-Grid */}
-      <div className="row flex-grow-1 overflow-auto">
-        <div className="col-12">
-          <div className="row row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3">
-            {filteredData.map((item) => (
-              <div key={item.id} className="col" style={{ minWidth: "150px" }}>
+      {/* Slider-Container */}
+      <div className="slider-container">
+        {/* Linke Navigation */}
+        <button className="custom-slider-button left" onClick={scrollLeft}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#89ba17"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M14 18L8 12l6-6" />
+          </svg>
+        </button>
+
+        {/* Slider-Track */}
+        <div className="slider-track" ref={sliderRef}>
+          {filteredData.map((item) => (
+            <div key={item.id} className="slider-item">
+              <div
+                className="card shadow-sm modern-card"
+                onClick={() =>
+                  handleBoxClick(
+                    <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
+                    item.info
+                  )
+                }
+              >
                 <div
-                  className="card h-100 shadow-sm"
-                  onClick={() =>
-                    handleBoxClick(
-                      <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
-                      item.info
-                    )
-                  }
+                  className="card-img-top"
+                  style={{
+                    height: "150px",
+                    backgroundImage: `url(${item.previewImage})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
                 >
-                  <div
-                    className="card-img-top"
-                    style={{
-                      height: "150px",
-                      backgroundImage: `url(${item.previewImage})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
+                  <div className="image-overlay" />
+                </div>
+                <div className="card-body text-center">
+                  <h5 className="card-title">{item.name}</h5>
+                  <div className="card-text small text-muted text-start">
+                    {item.info.substring(0, 60)}...
+                  </div>
+                  <button
+                    className="custom-link-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleBoxClick(
+                        <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
+                        item.info
+                      );
                     }}
                   >
-                    <div className="image-overlay" />
-                  </div>
-                  <div className="card-body text-center">
-                    <h5 className="card-title">{item.name}</h5>
-                    <div className="card-text small text-muted text-start">
-                      {item.info.substring(0, 60)}...
-                    </div>
-                    <button
-                      className="custom-link-button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleBoxClick(
-                          <PlayH5p h5pJsonPath={item.h5pJsonPath} />,
-                          item.info
-                        );
-                      }}
-                    >
-                      Mehr erfahren →
-                    </button>
-                  </div>
+                    Mehr erfahren →
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
+
+        {/* Rechte Navigation */}
+        <button className="custom-slider-button right" onClick={scrollRight}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#89ba17"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M10 6l6 6-6 6" />
+          </svg>
+        </button>
       </div>
 
       {isPopupOpen && (

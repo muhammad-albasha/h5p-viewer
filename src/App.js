@@ -66,8 +66,17 @@ export default function App() {
     <Router basename={process.env.PUBLIC_URL}>
       <div
         className="d-flex flex-column min-vh-100"
-        style={{ fontSize: `${fontSize}px`, overflowX: "hidden" }}
+        style={{
+          fontSize: `${fontSize}px`,
+          overflowX: "hidden",
+          // Überschreibt die CSS-Variablen bei aktiviertem Kontrastmodus
+          ...(isContrast && {
+            "--primary-color": "#000",
+            "--primary-hover": "#000",
+          }),
+        }}
       >
+        {/* Top-Banner, Navigation, etc. bleiben unverändert */}
         <div
           id="top-banner"
           className="bg-white d-flex justify-content-end align-items-center"
@@ -90,7 +99,7 @@ export default function App() {
             </svg>
             Leichte Sprache
           </Link>
-
+          {/* Schriftgrößen-Buttons und Kontrast-Toggle */}
           <div className="d-flex align-items-center me-2">
             <button
               className="btn btn-link text-dark"
@@ -124,7 +133,6 @@ export default function App() {
               </svg>
             </button>
           </div>
-
           <button
             className="btn btn-link text-dark d-flex align-items-center"
             style={{ minWidth: "100px" }}
@@ -145,6 +153,7 @@ export default function App() {
           </button>
         </div>
 
+        {/* Navigation und weitere Komponenten bleiben unverändert */}
         <nav
           className={`navbar navbar-expand-lg navbar-dark shadow-sm p-2 ${
             isContrast ? "contrast-mode" : "green-mode"
@@ -229,7 +238,7 @@ export default function App() {
             className="mt-4 mx-auto"
             style={{
               width: "100%",
-              marginBottom: "5rem",
+              marginBottom: "2rem",
             }}
           >
             <Routes>
@@ -276,14 +285,6 @@ export default function App() {
               >
                 Datenschutz
               </Link>
-              {/* <a
-                className="text-decoration-none text-secondary me-3"
-                href="https://www.uni-wuppertal.de/de/impressum"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Impressum
-              </a> */}
               <Link
                 className="text-decoration-none text-secondary me-3"
                 to="/impressum"
