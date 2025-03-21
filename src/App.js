@@ -71,7 +71,7 @@ export default function App() {
         <div
           id="top-banner"
           className="bg-white d-flex justify-content-end align-items-center"
-          style={{ padding: "0 1rem" }}
+          style={{ padding: "0 1rem", height: "1.6rem" }}
         >
           <Link
             className="btn btn-link text-dark me-2 d-flex align-items-center"

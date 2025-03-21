@@ -56,7 +56,7 @@ const FacultyDetail = () => {
   };
 
   return (
-    <div className="container-fluid" style={{ minHeight: "100vh" }}>
+    <div className="container-fluid">
       {/* Header und Filterbereich */}
       <div className="row my-4">
         <div className="col-md-8 mx-auto text-center">
