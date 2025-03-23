@@ -8,6 +8,7 @@ const PlayH5pGrid = ({ isContrast }) => {
   const [currentContent, setCurrentContent] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [isScrollable, setIsScrollable] = useState(false);
 
   const sliderRef = useRef(null);
 
@@ -17,6 +18,20 @@ const PlayH5pGrid = ({ isContrast }) => {
       .then((data) => setH5pData(data))
       .catch(console.error);
   }, []);
+
+  // Prüfe, ob der Slider-Track scrollbar ist
+  useEffect(() => {
+    const checkScrollable = () => {
+      if (sliderRef.current) {
+        setIsScrollable(
+          sliderRef.current.scrollWidth > sliderRef.current.clientWidth
+        );
+      }
+    };
+    checkScrollable();
+    window.addEventListener("resize", checkScrollable);
+    return () => window.removeEventListener("resize", checkScrollable);
+  }, [h5pData, searchTerm, selectedCategory]);
 
   const categories = ["All", ...new Set(h5pData.map((item) => item.category))];
 
@@ -37,7 +52,7 @@ const PlayH5pGrid = ({ isContrast }) => {
   };
 
   const scrollLeft = () => {
-    if (sliderRef.current) {
+    if (sliderRef.current && isScrollable) {
       sliderRef.current.scrollBy({
         left: -300,
         behavior: "smooth",
@@ -46,7 +61,7 @@ const PlayH5pGrid = ({ isContrast }) => {
   };
 
   const scrollRight = () => {
-    if (sliderRef.current) {
+    if (sliderRef.current && isScrollable) {
       sliderRef.current.scrollBy({
         left: 300,
         behavior: "smooth",
@@ -96,7 +111,13 @@ const PlayH5pGrid = ({ isContrast }) => {
       {/* Slider-Container */}
       <div className="slider-container">
         {/* Linke Navigation */}
-        <button className="custom-slider-button left" onClick={scrollLeft}>
+        <button
+          className={`custom-slider-button left ${
+            !isScrollable ? "disabled" : ""
+          }`}
+          onClick={scrollLeft}
+          disabled={!isScrollable}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -160,7 +181,13 @@ const PlayH5pGrid = ({ isContrast }) => {
         </div>
 
         {/* Rechte Navigation */}
-        <button className="custom-slider-button right" onClick={scrollRight}>
+        <button
+          className={`custom-slider-button right ${
+            !isScrollable ? "disabled" : ""
+          }`}
+          onClick={scrollRight}
+          disabled={!isScrollable}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"

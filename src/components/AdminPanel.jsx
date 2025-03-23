@@ -19,8 +19,6 @@ const AdminPanel = ({ isContrast }) => {
           `${process.env.REACT_APP_API_URL}/h5pContent`
         );
 
-        // Neue Einträge sollen oben erscheinen, deshalb können wir hier
-        // auch die Reihenfolge gegebenenfalls umkehren, falls gewünscht.
         setFaculties(await facultyRes.json());
         setH5pContents(await h5pRes.json());
       } catch (error) {
@@ -101,7 +99,6 @@ const AdminPanel = ({ isContrast }) => {
     }
   };
 
-  // Neue H5P-Inhalte werden oben eingefügt:
   const addH5PContent = (newContent) => {
     setH5pContents([newContent, ...h5pContents]);
   };
@@ -163,7 +160,7 @@ const AdminPanel = ({ isContrast }) => {
     >
       {/* Fachbereiche */}
       <div className="section">
-        <h3 style={{ color: isContrast ? "#000" : "#2c3e50" }}>Fachbereiche</h3>
+        <h3 style={{ color: isContrast ? "#000" : "#2c3e50" }}>Thema</h3>
         <button
           className="add-button"
           style={{
@@ -284,7 +281,7 @@ const AdminPanel = ({ isContrast }) => {
             <tr>
               <th>ID</th>
               <th>Name</th>
-              <th>Kategorie</th>
+              <th>Tag</th>
               <th>Info</th>
               <th>Aktionen</th>
             </tr>

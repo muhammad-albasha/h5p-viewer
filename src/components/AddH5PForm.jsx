@@ -95,14 +95,14 @@ const AddH5PForm = ({ onAdd }) => {
       {notification && <div className="notification">{notification}</div>}
 
       <div>
-        <label>Fachbereich:</label>
+        <label>Thema:</label>
         <select
           value={selectedFaculty}
           onChange={(e) => setSelectedFaculty(e.target.value)}
           required
         >
           <option value="" disabled>
-            Fachbereich auswählen
+            Thema auswählen
           </option>
           {faculties.map((faculty) => (
             <option key={faculty.id} value={faculty.id}>
@@ -112,7 +112,7 @@ const AddH5PForm = ({ onAdd }) => {
         </select>
       </div>
       <div>
-        <label>Kategorie:</label>
+        <label>Tag:</label>
         <input
           type="text"
           value={category}

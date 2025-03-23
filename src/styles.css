@@ -40,9 +40,6 @@
 
 /* Close Button */
 .close-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
   background: rgba(255, 255, 255, 0.9);
   border: none;
   border-radius: 50%;
@@ -53,7 +50,6 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  z-index: 1001;
 }
 
 .close-btn:hover {
@@ -96,18 +92,16 @@
 
 /* Fullscreen Toggle */
 .fullscreen-toggle {
-  background: #94b63b;
-  color: white;
+  background: rgba(255, 255, 255, 0.9);
   border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 14px;
-  font-weight: 500;
 }
 
 .fullscreen-toggle:hover {
@@ -653,6 +647,13 @@ input[type="file"]::file-selector-button:hover {
   z-index: 10;
 }
 
+.custom-slider-button.disabled {
+  /* background: #ccc; */
+  opacity: 0.3;
+  cursor: default;
+  pointer-events: none;
+}
+
 .custom-slider-button:hover {
   background: rgba(255, 255, 255, 1);
   transform: translateY(-50%) scale(1.1);
@@ -669,18 +670,25 @@ input[type="file"]::file-selector-button:hover {
 .custom-search-input {
   width: 100%;
   max-width: 500px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  border: 2px solid var(--primary-color);
+  padding: 12px 20px;
+  font-size: 1.1rem;
+  border: 1px solid #ccc;
   border-radius: 25px;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  background: #fff;
-  outline: none;
+  background-color: #f9f9f9;
+  color: #333;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
 }
 
 .custom-search-input:focus {
-  border-color: var(--primary-hover);
-  box-shadow: 0 0 10px rgba(120, 155, 20, 0.3); /* Optional – kannst du beibehalten, da Weiß unverändert bleibt */
+  border-color: #89ba17; /* Deine Primärfarbe */
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(137, 186, 23, 0.3);
+  outline: none;
+}
+
+.custom-search-input::placeholder {
+  color: #aaa;
 }
 
 .custom-slider-button svg {
@@ -788,4 +796,12 @@ input[type="file"]::file-selector-button:hover {
     width: 100%;
     margin: 0 0 1rem 0;
   }
+}
+.popup-header {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  z-index: 1001;
 }
