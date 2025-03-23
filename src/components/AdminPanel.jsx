@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import AddH5PForm from "./AddH5PForm";
 
 const AdminPanel = ({ isContrast }) => {
@@ -283,6 +284,7 @@ const AdminPanel = ({ isContrast }) => {
               <th>Name</th>
               <th>Tag</th>
               <th>Info</th>
+              <th>Viewe</th>
               <th>Aktionen</th>
             </tr>
           </thead>
@@ -336,6 +338,10 @@ const AdminPanel = ({ isContrast }) => {
                   ) : (
                     content.info
                   )}
+                </td>
+                {/* Neue Spalte "Viewe" */}
+                <td>
+                  <Link to={`/content?id=${content.id}`}>Viewe</Link>
                 </td>
                 <td>
                   {editH5PContent?.id === content.id ? (
