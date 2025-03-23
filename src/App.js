@@ -246,7 +246,7 @@ export default function App() {
                 path="/"
                 element={
                   <div className="row">
-                    <div className="col-md-2 mb-4">
+                    <div className="col-md-2">
                       <FacultyMenu isContrast={isContrast} />
                     </div>
                     <div className="col-md-10">
