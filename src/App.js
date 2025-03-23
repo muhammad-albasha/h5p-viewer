@@ -246,10 +246,10 @@ export default function App() {
                 path="/"
                 element={
                   <div className="row">
-                    <div className="col-md-3 mb-4">
+                    <div className="col-md-2 mb-4">
                       <FacultyMenu isContrast={isContrast} />
                     </div>
-                    <div className="col-md-9">
+                    <div className="col-md-10">
                       <PlayH5pGrid isContrast={isContrast} />
                     </div>
                   </div>

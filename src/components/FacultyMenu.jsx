@@ -53,23 +53,26 @@ const FacultyMenu = ({ isContrast }) => {
   }
 
   return (
-    <Card className="shadow-sm faculty-menu">
+    <Card className="faculty-menu">
       <Card.Header className="faculty-header">
         <h3 className="mb-0">Themen</h3>
       </Card.Header>
-      <ListGroup variant="flush">
-        {faculties.map((faculty) => (
-          <ListGroup.Item
-            key={faculty.id}
-            action
-            as={Link}
-            to={`/${encodeURIComponent(faculty.name)}`}
-            className="faculty-link"
-          >
-            {faculty.name}
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
+      {/* Der scrollbare Bereich */}
+      <div className="faculty-list-container">
+        <ListGroup variant="flush" className="faculty-list">
+          {faculties.map((faculty) => (
+            <ListGroup.Item
+              key={faculty.id}
+              action
+              as={Link}
+              to={`/${encodeURIComponent(faculty.name)}`}
+              className="faculty-link"
+            >
+              {faculty.name}
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+      </div>
     </Card>
   );
 };

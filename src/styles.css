@@ -698,7 +698,7 @@ input[type="file"]::file-selector-button:hover {
 /* Container für Filter-Buttons – zentriert */
 .custom-filter-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Damit brechen die Buttons in mehreren Zeilen */
   gap: 10px;
   justify-content: center;
 }
@@ -728,21 +728,18 @@ input[type="file"]::file-selector-button:hover {
   --primary-hover: #769f14;
 }
 
-/* Basis-Styling für den FacultyMenu-Container */
 .faculty-menu {
   background: #fff;
   border: none;
-  border-radius: 12px;
-  overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  margin: 1rem;
+  /* margin-left: 0.5rem; */
+  /* Keine overflow‑Angabe hier – nur im inneren Container */
 }
 
-.faculty-menu:hover {
+/* .faculty-menu:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-}
+} */
 
 /* Header: Hier wird der grüne Farbverlauf über Variablen gesetzt */
 .faculty-header {
@@ -752,22 +749,36 @@ input[type="file"]::file-selector-button:hover {
     var(--primary-hover)
   );
   border-bottom: none;
-  padding: 1rem 1.5rem;
+  position: sticky; /* Optional: Damit bleibt er beim Scrollen immer am oberen Rand */
+  top: 0;
+  z-index: 1;
 }
 
 .faculty-header h3 {
   margin: 0;
-  color: #fff; /* Weiß bleibt Weiß */
+  color: #fff;
   font-size: 1.25rem;
+}
+
+.faculty-list-container {
+  overflow-y: auto;
+  max-height: 54vh; /* Passt sich an den Viewport an – passt den Wert an, damit der Header sichtbar bleibt */
+  direction: rtl; /* Damit erscheint die Scrollbar links */
+}
+
+/* Inhalte innerhalb der Liste normal ausrichten */
+.faculty-list {
+  direction: ltr;
 }
 
 /* ListGroup Items & Links */
 .faculty-menu .list-group-item {
   border: none;
-  border-bottom: 1px solid #eee;
+  border: 1px solid #eee;
   transition: background 0.3s, color 0.3s;
   padding: 0.8rem 1.5rem;
   cursor: pointer;
+  align-items: center;
 }
 
 .faculty-menu .list-group-item:last-child {

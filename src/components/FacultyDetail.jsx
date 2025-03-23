@@ -93,12 +93,12 @@ const FacultyDetail = () => {
   return (
     <div className="container-fluid">
       {/* Header und Such-/Filterbereich */}
-      <div className="row my-4">
+      <div className="row ">
         <div className="col-12 text-center">
           <h2>{decodeURIComponent(name)}</h2>
         </div>
       </div>
-      <div className="row mb-4">
+      <div className="row mb-2">
         <div className="col-12 d-flex justify-content-center">
           <input
             type="text"
@@ -109,7 +109,7 @@ const FacultyDetail = () => {
           />
         </div>
       </div>
-      <div className="row mb-4">
+      <div className="row mb-2">
         <div className="col-12 d-flex justify-content-center">
           <div className="custom-filter-container">
             {categories.map((category) => (
@@ -168,7 +168,7 @@ const FacultyDetail = () => {
                 <div
                   className="card-img-top"
                   style={{
-                    height: "200px",
+                    height: "150px", // Bildhöhe reduziert
                     backgroundImage: `url(${item.previewImage})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
