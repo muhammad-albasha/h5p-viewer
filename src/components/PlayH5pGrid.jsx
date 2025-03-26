@@ -7,7 +7,7 @@ const PlayH5pGrid = ({ isContrast }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentContent, setCurrentContent] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("Alle");
   const [isScrollable, setIsScrollable] = useState(false);
 
   const sliderRef = useRef(null);
@@ -33,11 +33,11 @@ const PlayH5pGrid = ({ isContrast }) => {
     return () => window.removeEventListener("resize", checkScrollable);
   }, [h5pData, searchTerm, selectedCategory]);
 
-  const categories = ["All", ...new Set(h5pData.map((item) => item.category))];
+  const categories = ["Alle", ...new Set(h5pData.map((item) => item.category))];
 
   const filteredData = h5pData.filter(
     (item) =>
-      (selectedCategory === "All" || item.category === selectedCategory) &&
+      (selectedCategory === "Alle" || item.category === selectedCategory) &&
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 

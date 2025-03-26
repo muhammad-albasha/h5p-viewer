@@ -1,4 +1,3 @@
-// App.js
 import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
@@ -32,8 +31,12 @@ const ProtectedRoute = ({ children }) => {
 export default function App() {
   const [isContrast, setIsContrast] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // Standard-Fontgröße in Pixeln (hier 16px)
   const [fontSize, setFontSize] = useState(16);
+
+  // Update root font-size so that rem-basierte Werte angepasst werden
+  useEffect(() => {
+    document.documentElement.style.fontSize = `${fontSize}px`;
+  }, [fontSize]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -67,19 +70,18 @@ export default function App() {
       <div
         className="d-flex flex-column min-vh-100"
         style={{
-          fontSize: `${fontSize}px`,
           overflowX: "hidden",
-          // Überschreibt die CSS-Variablen bei aktiviertem Kontrastmodus
+          padding: "0 5px",
           ...(isContrast && {
             "--primary-color": "#000",
             "--primary-hover": "#000",
           }),
         }}
       >
-        {/* Top-Banner, Navigation, etc. bleiben unverändert */}
+        {/* Top-Banner */}
         <div
           id="top-banner"
-          className="bg-white d-flex justify-content-end align-items-center"
+          className="bg-white d-flex flex-nowrap justify-content-end align-items-center"
           style={{ padding: "0 1rem", height: "1.6rem" }}
         >
           <Link
@@ -99,7 +101,6 @@ export default function App() {
             </svg>
             Leichte Sprache
           </Link>
-          {/* Schriftgrößen-Buttons und Kontrast-Toggle */}
           <div className="d-flex align-items-center me-2">
             <button
               className="btn btn-link text-dark"
@@ -153,7 +154,6 @@ export default function App() {
           </button>
         </div>
 
-        {/* Navigation und weitere Komponenten bleiben unverändert */}
         <nav
           className={`navbar navbar-expand-lg navbar-dark shadow-sm p-2 ${
             isContrast ? "contrast-mode" : "green-mode"
@@ -238,7 +238,6 @@ export default function App() {
             className="mt-4 mx-auto"
             style={{
               width: "100%",
-              marginBottom: "2rem",
             }}
           >
             <Routes>
@@ -246,10 +245,10 @@ export default function App() {
                 path="/"
                 element={
                   <div className="row">
-                    <div className="col-md-2">
+                    <div className="col-md-3">
                       <FacultyMenu isContrast={isContrast} />
                     </div>
-                    <div className="col-md-10">
+                    <div className="col-md-9">
                       <PlayH5pGrid isContrast={isContrast} />
                     </div>
                   </div>
@@ -270,7 +269,10 @@ export default function App() {
               />
               <Route path="/Datenschutz" element={<Datenschutz />} />
               <Route path="/Contact" element={<Contact />} />
-              <Route path="/:name" element={<FacultyDetail />} />
+              <Route
+                path="/:name"
+                element={<FacultyDetail isContrast={isContrast} />}
+              />
               <Route path="/leichte-sprache" element={<LeichteSprache />} />
               <Route path="/content" element={<H5PContentPage />} />
               <Route path="/impressum" element={<Impressum />} />

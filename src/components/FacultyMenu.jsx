@@ -3,9 +3,6 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
-import ListGroup from "react-bootstrap/ListGroup";
-import Card from "react-bootstrap/Card";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 const FacultyMenu = ({ isContrast }) => {
   const [faculties, setFaculties] = useState([]);
@@ -53,27 +50,29 @@ const FacultyMenu = ({ isContrast }) => {
   }
 
   return (
-    <Card className="faculty-menu">
-      <Card.Header className="faculty-header">
-        <h3 className="mb-0">Themen</h3>
-      </Card.Header>
-      {/* Der scrollbare Bereich */}
-      <div className="faculty-list-container">
-        <ListGroup variant="flush" className="faculty-list">
-          {faculties.map((faculty) => (
-            <ListGroup.Item
-              key={faculty.id}
-              action
-              as={Link}
-              to={`/${encodeURIComponent(faculty.name)}`}
-              className="faculty-link"
-            >
-              {faculty.name}
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
+    <div>
+      {/* Überschrift */}
+      <h2 className={`faculty-menu-title ${isContrast ? "contrast" : ""}`}>
+        Themen:
+      </h2>
+
+      {/* Container der Buttons: zentriert, aber Inhalte linksbündig */}
+      <div className="faculty-menu-buttons">
+        {/* Button "Alle" führt zur Startseite */}
+        <Link to="/" className={`faculty-btn ${isContrast ? "contrast" : ""}`}>
+          Alle
+        </Link>
+        {faculties.map((faculty) => (
+          <Link
+            key={faculty.id}
+            to={`/${encodeURIComponent(faculty.name)}`}
+            className={`faculty-btn ${isContrast ? "contrast" : ""}`}
+          >
+            {faculty.name}
+          </Link>
+        ))}
       </div>
-    </Card>
+    </div>
   );
 };
 

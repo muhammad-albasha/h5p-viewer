@@ -681,7 +681,7 @@ input[type="file"]::file-selector-button:hover {
 }
 
 .custom-search-input:focus {
-  border-color: #89ba17; /* Deine Primärfarbe */
+  border-color: #89ba17;
   background-color: #fff;
   box-shadow: 0 4px 12px rgba(137, 186, 23, 0.3);
   outline: none;
@@ -695,10 +695,9 @@ input[type="file"]::file-selector-button:hover {
   stroke: var(--primary-color);
 }
 
-/* Container für Filter-Buttons – zentriert */
 .custom-filter-container {
   display: flex;
-  flex-wrap: wrap; /* Damit brechen die Buttons in mehreren Zeilen */
+  flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
 }
@@ -721,9 +720,7 @@ input[type="file"]::file-selector-button:hover {
   color: #fff;
 }
 
-/* Modernes Styling für den FacultyMenu-Container */
 :root {
-  /* Standard: grün */
   --primary-color: #89ba17;
   --primary-hover: #769f14;
 }
@@ -732,16 +729,8 @@ input[type="file"]::file-selector-button:hover {
   background: #fff;
   border: none;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* margin-left: 0.5rem; */
-  /* Keine overflow‑Angabe hier – nur im inneren Container */
 }
 
-/* .faculty-menu:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-} */
-
-/* Header: Hier wird der grüne Farbverlauf über Variablen gesetzt */
 .faculty-header {
   background: linear-gradient(
     135deg,
@@ -749,7 +738,7 @@ input[type="file"]::file-selector-button:hover {
     var(--primary-hover)
   );
   border-bottom: none;
-  position: sticky; /* Optional: Damit bleibt er beim Scrollen immer am oberen Rand */
+  position: sticky;
   top: 0;
   z-index: 1;
 }
@@ -760,13 +749,63 @@ input[type="file"]::file-selector-button:hover {
   font-size: 1.25rem;
 }
 
-.faculty-list-container {
-  overflow-y: auto;
-  max-height: 54vh; /* Passt sich an den Viewport an – passt den Wert an, damit der Header sichtbar bleibt */
-  direction: rtl; /* Damit erscheint die Scrollbar links */
+.faculty-menu-title {
+  text-decoration: underline;
+  font-size: 1.5rem;
+  /* font-weight: bold; */
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+  color: #000000; /* oder eine andere Wunschfarbe */
 }
 
-/* Inhalte innerhalb der Liste normal ausrichten */
+/* Vorherige Styles (z. B. faculty-menu-buttons, faculty-btn) bleiben unverändert */
+.faculty-menu-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  direction: ltr;
+  border-radius: 20px;
+  /* outline: 1px solid #eee; */
+  padding: 10px;
+  border: 2px solid #e0e0e0;
+  justify-content: flex-start; /* Inhalte linksbündig */
+  max-width: 500px; /* oder eine andere gewünschte Breite */
+  margin: 0 auto;
+}
+
+.faculty-btn {
+  display: inline-block;
+  border: 2px solid #89ba17;
+  border-radius: 20px;
+  padding: 0rem 0.5rem;
+  background-color: transparent;
+  color: #89ba17;
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.faculty-btn:hover {
+  background-color: #89ba17;
+  color: #fff;
+}
+
+.faculty-btn.contrast {
+  border: 2px solid #000;
+  color: #000;
+}
+
+.faculty-btn.contrast:hover {
+  background-color: #000;
+  color: white;
+}
+
+.faculty-list-container {
+  overflow-y: auto;
+  max-height: 54vh;
+  direction: rtl;
+}
+
 .faculty-list {
   direction: ltr;
 }
@@ -794,12 +833,8 @@ input[type="file"]::file-selector-button:hover {
 .faculty-menu .list-group-item:hover,
 .faculty-menu .list-group-item.active {
   background: #f8f9fa;
-  color: var(--primary-hover); /* Nutzt die Variable */
+  color: var(--primary-hover);
 }
-
-/* Kontrastmodus: Nur die grünen Variablen werden überschrieben – Weiß bleibt unverändert */
-/* In App.js wird im isContrast-Fall der Inline-Stil gesetzt:
-   style={ isContrast ? { "--primary-color": "#000", "--primary-hover": "#000" } : {} } */
 
 /* Responsive Anpassung */
 @media (max-width: 768px) {
