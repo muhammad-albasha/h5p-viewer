@@ -1,3 +1,4 @@
+// src/components/AdminPanel.js
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AddH5PForm from "./AddH5PForm";
@@ -10,6 +11,10 @@ const AdminPanel = ({ isContrast }) => {
   const [isFacultyFormVisible, setIsFacultyFormVisible] = useState(false);
   const [isH5PFormVisible, setIsH5PFormVisible] = useState(false);
 
+  // States für Profil-Daten
+  const [profile, setProfile] = useState({ email: "", password: "" });
+  const [isProfileEdit, setIsProfileEdit] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -19,7 +24,6 @@ const AdminPanel = ({ isContrast }) => {
         const h5pRes = await fetch(
           `${process.env.REACT_APP_API_URL}/h5pContent`
         );
-
         setFaculties(await facultyRes.json());
         setH5pContents(await h5pRes.json());
       } catch (error) {
@@ -30,6 +34,31 @@ const AdminPanel = ({ isContrast }) => {
     fetchData();
   }, []);
 
+  // Profil-Daten abrufen
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/profile`,
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setProfile({ email: data.email, password: "" });
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  // Funktionen für Fakultäten
   const addFaculty = async (name) => {
     try {
       const response = await fetch(
@@ -46,7 +75,6 @@ const AdminPanel = ({ isContrast }) => {
 
       if (response.ok) {
         const newFaculty = await response.json();
-        // Neue Fakultät oben einfügen:
         setFaculties([newFaculty, ...faculties]);
       }
     } catch (error) {
@@ -100,6 +128,7 @@ const AdminPanel = ({ isContrast }) => {
     }
   };
 
+  // Funktionen für H5P-Inhalte
   const addH5PContent = (newContent) => {
     setH5pContents([newContent, ...h5pContents]);
   };
@@ -150,6 +179,27 @@ const AdminPanel = ({ isContrast }) => {
     }
   };
 
+  // Profil aktualisieren
+  const updateProfile = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/profile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+        body: JSON.stringify(profile),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message);
+        setIsProfileEdit(false);
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+
   return (
     <div
       className="admin-panel"
@@ -159,7 +209,52 @@ const AdminPanel = ({ isContrast }) => {
           : {}
       }
     >
-      {/* Fachbereiche */}
+      {/* Profil-Sektion */}
+      <div className="profile-section">
+        <h3>Profil</h3>
+        {isProfileEdit ? (
+          <div className="profile-form">
+            <input
+              type="email"
+              value={profile.email}
+              onChange={(e) =>
+                setProfile({ ...profile, email: e.target.value })
+              }
+              placeholder="E-Mail"
+            />
+            <input
+              type="password"
+              value={profile.password}
+              onChange={(e) =>
+                setProfile({ ...profile, password: e.target.value })
+              }
+              placeholder="Neues Passwort (optional)"
+            />
+            <div className="form-actions">
+              <button className="save-btn" onClick={updateProfile}>
+                Speichern
+              </button>
+              <button
+                className="cancel-btn"
+                onClick={() => setIsProfileEdit(false)}
+              >
+                Abbrechen
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <p className="profile-info">E-Mail: {profile.email}</p>
+            <button
+              className="profile-btn"
+              onClick={() => setIsProfileEdit(true)}
+            >
+              Profil bearbeiten
+            </button>
+          </div>
+        )}
+      </div>
+      {/* Fakultäten */}
       <div className="section">
         <h3 style={{ color: isContrast ? "#000" : "#2c3e50" }}>Thema</h3>
         <button
@@ -183,7 +278,6 @@ const AdminPanel = ({ isContrast }) => {
           <tbody>
             {faculties.map((faculty, index) => (
               <tr key={faculty.id}>
-                {/* Frontend-ID als fortlaufende Nummer */}
                 <td>{index + 1}</td>
                 <td>
                   {editFaculty?.id === faculty.id ? (
@@ -339,7 +433,6 @@ const AdminPanel = ({ isContrast }) => {
                     content.info
                   )}
                 </td>
-                {/* Neue Spalte "Viewe" */}
                 <td>
                   <Link to={`/content?id=${content.id}`}>Viewe</Link>
                 </td>

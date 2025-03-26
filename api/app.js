@@ -8,6 +8,7 @@ import sequelize from "./models/index.js";
 import authRoutes from "./routes/authRoutes.js";
 import dataRoutes from "./routes/dataRoutes.js";
 import { ensureAdminUser } from "./models/user.js";
+import profileRoutes from "./routes/profileRoutes.js";
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ console.log("Static path for previewimages:", staticPaths.previewimages);
 
 app.use("/api/auth", authRoutes);
 app.use("/api", dataRoutes);
+app.use("/api/profile", profileRoutes);
 
 app.use((err, req, res, next) => {
   console.error("Unhandled error:", err);
