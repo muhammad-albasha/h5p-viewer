@@ -6,8 +6,41 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import extract from "extract-zip";
+import { fileURLToPath } from "url";
 
 const router = Router();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Basisverzeichnis – passe diesen Pfad an, sodass er auf dein Verzeichnis "/var/www/app/h5p/api/data" zeigt.
+const baseDataDir = path.join(__dirname, "../data");
+
+// Hilfsfunktion zum Erstellen von Verzeichnissen, falls diese nicht existieren.
+const ensureDirectory = (dir) => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+    console.log(`'${dir}'-Verzeichnis wurde erstellt.`);
+  }
+};
+
+// Hilfsfunktion zum rekursiven Löschen eines Ordners – prüft, ob fs.rmSync existiert.
+const deleteFolderRecursive = (folderPath) => {
+  if (fs.existsSync(folderPath)) {
+    if (typeof fs.rmSync === "function") {
+      fs.rmSync(folderPath, { recursive: true, force: true });
+      console.log(`Ordner gelöscht (fs.rmSync): ${folderPath}`);
+    } else {
+      fs.rmdirSync(folderPath, { recursive: true });
+      console.log(`Ordner gelöscht (fs.rmdirSync): ${folderPath}`);
+    }
+  } else {
+    console.log(`Ordner existiert nicht: ${folderPath}`);
+  }
+};
+
+// ------------------------------
+// Routen
+// ------------------------------
 
 // Fakultäten abrufen
 router.get("/faculties", async (req, res) => {
@@ -22,9 +55,7 @@ router.get("/faculties", async (req, res) => {
 // Fakultäten mit H5P-Daten abrufen
 router.get("/faculties-with-h5p", async (req, res) => {
   try {
-    const faculties = await Faculty.findAll({
-      include: H5PContent,
-    });
+    const faculties = await Faculty.findAll({ include: H5PContent });
     res.json(faculties);
   } catch (error) {
     res.status(500).send(error.message);
@@ -52,20 +83,16 @@ router.get("/h5pContent", async (req, res) => {
   }
 });
 
-// GET einzelnes H5P Content Item
+// Einzelnes H5P Content Item abrufen
 router.get("/h5pContent/:id", async (req, res) => {
   try {
     const content = await H5PContent.findByPk(req.params.id);
 
     if (!content) {
-      return res.status(404).json({
-        error: "Content nicht gefunden",
-      });
+      return res.status(404).json({ error: "Content nicht gefunden" });
     }
 
-    // URLs konstruieren
     const baseUrl = `${req.protocol}://${req.get("host")}`;
-
     const formattedData = {
       id: content.id,
       name: content.name,
@@ -81,21 +108,19 @@ router.get("/h5pContent/:id", async (req, res) => {
     res.json(formattedData);
   } catch (error) {
     console.error("Fehler beim Abrufen des Contents:", error);
-    res.status(500).json({
-      error: "Interner Serverfehler",
-      details: error.message,
-    });
+    res
+      .status(500)
+      .json({ error: "Interner Serverfehler", details: error.message });
   }
 });
 
 // Neue Fakultät hinzufügen
 router.post("/faculties", authenticateToken, async (req, res) => {
   const { name } = req.body;
-  if (!name) {
+  if (!name)
     return res
       .status(400)
       .json({ error: "Name der Fakultät ist erforderlich" });
-  }
   try {
     const newFaculty = await Faculty.create({ name });
     res.status(201).json(newFaculty);
@@ -105,7 +130,7 @@ router.post("/faculties", authenticateToken, async (req, res) => {
   }
 });
 
-// Storage-Konfiguration
+// Storage-Konfiguration für Multer (temporärer Upload)
 const h5pStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = "uploads";
@@ -119,14 +144,6 @@ const h5pStorage = multer.diskStorage({
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
-
-const ensureDirectory = (dir) => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-    console.log(`'${dir}'-Verzeichnis wurde erstellt.`);
-  }
-};
-
 const upload = multer({ storage: h5pStorage });
 
 // H5P-Inhalt hochladen und speichern
@@ -152,30 +169,25 @@ router.post(
       const h5pFile = req.files.h5pFile[0];
       const imageFile = req.files.imageFile[0];
 
-      // H5P-Datei entpacken
-      const h5pDir = `data/h5p/${Date.now()}`;
+      // H5P-Datei entpacken in ein eindeutiges Verzeichnis unter baseDataDir/h5p/
+      const h5pDir = path.join(baseDataDir, "h5p", Date.now().toString());
       ensureDirectory(h5pDir);
 
       try {
         console.log("Entpacken der H5P-Datei...");
         await extract(h5pFile.path, { dir: path.resolve(h5pDir) });
         console.log("Entpacken erfolgreich.");
-
-        // Lösche die hochgeladene .h5p-Datei nach erfolgreichem Entpacken
         fs.unlink(h5pFile.path, (err) => {
-          if (err) {
-            console.error("Fehler beim Löschen der .h5p-Datei:", err);
-          } else {
-            console.log("Hochgeladene .h5p-Datei erfolgreich gelöscht.");
-          }
+          if (err) console.error("Fehler beim Löschen der .h5p-Datei:", err);
+          else console.log("Hochgeladene .h5p-Datei erfolgreich gelöscht.");
         });
       } catch (error) {
         console.error("Fehler beim Entpacken der H5P-Datei:", error);
         return res.status(400).json({ error: "Ungültige H5P-Datei." });
       }
 
-      // Bild verschieben
-      const imageDir = `data/images`;
+      // Bild verschieben in baseDataDir/previewimages
+      const imageDir = path.join(baseDataDir, "previewimages");
       ensureDirectory(imageDir);
       const imageDest = path.join(imageDir, imageFile.filename);
       try {
@@ -188,13 +200,13 @@ router.post(
           .json({ error: "Fehler beim Speichern des Bildes." });
       }
 
-      // Datenbankeintrag erstellen – Speichern nur des Ordnernamens (z. B. "1691234567890")
+      // Datenbankeintrag erstellen – speichere den Ordnernamen (z. B. "1691234567890")
       try {
         const newContent = await H5PContent.create({
           name: path.basename(h5pFile.originalname, ".h5p"),
           category: req.body.category,
-          previewImage: `images/${imageFile.filename}`, // Pfad relativ zu `public/`
-          h5pJsonPath: path.basename(h5pDir), // Nur der Ordnername wird gespeichert
+          previewImage: `previewimages/${imageFile.filename}`, // relativer Pfad zu baseDataDir
+          h5pJsonPath: path.basename(h5pDir), // nur der Ordnername
           info: req.body.info,
           facultyId: req.body.facultyId,
         });
@@ -218,26 +230,24 @@ router.delete("/h5pContent/:id", authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
     const content = await H5PContent.findByPk(id);
-    if (!content) {
-      return res.status(404).send("H5P-Inhalt nicht gefunden.");
-    }
+    if (!content) return res.status(404).send("H5P-Inhalt nicht gefunden.");
     try {
-      // Konstruiere den vollständigen Pfad zum entpackten H5P-Ordner
-      const h5pFolderPath = path.join("data", "h5p", content.h5pJsonPath);
-      if (fs.existsSync(h5pFolderPath)) {
-        fs.rmSync(h5pFolderPath, { recursive: true, force: true });
-        console.log(`H5P-Verzeichnis gelöscht: ${h5pFolderPath}`);
-      }
+      // Absoluter Pfad zum entpackten H5P-Ordner
+      const h5pFolderPath = path.join(baseDataDir, "h5p", content.h5pJsonPath);
+      console.log("Lösche Ordner:", h5pFolderPath);
+      deleteFolderRecursive(h5pFolderPath);
 
-      // Konstruiere den Pfad zum Vorschaubild
+      // Absoluter Pfad zum Vorschaubild
       const imagePath = path.join(
-        "data",
-        "images",
+        baseDataDir,
+        "previewimages",
         path.basename(content.previewImage)
       );
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);
         console.log(`Bilddatei gelöscht: ${imagePath}`);
+      } else {
+        console.log(`Vorschaubild nicht gefunden: ${imagePath}`);
       }
     } catch (fileError) {
       console.error("Fehler beim Entfernen der Dateien:", fileError);
@@ -249,26 +259,17 @@ router.delete("/h5pContent/:id", authenticateToken, async (req, res) => {
   }
 });
 
-// Fakultät löschen
+// Fakultät löschen (inkl. zugehöriger H5P-Inhalte)
 router.delete("/faculties/:id", authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
     const h5pContents = await H5PContent.findAll({ where: { facultyId: id } });
     for (const content of h5pContents) {
-      // Lösche H5P-Ordner
-      const h5pFolderPath = path.join(
-        __dirname,
-        "../data/h5p",
-        content.h5pJsonPath
-      );
-      if (fs.existsSync(h5pFolderPath)) {
-        fs.rmSync(h5pFolderPath, { recursive: true, force: true });
-        console.log(`H5P-Verzeichnis gelöscht: ${h5pFolderPath}`);
-      }
-      // Lösche das Vorschaubild
+      const h5pFolderPath = path.join(baseDataDir, "h5p", content.h5pJsonPath);
+      deleteFolderRecursive(h5pFolderPath);
       const imagePath = path.join(
-        __dirname,
-        "../data/images",
+        baseDataDir,
+        "previewimages",
         path.basename(content.previewImage)
       );
       if (fs.existsSync(imagePath)) {
@@ -277,13 +278,11 @@ router.delete("/faculties/:id", authenticateToken, async (req, res) => {
       }
     }
     const result = await Faculty.destroy({ where: { id } });
-    if (result) {
+    if (result)
       res
         .status(200)
         .send("Fachbereich und zugehörige H5P-Inhalte erfolgreich entfernt.");
-    } else {
-      res.status(404).send("Fachbereich nicht gefunden.");
-    }
+    else res.status(404).send("Fachbereich nicht gefunden.");
   } catch (error) {
     console.error("Fehler beim Entfernen des Fachbereichs:", error);
     res.status(500).send("Fehler beim Entfernen des Fachbereichs.");
@@ -294,9 +293,7 @@ router.delete("/faculties/:id", authenticateToken, async (req, res) => {
 router.put("/faculties/:id", authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-  if (!name) {
-    return res.status(400).json({ error: "Name ist erforderlich" });
-  }
+  if (!name) return res.status(400).json({ error: "Name ist erforderlich" });
   try {
     const faculty = await Faculty.findByPk(id);
     if (!faculty) return res.status(404).json({ error: "Nicht gefunden" });

@@ -2,48 +2,51 @@
 
 /* Custom H5P font to use for icons. */
 @font-face {
-  font-family: 'h5p';
-  src:  url('../fonts/h5p-core-27.eot?9pg14');
-  src:  url('../fonts/h5p-core-27.eot?9pg14#iefix') format('embedded-opentype'),
-  url('../fonts/h5p-core-27.ttf?9pg14') format('truetype'),
-  url('../fonts/h5p-core-27.woff?9pg14') format('woff'),
-  url('../fonts/h5p-core-27.svg?9pg14#h5p-core-27') format('svg');
+  font-family: "h5p";
+  src: url("../fonts/h5p-core-27.eot?9pg14");
+  src: url("../fonts/h5p-core-27.eot?9pg14#iefix") format("embedded-opentype"),
+    url("../fonts/h5p-core-27.ttf?9pg14") format("truetype"),
+    url("../fonts/h5p-core-27.woff?9pg14") format("woff"),
+    url("../fonts/h5p-core-27.svg?9pg14#h5p-core-27") format("svg");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'h5p-hub-publish';
-  src: url('../fonts/h5p-hub-publish.eot?wy8ylc');
-  src: url('../fonts/h5p-hub-publish.eot?wy8ylc#iefix') format('embedded-opentype'),
-  url('../fonts/h5p-hub-publish.ttf?wy8ylc') format('truetype'),
-  url('../fonts/h5p-hub-publish.woff?wy8ylc') format('woff'),
-  url('../fonts/h5p-hub-publish.svg?wy8ylc#h5p-hub') format('svg');
+  font-family: "h5p-hub-publish";
+  src: url("../fonts/h5p-hub-publish.eot?wy8ylc");
+  src: url("../fonts/h5p-hub-publish.eot?wy8ylc#iefix")
+      format("embedded-opentype"),
+    url("../fonts/h5p-hub-publish.ttf?wy8ylc") format("truetype"),
+    url("../fonts/h5p-hub-publish.woff?wy8ylc") format("woff"),
+    url("../fonts/h5p-hub-publish.svg?wy8ylc#h5p-hub") format("svg");
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
-html.h5p-iframe, html.h5p-iframe > body {
+html.h5p-iframe,
+html.h5p-iframe > body {
   font-family: Sans-Serif; /* Use the browser's default sans-serif font. (Since Heletica doesn't look nice on Windows, and Arial on OS X.) */
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
 }
-.h5p-semi-fullscreen, .h5p-fullscreen, html.h5p-iframe .h5p-container {
+.h5p-semi-fullscreen,
+.h5p-fullscreen,
+html.h5p-iframe .h5p-container {
   overflow: hidden;
 }
 .h5p-content {
   position: relative;
   background: #fefefe;
-  border: 1px solid #EEE;
+  border: 1px solid #eee;
   border-bottom: none;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
 }
-.h5p-noselect
-{
+.h5p-noselect {
   -khtml-user-select: none;
   -ms-user-select: none;
   -moz-user-select: none;
@@ -84,7 +87,7 @@ body.h5p-semi-fullscreen {
   z-index: 101;
   width: 100%;
   height: 100%;
-  background-color: #FFF;
+  background-color: #fff;
 }
 
 .h5p-content-controls {
@@ -98,23 +101,27 @@ body.h5p-semi-fullscreen {
   display: none;
 }
 
-.h5p-content-controls > a:link, .h5p-content-controls > a:visited, a.h5p-disable-fullscreen:link, a.h5p-disable-fullscreen:visited {
+.h5p-content-controls > a:link,
+.h5p-content-controls > a:visited,
+a.h5p-disable-fullscreen:link,
+a.h5p-disable-fullscreen:visited {
   color: #e5eef6;
 }
 
 .h5p-enable-fullscreen:before {
-  font-family: 'H5P';
+  font-family: "H5P";
   content: "\e88c";
 }
 .h5p-disable-fullscreen:before {
-  font-family: 'H5P';
+  font-family: "H5P";
   content: "\e891";
 }
-.h5p-enable-fullscreen, .h5p-disable-fullscreen {
+.h5p-enable-fullscreen,
+.h5p-disable-fullscreen {
   cursor: pointer;
-  color: #EEE;
-  background: rgb(0,0,0);
-  background: rgba(0,0,0,0.3);
+  color: #eee;
+  background: rgb(0, 0, 0);
+  background: rgba(0, 0, 0, 0.3);
   line-height: 0.975em;
   font-size: 2em;
   width: 1.125em;
@@ -134,8 +141,9 @@ body.h5p-semi-fullscreen {
   outline-offset: 0.25em;
 }
 
-.h5p-enable-fullscreen:hover, .h5p-disable-fullscreen:hover {
-  background: rgba(0,0,0,0.5);
+.h5p-enable-fullscreen:hover,
+.h5p-disable-fullscreen:hover {
+  background: rgba(0, 0, 0, 0.5);
 }
 .h5p-semi-fullscreen .h5p-enable-fullscreen {
   display: none;
@@ -177,7 +185,7 @@ div.h5p-fullscreen {
   /* Hack for IOS landscape / portrait */
   width: 10px;
   min-width: 100%;
-  *width: 100%;
+  width: 100%;
   /* End of hack */
   height: 100%;
   z-index: 10;
@@ -195,13 +203,14 @@ div.h5p-fullscreen {
   margin: 0;
   height: 25px;
   font-size: 12px;
-  background: #FAFAFA;
-  border-top: 1px solid #EEE;
-  border-bottom: 1px solid #EEE;
+  background: #fafafa;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
   clear: both;
   font-family: Sans-Serif;
 }
-.h5p-fullscreen .h5p-actions, .h5p-semi-fullscreen .h5p-actions {
+.h5p-fullscreen .h5p-actions,
+.h5p-semi-fullscreen .h5p-actions {
   display: none;
 }
 .h5p-actions > .h5p-button {
@@ -233,7 +242,7 @@ div.h5p-fullscreen {
   outline-color: #9ecaed;
 }
 .h5p-actions > .h5p-button:before {
-  font-family: 'H5P';
+  font-family: "H5P";
   font-size: 20px;
   line-height: 23px;
   vertical-align: bottom;
@@ -251,7 +260,7 @@ div.h5p-fullscreen {
 .h5p-actions .h5p-link {
   float: right;
   margin-right: 0;
-  font-size: 2.0em;
+  font-size: 2em;
   line-height: 23px;
   overflow: hidden;
   color: #999;
@@ -259,7 +268,7 @@ div.h5p-fullscreen {
   outline: none;
 }
 .h5p-actions .h5p-link:before {
-  font-family: 'H5P';
+  font-family: "H5P";
   content: "\e88e";
   vertical-align: bottom;
 }
@@ -282,8 +291,8 @@ div.h5p-fullscreen {
   -moz-transition: opacity 0.2s;
   -o-transition: opacity 0.2s;
   transition: opacity 0.2s;
-  background:#000;
-  background:rgba(0,0,0,0.75);
+  background: #000;
+  background: rgba(0, 0, 0, 0.75);
 }
 .h5p-popup-dialog.h5p-open {
   opacity: 1;
@@ -389,10 +398,10 @@ div.h5p-fullscreen {
   color: #656565;
   cursor: pointer;
   text-indent: -0.065em;
-  z-index: 3
+  z-index: 3;
 }
 .h5p-popup-dialog .h5p-close:after {
-  font-family: 'H5P';
+  font-family: "H5P";
   content: "\e894";
 }
 .h5p-popup-dialog .h5p-close:hover:after,
@@ -416,7 +425,7 @@ div.h5p-fullscreen {
   margin: 0 0.75em 0 0;
 }
 .h5p-popup-dialog dt:after {
-  content: ':';
+  content: ":";
 }
 .h5p-popup-dialog dd {
   margin: 0;
@@ -456,7 +465,7 @@ div.h5p-fullscreen {
   padding-left: 0.25em;
 }
 .h5p-throbber {
-  background: url('../images/throbber.gif?ver=1.2.1') 10px center no-repeat;
+  background: url("../images/throbber.gif?ver=1.2.1") 10px center no-repeat;
   padding-left: 38px;
   min-height: 30px;
   line-height: 30px;
@@ -489,7 +498,7 @@ div.h5p-fullscreen {
   border-radius: 0.25em;
 }
 .h5p-big-button:before {
-  font-family: 'h5p';
+  font-family: "h5p";
   content: "\e893";
   line-height: 1;
   font-size: 3em;
@@ -573,7 +582,6 @@ div.h5p-fullscreen {
   white-space: pre;
   overflow: auto;
 }
-
 
 /* This is loaded as part of Core and not Editor since this needs to be outside the editor iframe */
 .h5peditor-semi-fullscreen {

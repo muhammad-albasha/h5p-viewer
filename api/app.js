@@ -23,16 +23,16 @@ app.use(express.json());
 const staticPaths = {
   h5pRoot: path.join(__dirname, "data", "h5p"),
   h5pAlt: path.join(__dirname, "../api/data/h5p"),
-  images: path.join(__dirname, "../api/data/images"),
+  previewimages: path.join(__dirname, "../api/data/previewimages"),
 };
 
 app.use("/h5p/data/h5p", express.static(staticPaths.h5pRoot));
 app.use("/h5p", express.static(staticPaths.h5pAlt));
-app.use("/images", express.static(staticPaths.images));
+app.use("/previewimages", express.static(staticPaths.previewimages));
 
 console.log("Static path for H5P (root):", staticPaths.h5pRoot);
 console.log("Static path for H5P (alternative):", staticPaths.h5pAlt);
-console.log("Static path for Images:", staticPaths.images);
+console.log("Static path for previewimages:", staticPaths.previewimages);
 
 app.use("/api/auth", authRoutes);
 app.use("/api", dataRoutes);
