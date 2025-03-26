@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
@@ -32,8 +33,9 @@ export default function App() {
   const [isContrast, setIsContrast] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [fontSize, setFontSize] = useState(16);
+  const [lastActivity, setLastActivity] = useState(Date.now());
 
-  // Update root font-size so that rem-basierte Werte angepasst werden
+  // Aktualisiere root font-size (rem-basierte Werte)
   useEffect(() => {
     document.documentElement.style.fontSize = `${fontSize}px`;
   }, [fontSize]);
@@ -43,6 +45,7 @@ export default function App() {
     setIsAuthenticated(!!token);
   }, []);
 
+  // Globaler Fetch-Interceptor: Bei 401 wird automatisch ausgeloggt und zur Login-Seite weitergeleitet
   useEffect(() => {
     const originalFetch = window.fetch;
     window.fetch = async (...args) => {
@@ -50,11 +53,52 @@ export default function App() {
       if (response.status === 401) {
         localStorage.removeItem("token");
         setIsAuthenticated(false);
-        window.location.href = "/h5p/Login";
+        window.location.href = "/Login";
       }
       return response;
     };
   }, []);
+
+  // Erfasse Benutzeraktivität (z.B. Mausbewegung, Tastendruck, Klick)
+  useEffect(() => {
+    const updateActivity = () => setLastActivity(Date.now());
+    window.addEventListener("mousemove", updateActivity);
+    window.addEventListener("keydown", updateActivity);
+    window.addEventListener("click", updateActivity);
+    return () => {
+      window.removeEventListener("mousemove", updateActivity);
+      window.removeEventListener("keydown", updateActivity);
+      window.removeEventListener("click", updateActivity);
+    };
+  }, []);
+
+  // Bei aktiver Nutzung den Token regelmäßig verlängern
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      // Wenn in den letzten 60 Sekunden Aktivität war, wird der Token verlängert
+      if (Date.now() - lastActivity < 60000) {
+        try {
+          const token = localStorage.getItem("token");
+          if (!token) return;
+          const response = await fetch(
+            `${process.env.REACT_APP_API_URL}/auth/refresh`,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
+          if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem("token", data.token);
+          }
+        } catch (error) {
+          console.error("Error refreshing token:", error);
+        }
+      }
+    }, 30000); // alle 30 Sekunden prüfen
+    return () => clearInterval(interval);
+  }, [lastActivity]);
 
   const toggleContrast = () => {
     setIsContrast(!isContrast);
@@ -84,6 +128,7 @@ export default function App() {
           className="bg-white d-flex flex-nowrap justify-content-end align-items-center"
           style={{ padding: "0 1rem", height: "1.6rem" }}
         >
+          {/* Leichte Sprache Button mit neuem SVG */}
           <Link
             className="btn btn-link text-dark me-2 d-flex align-items-center"
             to="/leichte-sprache"
@@ -93,11 +138,11 @@ export default function App() {
               width="24"
               height="24"
               fill="currentColor"
-              className="bi bi-chat-text me-1"
+              className="bi bi-chat-left-text me-1"
               viewBox="0 0 16 16"
             >
-              <path d="M2 2a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3v3.586L9.586 12H14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2zm0 1h12a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H9.414L7 14.414V11H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
-              <path d="M3 5.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 3 5.5zm0 2a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 3 7.5z" />
+              <path d="M14 1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h1v3.586L6.586 11H14a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 2h12v7H6a1 1 0 0 0-1 1v3.293L3.707 10H2V2z" />
+              <path d="M4 4.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 4.5zm0 2a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z" />
             </svg>
             Leichte Sprache
           </Link>
@@ -106,6 +151,7 @@ export default function App() {
               className="btn btn-link text-dark"
               onClick={() => setFontSize((prev) => Math.max(10, prev - 1))}
             >
+              {/* Minus-Icon */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -122,6 +168,7 @@ export default function App() {
               className="btn btn-link text-dark"
               onClick={() => setFontSize((prev) => prev + 1)}
             >
+              {/* Plus-Icon */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -134,6 +181,7 @@ export default function App() {
               </svg>
             </button>
           </div>
+          {/* Kontrast Button mit SVG */}
           <button
             className="btn btn-link text-dark d-flex align-items-center"
             style={{ minWidth: "100px" }}
@@ -234,12 +282,7 @@ export default function App() {
         </div>
 
         <div className="flex-grow-1 d-flex flex-column">
-          <div
-            className="mt-4 mx-auto"
-            style={{
-              width: "100%",
-            }}
-          >
+          <div className="mt-4 mx-auto" style={{ width: "100%" }}>
             <Routes>
               <Route
                 path="/"
