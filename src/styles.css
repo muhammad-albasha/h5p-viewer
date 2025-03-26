@@ -753,7 +753,7 @@ input[type="file"]::file-selector-button:hover {
   text-decoration: underline;
   font-size: 1.5rem;
   /* font-weight: bold; */
-  margin-left: 1.5rem;
+  margin-left: 2rem;
   margin-bottom: 1rem;
   color: #000000; /* oder eine andere Wunschfarbe */
 }
