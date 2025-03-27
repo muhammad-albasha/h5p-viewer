@@ -26,7 +26,7 @@ import Impressum from "./components/Impressum";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
-  return token ? children : <Navigate to="/h5p/Login" />;
+  return token ? children : <Navigate to="/Login" />;
 };
 
 export default function App() {
@@ -53,7 +53,7 @@ export default function App() {
       if (response.status === 401) {
         localStorage.removeItem("token");
         setIsAuthenticated(false);
-        window.location.href = "/Login";
+        window.location.href = "/h5p/Login";
       }
       return response;
     };
@@ -130,7 +130,7 @@ export default function App() {
           <Link
             className="btn btn-link text-dark me-2 d-flex align-items-center"
             to="/leichte-sprache"
-            style={{ fontSize: "0.8rem" }}
+            style={{ fontSize: "0.9rem" }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -186,7 +186,7 @@ export default function App() {
           {/* Kontrast Button */}
           <button
             className="btn btn-link text-dark d-flex align-items-center"
-            style={{ minWidth: "80px", fontSize: "0.8rem" }}
+            style={{ minWidth: "80px", fontSize: "0.9rem" }}
             onClick={toggleContrast}
           >
             <svg
