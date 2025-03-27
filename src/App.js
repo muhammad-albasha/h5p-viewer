@@ -124,7 +124,7 @@ export default function App() {
         {/* Top-Banner */}
         <div
           id="top-banner"
-          className="bg-white d-flex flex-wrap justify-content-end align-items-center fs-6"
+          className="bg-white d-flex justify-content-end align-items-center fs-6"
         >
           {/* Leichte Sprache Button */}
           <Link
