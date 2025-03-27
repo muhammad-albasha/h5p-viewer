@@ -26,7 +26,7 @@ import Impressum from "./components/Impressum";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
-  return token ? children : <Navigate to="/Login" />;
+  return token ? children : <Navigate to="/h5p/Login" />;
 };
 
 export default function App() {
@@ -124,12 +124,13 @@ export default function App() {
         {/* Top-Banner */}
         <div
           id="top-banner"
-          className="bg-white d-flex flex-wrap justify-content-end align-items-center p-1 fs-6"
+          className="bg-white d-flex flex-wrap justify-content-end align-items-center fs-6"
         >
           {/* Leichte Sprache Button */}
           <Link
             className="btn btn-link text-dark me-2 d-flex align-items-center"
             to="/leichte-sprache"
+            style={{ fontSize: "0.8rem" }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -163,7 +164,7 @@ export default function App() {
                 <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z" />
               </svg>
             </button>
-            <span className="mx-1">Schriftgröße: {fontSize}</span>
+            <span className="mx-1">{fontSize}</span>
             <button
               className="btn btn-link text-dark"
               onClick={() => setFontSize((prev) => prev + 1)}
@@ -185,7 +186,7 @@ export default function App() {
           {/* Kontrast Button */}
           <button
             className="btn btn-link text-dark d-flex align-items-center"
-            style={{ minWidth: "80px" }}
+            style={{ minWidth: "80px", fontSize: "0.8rem" }}
             onClick={toggleContrast}
           >
             <svg

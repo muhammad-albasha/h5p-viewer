@@ -79,7 +79,7 @@ const PlayH5pGrid = ({ isContrast }) => {
       }
     >
       {/* Such- und Filterbereich – zentriert */}
-      <div className="row mb-4">
+      <div className="row mb-4 mt-1">
         <div className="col-12 d-flex justify-content-center">
           <input
             type="text"
