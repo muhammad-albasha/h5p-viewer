@@ -59,7 +59,7 @@ export default function App() {
     };
   }, []);
 
-  // Erfasse Benutzeraktivität (z.B. Mausbewegung, Tastendruck, Klick)
+  // Erfasse Benutzeraktivität (Mausbewegung, Tastendruck, Klick)
   useEffect(() => {
     const updateActivity = () => setLastActivity(Date.now());
     window.addEventListener("mousemove", updateActivity);
@@ -75,7 +75,6 @@ export default function App() {
   // Bei aktiver Nutzung den Token regelmäßig verlängern
   useEffect(() => {
     const interval = setInterval(async () => {
-      // Wenn in den letzten 60 Sekunden Aktivität war, wird der Token verlängert
       if (Date.now() - lastActivity < 60000) {
         try {
           const token = localStorage.getItem("token");
@@ -96,7 +95,7 @@ export default function App() {
           console.error("Error refreshing token:", error);
         }
       }
-    }, 30000); // alle 30 Sekunden prüfen
+    }, 30000);
     return () => clearInterval(interval);
   }, [lastActivity]);
 
@@ -125,18 +124,17 @@ export default function App() {
         {/* Top-Banner */}
         <div
           id="top-banner"
-          className="bg-white d-flex flex-nowrap justify-content-end align-items-center"
-          style={{ padding: "0 1rem", height: "1.6rem" }}
+          className="bg-white d-flex flex-wrap justify-content-end align-items-center p-1 fs-6"
         >
-          {/* Leichte Sprache Button mit neuem SVG */}
+          {/* Leichte Sprache Button */}
           <Link
             className="btn btn-link text-dark me-2 d-flex align-items-center"
             to="/leichte-sprache"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="16"
+              height="16"
               fill="currentColor"
               className="bi bi-chat-left-text me-1"
               viewBox="0 0 16 16"
@@ -146,6 +144,8 @@ export default function App() {
             </svg>
             Leichte Sprache
           </Link>
+
+          {/* Schriftgröße-Steuerung */}
           <div className="d-flex align-items-center me-2">
             <button
               className="btn btn-link text-dark"
@@ -154,8 +154,8 @@ export default function App() {
               {/* Minus-Icon */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="16"
+                height="16"
                 fill="currentColor"
                 className="bi bi-dash"
                 viewBox="0 0 16 16"
@@ -171,8 +171,8 @@ export default function App() {
               {/* Plus-Icon */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="16"
+                height="16"
                 fill="currentColor"
                 className="bi bi-plus"
                 viewBox="0 0 16 16"
@@ -181,16 +181,17 @@ export default function App() {
               </svg>
             </button>
           </div>
-          {/* Kontrast Button mit SVG */}
+
+          {/* Kontrast Button */}
           <button
             className="btn btn-link text-dark d-flex align-items-center"
-            style={{ minWidth: "100px" }}
+            style={{ minWidth: "80px" }}
             onClick={toggleContrast}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="16"
+              height="16"
               fill="currentColor"
               className="bi bi-brightness-high me-1"
               viewBox="0 0 16 16"

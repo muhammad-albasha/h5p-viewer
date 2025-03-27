@@ -729,6 +729,7 @@ input[type="file"]::file-selector-button:hover {
   background: #fff;
   border: none;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
 }
 
 .faculty-header {
@@ -767,11 +768,12 @@ input[type="file"]::file-selector-button:hover {
   direction: ltr;
   border-radius: 20px;
   /* outline: 1px solid #eee; */
-  padding: 17px;
-  border: 2px solid #e0e0e0;
+  /* padding: 17px; */
+  /* border: 2px solid #e0e0e0; */
   justify-content: flex-start;
   max-width: 300px;
   margin: 0 auto;
+  margin-left: 5px;
 }
 
 .faculty-btn {
@@ -929,4 +931,13 @@ input[type="file"]::file-selector-button:hover {
 .profile-form .cancel-btn {
   background: #ccc;
   color: #333;
+}
+
+#top-banner {
+  font-size: 6px; /* z.B. entspricht ~14px */
+}
+
+#top-banner svg {
+  width: 16px;
+  height: 16px;
 }
