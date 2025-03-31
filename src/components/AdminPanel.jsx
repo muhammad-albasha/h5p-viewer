@@ -1,7 +1,69 @@
-// src/components/AdminPanel.js
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AddH5PForm from "./AddH5PForm";
+
+// Bestätigungsmodal-Komponente mit optimierten Styles
+const ConfirmModal = ({ isOpen, message, onConfirm, onCancel }) => {
+  if (!isOpen) return null;
+
+  const overlayStyle = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: "rgba(0, 0, 0, 0.5)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1000,
+  };
+
+  const modalStyle = {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "8px",
+    maxWidth: "300px",
+    width: "90%",
+    textAlign: "center",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+  };
+
+  const buttonStyle = {
+    padding: "6px 12px",
+    fontSize: "14px",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    margin: "0 5px",
+  };
+
+  return (
+    <div style={overlayStyle}>
+      <div style={modalStyle}>
+        <p>{message}</p>
+        <div style={{ marginTop: "15px" }}>
+          <button
+            style={{
+              ...buttonStyle,
+              backgroundColor: "#89ba17",
+              color: "#fff",
+            }}
+            onClick={onConfirm}
+          >
+            Ja
+          </button>
+          <button
+            style={{ ...buttonStyle, backgroundColor: "#ccc", color: "#000" }}
+            onClick={onCancel}
+          >
+            Nein
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const AdminPanel = ({ isContrast }) => {
   const [faculties, setFaculties] = useState([]);
@@ -14,6 +76,13 @@ const AdminPanel = ({ isContrast }) => {
   // States für Profil-Daten
   const [profile, setProfile] = useState({ email: "", password: "" });
   const [isProfileEdit, setIsProfileEdit] = useState(false);
+
+  // State für das Bestätigungsmodal
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    message: "",
+    onConfirm: null,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,11 +99,9 @@ const AdminPanel = ({ isContrast }) => {
         console.error("Fehler beim Abrufen:", error);
       }
     };
-
     fetchData();
   }, []);
 
-  // Profil-Daten abrufen
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -54,7 +121,6 @@ const AdminPanel = ({ isContrast }) => {
         console.error("Error fetching profile:", error);
       }
     };
-
     fetchProfile();
   }, []);
 
@@ -72,7 +138,6 @@ const AdminPanel = ({ isContrast }) => {
           body: JSON.stringify({ name }),
         }
       );
-
       if (response.ok) {
         const newFaculty = await response.json();
         setFaculties([newFaculty, ...faculties]);
@@ -82,22 +147,29 @@ const AdminPanel = ({ isContrast }) => {
     }
   };
 
-  const removeFaculty = async (id) => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/faculties/${id}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: localStorage.getItem("token") },
+  const handleDeleteFaculty = (id) => {
+    setConfirmModal({
+      isOpen: true,
+      message: "Möchten Sie diesen Fachbereich wirklich löschen?",
+      onConfirm: async () => {
+        try {
+          const response = await fetch(
+            `${process.env.REACT_APP_API_URL}/faculties/${id}`,
+            {
+              method: "DELETE",
+              headers: { Authorization: localStorage.getItem("token") },
+            }
+          );
+          if (response.ok) {
+            setFaculties(faculties.filter((faculty) => faculty.id !== id));
+          }
+        } catch (error) {
+          console.error("Fehler beim Entfernen eines Fachbereichs:", error);
+        } finally {
+          setConfirmModal({ isOpen: false, message: "", onConfirm: null });
         }
-      );
-
-      if (response.ok) {
-        setFaculties(faculties.filter((faculty) => faculty.id !== id));
-      }
-    } catch (error) {
-      console.error("Fehler beim Entfernen eines Fachbereichs:", error);
-    }
+      },
+    });
   };
 
   const editFacultyHandler = async (id, name) => {
@@ -113,7 +185,6 @@ const AdminPanel = ({ isContrast }) => {
           body: JSON.stringify({ name }),
         }
       );
-
       if (response.ok) {
         const updatedFaculty = await response.json();
         setFaculties(
@@ -133,22 +204,29 @@ const AdminPanel = ({ isContrast }) => {
     setH5pContents([newContent, ...h5pContents]);
   };
 
-  const removeH5PContent = async (id) => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/h5pContent/${id}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: localStorage.getItem("token") },
+  const handleDeleteH5PContent = (id) => {
+    setConfirmModal({
+      isOpen: true,
+      message: "Möchten Sie diesen H5P-Inhalt wirklich löschen?",
+      onConfirm: async () => {
+        try {
+          const response = await fetch(
+            `${process.env.REACT_APP_API_URL}/h5pContent/${id}`,
+            {
+              method: "DELETE",
+              headers: { Authorization: localStorage.getItem("token") },
+            }
+          );
+          if (response.ok) {
+            setH5pContents(h5pContents.filter((content) => content.id !== id));
+          }
+        } catch (error) {
+          console.error("Fehler beim Entfernen eines H5P-Inhalts:", error);
+        } finally {
+          setConfirmModal({ isOpen: false, message: "", onConfirm: null });
         }
-      );
-
-      if (response.ok) {
-        setH5pContents(h5pContents.filter((content) => content.id !== id));
-      }
-    } catch (error) {
-      console.error("Fehler beim Entfernen eines H5P-Inhalts:", error);
-    }
+      },
+    });
   };
 
   const editH5PContentHandler = async (id, updates) => {
@@ -164,7 +242,6 @@ const AdminPanel = ({ isContrast }) => {
           body: JSON.stringify(updates),
         }
       );
-
       if (response.ok) {
         const updatedContent = await response.json();
         setH5pContents(
@@ -191,8 +268,8 @@ const AdminPanel = ({ isContrast }) => {
         body: JSON.stringify(profile),
       });
       if (response.ok) {
-        const data = await response.json();
-        alert(data.message);
+        const updatedProfile = await response.json();
+        setProfile({ email: updatedProfile.email, password: "" });
         setIsProfileEdit(false);
       }
     } catch (error) {
@@ -209,6 +286,15 @@ const AdminPanel = ({ isContrast }) => {
           : {}
       }
     >
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        message={confirmModal.message}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() =>
+          setConfirmModal({ isOpen: false, message: "", onConfirm: null })
+        }
+      />
+
       {/* Profil-Sektion */}
       <div className="profile-section">
         <h3>Profil</h3>
@@ -254,6 +340,7 @@ const AdminPanel = ({ isContrast }) => {
           </div>
         )}
       </div>
+
       {/* Fakultäten */}
       <div className="section">
         <h3 style={{ color: isContrast ? "#000" : "#2c3e50" }}>Thema</h3>
@@ -285,7 +372,10 @@ const AdminPanel = ({ isContrast }) => {
                       type="text"
                       value={editFaculty.name}
                       onChange={(e) =>
-                        setEditFaculty({ ...editFaculty, name: e.target.value })
+                        setEditFaculty({
+                          ...editFaculty,
+                          name: e.target.value,
+                        })
                       }
                     />
                   ) : (
@@ -320,7 +410,7 @@ const AdminPanel = ({ isContrast }) => {
                       </button>
                       <button
                         className="icon-button delete"
-                        onClick={() => removeFaculty(faculty.id)}
+                        onClick={() => handleDeleteFaculty(faculty.id)}
                       >
                         🗑️
                       </button>
@@ -468,7 +558,7 @@ const AdminPanel = ({ isContrast }) => {
                       </button>
                       <button
                         className="icon-button delete"
-                        onClick={() => removeH5PContent(content.id)}
+                        onClick={() => handleDeleteH5PContent(content.id)}
                       >
                         🗑️
                       </button>
