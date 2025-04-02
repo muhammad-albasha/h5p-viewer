@@ -132,17 +132,13 @@ export default function App() {
             to="/leichte-sprache"
             style={{ fontSize: "0.9rem" }}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              className="bi bi-chat-left-text me-1"
-              viewBox="0 0 16 16"
-            >
-              <path d="M14 1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h1v3.586L6.586 11H14a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 2h12v7H6a1 1 0 0 0-1 1v3.293L3.707 10H2V2z" />
-              <path d="M4 4.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 4.5zm0 2a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z" />
-            </svg>
+            <img
+              src="https://assets.uni-wuppertal.de/relaunch-assets/Resources/Public/Icons/iconEasyLanguage.svg" // neuer Icon-Link
+              alt="Icon for Easy Language"
+              width="20"
+              height="20"
+              style={{ marginRight: "5px" }}
+            />
             Leichte Sprache
           </Link>
 
@@ -191,14 +187,13 @@ export default function App() {
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              className="bi bi-brightness-high me-1"
-              viewBox="0 0 16 16"
+              fill="#000" // angepasste Farbe
+              viewBox="9 0 24 20"
+              width="24"
+              height="24"
             >
-              <path d="M8 4.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zm0 1a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z" />
-              <path d="M8 0a.5.5 0 0 1 .5.5V2a.5.5 0 0 1-1 0V.5A.5.5 0 0 1 8 0zm0 12a.5.5 0 0 1 .5.5v1.5a.5.5 0 0 1-1 0V12.5a.5.5 0 0 1 .5-.5zm7-4a.5.5 0 0 1-.5.5H14a.5.5 0 0 1 0-1h.5a.5.5 0 0 1 .5.5zM2 8a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5zm10.657-4.657a.5.5 0 0 1 .708 0l1.06 1.06a.5.5 0 1 1-.708.708l-1.06-1.06a.5.5 0 0 1 0-.708zM3.575 11.575a.5.5 0 0 1 .708 0l1.06 1.06a.5.5 0 1 1-.708.708L3.575 12.283a.5.5 0 0 1 0-.708zm9.9 1.06a.5.5 0 0 1 0-.708l1.06-1.06a.5.5 0 1 1 .708.708l-1.06 1.06a.5.5 0 0 1-.708 0zM3.575 4.425a.5.5 0 0 1 0 .708L2.515 6.193a.5.5 0 1 1-.708-.708l1.06-1.06a.5.5 0 0 1 .708 0z" />
+              {/* Ersetze den <path> durch deinen neuen Pfad */}
+              <path d="M18.917 0c-5.479 0-9.938 4.458-9.938 9.938s4.458 9.938 9.938 9.938 9.938-4.458 9.938-9.938S24.396 0 18.917 0zM19 12.145l7.258-7.174c.355.529.607 1.1.845 1.7L19 14.73v-2.585zm0-8l2.736-2.652a8.555 8.555 0 011.713.831L19 6.731V4.145zm.167-1.412v-1.72a8.99 8.99 0 011.55.169l-1.55 1.551zM19 16.145l8.486-8.402c.18.704.326 1.437.326 2.195 0 .038-.067.075-.068.113L19 18.731v-2.586zm6.646-11.978L19 10.731V8.145l5.285-5.243c.482.377.967.799 1.361 1.265zM9.812 9.938c0-4.675 4.188-8.517 8.188-8.9v17.799c-4-.383-8.188-4.225-8.188-8.899zm10.79 8.773l7.089-7.088a8.96 8.96 0 01-7.089 7.088z" />
             </svg>
             Kontrast
           </button>
@@ -214,8 +209,8 @@ export default function App() {
               <img
                 src={logo}
                 alt="Logo"
-                width="300"
-                height="100"
+                width="245"
+                height="90"
                 className="d-inline-block align-text-center me-2"
               />
             </Link>
