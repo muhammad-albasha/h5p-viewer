@@ -777,7 +777,8 @@ input[type="file"]::file-selector-button:hover {
 
 .faculty-btn {
   display: inline-block;
-  border: 2px solid #89ba17;
+  /* border-left: 2px solid #89ba17; */
+  border: 2px dotted #89ba17;
   border-radius: 10px;
   padding: 0rem 0.5rem;
   background-color: transparent;

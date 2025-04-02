@@ -19,7 +19,9 @@ const FacultyMenu = ({ isContrast }) => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        setFaculties(data);
+        // Alphabetisch sortieren nach dem Namen
+        const sortedData = data.sort((a, b) => a.name.localeCompare(b.name));
+        setFaculties(sortedData);
         setError(null);
       } catch (error) {
         console.error("Error fetching faculties:", error);

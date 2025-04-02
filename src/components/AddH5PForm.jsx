@@ -18,7 +18,11 @@ const AddH5PForm = ({ onAdd }) => {
           `${process.env.REACT_APP_API_URL}/faculties`
         );
         const data = await response.json();
-        setFaculties(data);
+        // Alphabetisch sortieren nach dem Namen
+        const sortedFaculties = data.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        setFaculties(sortedFaculties);
       } catch (error) {
         console.error("Fehler beim Abrufen der Fakultäten:", error);
       }

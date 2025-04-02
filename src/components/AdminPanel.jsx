@@ -93,7 +93,12 @@ const AdminPanel = ({ isContrast }) => {
         const h5pRes = await fetch(
           `${process.env.REACT_APP_API_URL}/h5pContent`
         );
-        setFaculties(await facultyRes.json());
+        const fetchedFaculties = await facultyRes.json();
+        // Alphabetisch sortieren nach dem Namen
+        const sortedFaculties = fetchedFaculties.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        setFaculties(sortedFaculties);
         setH5pContents(await h5pRes.json());
       } catch (error) {
         console.error("Fehler beim Abrufen:", error);

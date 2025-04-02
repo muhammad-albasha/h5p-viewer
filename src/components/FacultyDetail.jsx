@@ -23,7 +23,11 @@ const FacultyDetail = ({ isContrast }) => {
           `${process.env.REACT_APP_API_URL}/faculties`
         );
         const faculties = await facultyResponse.json();
-        const matchedFaculty = faculties.find(
+        // Fakultäten alphabetisch sortieren
+        const sortedFaculties = faculties.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        const matchedFaculty = sortedFaculties.find(
           (f) => f.name === decodeURIComponent(name)
         );
 
@@ -32,7 +36,11 @@ const FacultyDetail = ({ isContrast }) => {
             `${process.env.REACT_APP_API_URL}/h5pContent?facultyId=${matchedFaculty.id}`
           );
           const h5pData = await h5pResponse.json();
-          setH5pData(h5pData);
+          // H5P-Inhalte alphabetisch sortieren
+          const sortedH5pData = h5pData.sort((a, b) =>
+            a.name.localeCompare(b.name)
+          );
+          setH5pData(sortedH5pData);
         }
       } catch (error) {
         console.error("Fehler beim Abrufen der Daten:", error);

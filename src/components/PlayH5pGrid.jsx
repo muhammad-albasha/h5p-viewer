@@ -15,7 +15,11 @@ const PlayH5pGrid = ({ isContrast }) => {
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/h5pContent`)
       .then((response) => response.json())
-      .then((data) => setH5pData(data))
+      .then((data) => {
+        // Alphabetisch sortieren nach dem Feld "name"
+        const sortedData = data.sort((a, b) => a.name.localeCompare(b.name));
+        setH5pData(sortedData);
+      })
       .catch(console.error);
   }, []);
 
