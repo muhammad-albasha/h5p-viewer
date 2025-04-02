@@ -12,10 +12,8 @@ const router = Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Basisverzeichnis – passe diesen Pfad an, sodass er auf dein Verzeichnis "/var/www/app/h5p/api/data" zeigt.
 const baseDataDir = path.join(__dirname, "../data");
 
-// Hilfsfunktion zum Erstellen von Verzeichnissen, falls diese nicht existieren.
 const ensureDirectory = (dir) => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -23,7 +21,6 @@ const ensureDirectory = (dir) => {
   }
 };
 
-// Hilfsfunktion zum rekursiven Löschen eines Ordners – prüft, ob fs.rmSync existiert.
 const deleteFolderRecursive = (folderPath) => {
   if (fs.existsSync(folderPath)) {
     if (typeof fs.rmSync === "function") {
@@ -205,8 +202,8 @@ router.post(
         const newContent = await H5PContent.create({
           name: path.basename(h5pFile.originalname, ".h5p"),
           category: req.body.category,
-          previewImage: `previewimages/${imageFile.filename}`, // relativer Pfad zu baseDataDir
-          h5pJsonPath: path.basename(h5pDir), // nur der Ordnername
+          previewImage: `previewimages/${imageFile.filename}`,
+          h5pJsonPath: path.basename(h5pDir),
           info: req.body.info,
           facultyId: req.body.facultyId,
         });
@@ -308,13 +305,15 @@ router.put("/faculties/:id", authenticateToken, async (req, res) => {
 // H5P-Inhalt bearbeiten
 router.put("/h5pContent/:id", authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const { name, category, info } = req.body;
+  // Erweitere die Destrukturierung um facultyId
+  const { name, category, info, facultyId } = req.body;
   try {
     const content = await H5PContent.findByPk(id);
     if (!content) return res.status(404).json({ error: "Nicht gefunden" });
     if (name) content.name = name;
     if (category) content.category = category;
     if (info) content.info = info;
+    if (facultyId) content.facultyId = facultyId;
     await content.save();
     res.status(200).json(content);
   } catch (error) {

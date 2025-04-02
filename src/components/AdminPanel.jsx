@@ -471,6 +471,7 @@ const AdminPanel = ({ isContrast }) => {
             <tr>
               <th>ID</th>
               <th>Name</th>
+              <th>Thema</th> {/* Neue Spalte für das Thema */}
               <th>Tag</th>
               <th>Info</th>
               <th>Viewe</th>
@@ -478,100 +479,131 @@ const AdminPanel = ({ isContrast }) => {
             </tr>
           </thead>
           <tbody>
-            {h5pContents.map((content, index) => (
-              <tr key={content.id}>
-                <td>{index + 1}</td>
-                <td>
-                  {editH5PContent?.id === content.id ? (
-                    <input
-                      type="text"
-                      value={editH5PContent.name}
-                      onChange={(e) =>
-                        setEditH5PContent({
-                          ...editH5PContent,
-                          name: e.target.value,
-                        })
-                      }
-                    />
-                  ) : (
-                    content.name
-                  )}
-                </td>
-                <td>
-                  {editH5PContent?.id === content.id ? (
-                    <input
-                      type="text"
-                      value={editH5PContent.category}
-                      onChange={(e) =>
-                        setEditH5PContent({
-                          ...editH5PContent,
-                          category: e.target.value,
-                        })
-                      }
-                    />
-                  ) : (
-                    content.category
-                  )}
-                </td>
-                <td>
-                  {editH5PContent?.id === content.id ? (
-                    <textarea
-                      value={editH5PContent.info}
-                      onChange={(e) =>
-                        setEditH5PContent({
-                          ...editH5PContent,
-                          info: e.target.value,
-                        })
-                      }
-                    />
-                  ) : (
-                    content.info
-                  )}
-                </td>
-                <td>
-                  <Link to={`/content?id=${content.id}`}>Viewe</Link>
-                </td>
-                <td>
-                  {editH5PContent?.id === content.id ? (
-                    <>
-                      <button
-                        className="icon-button save"
-                        onClick={() =>
-                          editH5PContentHandler(content.id, {
-                            name: editH5PContent.name,
-                            category: editH5PContent.category,
-                            info: editH5PContent.info,
+            {h5pContents.map((content, index) => {
+              // Finde den zugehörigen Fachbereich anhand von facultyId
+              const associatedFaculty = faculties.find(
+                (faculty) => faculty.id === content.facultyId
+              );
+              return (
+                <tr key={content.id}>
+                  <td>{index + 1}</td>
+                  <td>
+                    {editH5PContent?.id === content.id ? (
+                      <input
+                        type="text"
+                        value={editH5PContent.name}
+                        onChange={(e) =>
+                          setEditH5PContent({
+                            ...editH5PContent,
+                            name: e.target.value,
+                          })
+                        }
+                      />
+                    ) : (
+                      content.name
+                    )}
+                  </td>
+                  <td>
+                    {editH5PContent?.id === content.id ? (
+                      // Dropdown zur Auswahl des Themas (Fakultät) während der Bearbeitung
+                      <select
+                        value={editH5PContent.facultyId}
+                        onChange={(e) =>
+                          setEditH5PContent({
+                            ...editH5PContent,
+                            facultyId: parseInt(e.target.value, 10),
                           })
                         }
                       >
-                        💾
-                      </button>
-                      <button
-                        className="icon-button cancel"
-                        onClick={() => setEditH5PContent(null)}
-                      >
-                        ❌
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        className="icon-button edit"
-                        onClick={() => setEditH5PContent(content)}
-                      >
-                        ✏️
-                      </button>
-                      <button
-                        className="icon-button delete"
-                        onClick={() => handleDeleteH5PContent(content.id)}
-                      >
-                        🗑️
-                      </button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
+                        {faculties.map((faculty) => (
+                          <option key={faculty.id} value={faculty.id}>
+                            {faculty.name}
+                          </option>
+                        ))}
+                      </select>
+                    ) : associatedFaculty ? (
+                      associatedFaculty.name
+                    ) : (
+                      "Unbekannt"
+                    )}
+                  </td>
+                  <td>
+                    {editH5PContent?.id === content.id ? (
+                      <input
+                        type="text"
+                        value={editH5PContent.category}
+                        onChange={(e) =>
+                          setEditH5PContent({
+                            ...editH5PContent,
+                            category: e.target.value,
+                          })
+                        }
+                      />
+                    ) : (
+                      content.category
+                    )}
+                  </td>
+                  <td>
+                    {editH5PContent?.id === content.id ? (
+                      <textarea
+                        value={editH5PContent.info}
+                        onChange={(e) =>
+                          setEditH5PContent({
+                            ...editH5PContent,
+                            info: e.target.value,
+                          })
+                        }
+                      />
+                    ) : (
+                      content.info
+                    )}
+                  </td>
+                  <td>
+                    <Link to={`/content?id=${content.id}`}>Viewe</Link>
+                  </td>
+                  <td>
+                    {editH5PContent?.id === content.id ? (
+                      <>
+                        <button
+                          className="icon-button save"
+                          onClick={() =>
+                            editH5PContentHandler(content.id, {
+                              name: editH5PContent.name,
+                              category: editH5PContent.category,
+                              info: editH5PContent.info,
+                              facultyId: editH5PContent.facultyId, // Übergebe den neuen Wert
+                            })
+                          }
+                        >
+                          💾
+                        </button>
+                        <button
+                          className="icon-button cancel"
+                          onClick={() => setEditH5PContent(null)}
+                        >
+                          ❌
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          className="icon-button edit"
+                          onClick={() => setEditH5PContent(content)}
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          className="icon-button delete"
+                          onClick={() => handleDeleteH5PContent(content.id)}
+                        >
+                          🗑️
+                        </button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
         {isH5PFormVisible && (
