@@ -1,4 +1,3 @@
-// FacultyDetail.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import PlayH5p from "./PlayH5p";
@@ -13,9 +12,12 @@ const FacultyDetail = ({ isContrast }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Alle");
   const [isScrollable, setIsScrollable] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const sliderRef = useRef(null);
+  const searchInputRef = useRef(null);
 
+  // Daten für die Fakultät und zugehörige H5P-Inhalte laden
   useEffect(() => {
     const fetchH5PDataForFaculty = async () => {
       try {
@@ -50,6 +52,7 @@ const FacultyDetail = ({ isContrast }) => {
     fetchH5PDataForFaculty();
   }, [name]);
 
+  // Prüfe, ob der Slider scrollbar ist
   useEffect(() => {
     const checkScrollable = () => {
       if (sliderRef.current) {
@@ -63,22 +66,48 @@ const FacultyDetail = ({ isContrast }) => {
     return () => window.removeEventListener("resize", checkScrollable);
   }, [h5pData, searchTerm, selectedCategory]);
 
+  // Kategorien ableiten
   const categories = ["Alle", ...new Set(h5pData.map((item) => item.category))];
 
+  // Filtere die H5P-Inhalte nach Kategorie und Suchbegriff
   const filteredData = h5pData.filter(
     (item) =>
       (selectedCategory === "Alle" || item.category === selectedCategory) &&
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Vorschläge für das Suchfeld (unabhängig von der Kategorie)
+  const suggestions = h5pData.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const handleBoxClick = (content, infoText) => {
     setCurrentContent({ content, infoText });
     setIsPopupOpen(true);
+    setShowSuggestions(false);
   };
 
   const closePopup = () => {
     setIsPopupOpen(false);
     setCurrentContent(null);
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerm(suggestion.name);
+    setShowSuggestions(false);
+  };
+
+  const handleSearchFocus = () => {
+    if (searchTerm) {
+      setShowSuggestions(true);
+    }
+  };
+
+  const handleSearchBlur = () => {
+    // Kurze Verzögerung, damit Klicks auf Vorschläge registriert werden
+    setTimeout(() => {
+      setShowSuggestions(false);
+    }, 100);
   };
 
   const scrollLeft = () => {
@@ -101,7 +130,7 @@ const FacultyDetail = ({ isContrast }) => {
 
   return (
     <div className="container-fluid" style={{ padding: "0 0" }}>
-      {/* row g-0 entfernt Standard-Gutters, p-0 entfernt Spalten-Padding */}
+      {/* Layout: Seitenmenü und Inhalt */}
       <div className="row g-0">
         <div className="col-md-3 p-0">
           <FacultyMenu isContrast={isContrast} />
@@ -112,17 +141,44 @@ const FacultyDetail = ({ isContrast }) => {
               <h2>{decodeURIComponent(name)}</h2>
             </div>
           </div>
+          {/* Suchfeld mit Dropdown für Vorschläge */}
           <div className="row mb-2">
-            <div className="col-12 d-flex justify-content-center">
+            <div className="col-12 d-flex justify-content-center position-relative">
               <input
                 type="text"
                 placeholder="Suchen..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setShowSuggestions(true);
+                }}
+                onFocus={handleSearchFocus}
+                onBlur={handleSearchBlur}
                 className="custom-search-input"
+                ref={searchInputRef}
               />
+              {showSuggestions && searchTerm && (
+                <div className="suggestions-dropdown">
+                  {suggestions.length > 0 ? (
+                    suggestions.map((suggestion) => (
+                      <div
+                        key={suggestion.id}
+                        className="suggestion-item"
+                        onMouseDown={() => handleSuggestionClick(suggestion)}
+                      >
+                        {suggestion.name}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="suggestion-item">
+                      Keine Vorschläge gefunden
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
+          {/* Filterbuttons */}
           <div className="row mb-2">
             <div className="col-12 d-flex justify-content-center">
               <div className="custom-filter-container">
@@ -140,6 +196,7 @@ const FacultyDetail = ({ isContrast }) => {
               </div>
             </div>
           </div>
+          {/* Slider-Container für H5P-Karten */}
           <div className="slider-container">
             <button
               className={`custom-slider-button left ${

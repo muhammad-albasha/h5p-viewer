@@ -9,21 +9,24 @@ const PlayH5pGrid = ({ isContrast }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Alle");
   const [isScrollable, setIsScrollable] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const sliderRef = useRef(null);
+  const searchInputRef = useRef(null);
 
+  // H5P-Daten laden
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/h5pContent`)
       .then((response) => response.json())
       .then((data) => {
-        // Alphabetisch sortieren nach dem Feld "name"
+        // Alphabetisch sortieren
         const sortedData = data.sort((a, b) => a.name.localeCompare(b.name));
         setH5pData(sortedData);
       })
       .catch(console.error);
   }, []);
 
-  // Prüfe, ob der Slider-Track scrollbar ist
+  // Scrollbarkeit des Slider-Tracks prüfen
   useEffect(() => {
     const checkScrollable = () => {
       if (sliderRef.current) {
@@ -37,22 +40,48 @@ const PlayH5pGrid = ({ isContrast }) => {
     return () => window.removeEventListener("resize", checkScrollable);
   }, [h5pData, searchTerm, selectedCategory]);
 
+  // Kategorien ableiten
   const categories = ["Alle", ...new Set(h5pData.map((item) => item.category))];
 
+  // Gefilterte Daten für den Slider (nach Kategorie und Suche)
   const filteredData = h5pData.filter(
     (item) =>
       (selectedCategory === "Alle" || item.category === selectedCategory) &&
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Vorschläge basierend auf dem Suchbegriff (unabhängig von der Kategorie)
+  const suggestions = h5pData.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const handleBoxClick = (content, infoText) => {
     setCurrentContent({ content, infoText });
     setIsPopupOpen(true);
+    setShowSuggestions(false);
   };
 
   const closePopup = () => {
     setIsPopupOpen(false);
     setCurrentContent(null);
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerm(suggestion.name);
+    setShowSuggestions(false);
+  };
+
+  const handleSearchFocus = () => {
+    if (searchTerm) {
+      setShowSuggestions(true);
+    }
+  };
+
+  const handleSearchBlur = () => {
+    // Kurze Verzögerung, damit ein Klick auf einen Vorschlag registriert wird
+    setTimeout(() => {
+      setShowSuggestions(false);
+    }, 100);
   };
 
   const scrollLeft = () => {
@@ -82,18 +111,43 @@ const PlayH5pGrid = ({ isContrast }) => {
           : {}
       }
     >
-      {/* Such- und Filterbereich – zentriert */}
+      {/* Suchfeld mit Vorschlägen */}
       <div className="row mb-4 mt-1">
-        <div className="col-12 d-flex justify-content-center">
+        <div className="col-12 d-flex justify-content-center position-relative">
           <input
             type="text"
             placeholder="Suchen..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setShowSuggestions(true);
+            }}
+            onFocus={handleSearchFocus}
+            onBlur={handleSearchBlur}
             className="custom-search-input"
+            ref={searchInputRef}
           />
+          {showSuggestions && searchTerm && (
+            <div className="suggestions-dropdown">
+              {suggestions.length > 0 ? (
+                suggestions.map((suggestion) => (
+                  <div
+                    key={suggestion.id}
+                    className="suggestion-item"
+                    onMouseDown={() => handleSuggestionClick(suggestion)}
+                  >
+                    {suggestion.name}
+                  </div>
+                ))
+              ) : (
+                <div className="suggestion-item">Keine Vorschläge gefunden</div>
+              )}
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Filterbuttons */}
       <div className="row mb-4">
         <div className="col-12 d-flex justify-content-center">
           <div className="custom-filter-container">
@@ -112,9 +166,8 @@ const PlayH5pGrid = ({ isContrast }) => {
         </div>
       </div>
 
-      {/* Slider-Container */}
+      {/* Slider mit H5P-Karten */}
       <div className="slider-container">
-        {/* Linke Navigation */}
         <button
           className={`custom-slider-button left ${
             !isScrollable ? "disabled" : ""
@@ -137,7 +190,6 @@ const PlayH5pGrid = ({ isContrast }) => {
           </svg>
         </button>
 
-        {/* Slider-Track */}
         <div className="slider-track" ref={sliderRef}>
           {filteredData.map((item) => (
             <div key={item.id} className="slider-item">
@@ -184,7 +236,6 @@ const PlayH5pGrid = ({ isContrast }) => {
           ))}
         </div>
 
-        {/* Rechte Navigation */}
         <button
           className={`custom-slider-button right ${
             !isScrollable ? "disabled" : ""
