@@ -70,7 +70,7 @@ router.get("/h5pContent", async (req, res) => {
     const formattedData = h5pData.map((item) => ({
       ...item.toJSON(),
       previewImage: `${baseUrl}/${item.previewImage}`,
-      h5pJsonPath: `${baseUrl}/h5p/api/data/h5p/${item.h5pJsonPath}`,
+      h5pJsonPath: `${baseUrl}/h5p-viewer/api/data/h5p/${item.h5pJsonPath}`,
     }));
 
     res.json(formattedData);
@@ -99,7 +99,7 @@ router.get("/h5pContent/:id", async (req, res) => {
       createdAt: content.createdAt,
       updatedAt: content.updatedAt,
       previewImage: `${baseUrl}/${content.previewImage}`,
-      h5pJsonPath: `${baseUrl}/h5p/api/data/h5p/${content.h5pJsonPath}`,
+      h5pJsonPath: `${baseUrl}/h5p-viewer/api/data/h5p/${content.h5pJsonPath}`,
     };
 
     res.json(formattedData);
@@ -166,7 +166,7 @@ router.post(
       const h5pFile = req.files.h5pFile[0];
       const imageFile = req.files.imageFile[0];
 
-      // H5P-Datei entpacken in ein eindeutiges Verzeichnis unter baseDataDir/h5p/
+      // H5P-Datei entpacken in ein eindeutiges Verzeichnis unter baseDataDir/h5p-viewer/
       const h5pDir = path.join(baseDataDir, "h5p", Date.now().toString());
       ensureDirectory(h5pDir);
 

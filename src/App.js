@@ -53,7 +53,7 @@ export default function App() {
       if (response.status === 401) {
         localStorage.removeItem("token");
         setIsAuthenticated(false);
-        window.location.href = "/h5p/Login";
+        window.location.href = "/h5p-viewer/Login";
       }
       return response;
     };

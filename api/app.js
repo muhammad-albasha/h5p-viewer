@@ -27,7 +27,7 @@ const staticPaths = {
   previewimages: path.join(__dirname, "../api/data/previewimages"),
 };
 
-app.use("/h5p/data/h5p", express.static(staticPaths.h5pRoot));
+app.use("/h5p-viwer/data/h5p", express.static(staticPaths.h5pRoot));
 app.use("/h5p", express.static(staticPaths.h5pAlt));
 app.use("/previewimages", express.static(staticPaths.previewimages));
 
