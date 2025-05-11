@@ -116,8 +116,8 @@ const AddH5PForm = forwardRef(({ onAdd }, ref) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="add-h5p-form">
-      {notification && <div className="notification">{notification}</div>}
+    <form onSubmit={handleSubmit}>
+      {notification && <div>{notification}</div>}
 
       <div>
         <label>Faculty:</label>
@@ -181,8 +181,8 @@ const AddH5PForm = forwardRef(({ onAdd }, ref) => {
       </button>
       {/* Prozessleiste */}
       {uploading && (
-        <div className="progress-bar">
-          <div className="progress" style={{ width: `${progress}%` }}></div>
+        <div>
+          <div style={{ width: `${progress}%`, background: '#007bff', height: 4 }}></div>
         </div>
       )}
     </form>
