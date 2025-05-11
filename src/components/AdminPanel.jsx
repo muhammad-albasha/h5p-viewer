@@ -1,615 +1,213 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import AddH5PForm from "./AddH5PForm";
 
-// Bestätigungsmodal-Komponente mit optimierten Styles
+
 const ConfirmModal = ({ isOpen, message, onConfirm, onCancel }) => {
   if (!isOpen) return null;
-
-  const overlayStyle = {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: "rgba(0, 0, 0, 0.5)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1000,
-  };
-
-  const modalStyle = {
-    background: "#fff",
-    padding: "20px",
-    borderRadius: "8px",
-    maxWidth: "300px",
-    width: "90%",
-    textAlign: "center",
-    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
-  };
-
-  const buttonStyle = {
-    padding: "6px 12px",
-    fontSize: "14px",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    margin: "0 5px",
-  };
-
   return (
-    <div style={overlayStyle}>
-      <div style={modalStyle}>
+    <div>
+      <div>
         <p>{message}</p>
-        <div style={{ marginTop: "15px" }}>
-          <button
-            style={{
-              ...buttonStyle,
-              backgroundColor: "#89ba17",
-              color: "#fff",
-            }}
-            onClick={onConfirm}
-          >
-            Ja
-          </button>
-          <button
-            style={{ ...buttonStyle, backgroundColor: "#ccc", color: "#000" }}
-            onClick={onCancel}
-          >
-            Nein
-          </button>
+        <div>
+          <button onClick={onConfirm}>Ja</button>
+          <button onClick={onCancel}>Nein</button>
         </div>
       </div>
     </div>
   );
 };
 
-const AdminPanel = ({ isContrast }) => {
+const AdminPanel = () => {
+  // Faculty
   const [faculties, setFaculties] = useState([]);
-  const [h5pContents, setH5pContents] = useState([]);
   const [editFaculty, setEditFaculty] = useState(null);
-  const [editH5PContent, setEditH5PContent] = useState(null);
   const [isFacultyFormVisible, setIsFacultyFormVisible] = useState(false);
-  const [isH5PFormVisible, setIsH5PFormVisible] = useState(false);
 
-  // States für Profil-Daten
-  const [profile, setProfile] = useState({ email: "", password: "" });
-  const [isProfileEdit, setIsProfileEdit] = useState(false);
+  // Category
+  const [categories, setCategories] = useState([]);
+  const [editCategory, setEditCategory] = useState(null);
+  const [isCategoryFormVisible, setIsCategoryFormVisible] = useState(false);
 
-  // State für das Bestätigungsmodal
+  // Modal
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
     message: "",
     onConfirm: null,
   });
 
+  // FACULTY CRUD
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const facultyRes = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/faculties`
-        );
-        const h5pRes = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/h5p-contents`
-        );
-        const fetchedFaculties = await facultyRes.json();
-        // Alphabetisch sortieren nach dem Namen
-        const sortedFaculties = fetchedFaculties.sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
-        setFaculties(sortedFaculties);
-        setH5pContents(await h5pRes.json());
-      } catch (error) {
-        console.error("Fehler beim Abrufen:", error);
-      }
-    };
-    fetchData();
+    fetch(`${process.env.REACT_APP_API_URL}/api/faculties`)
+      .then((res) => res.json())
+      .then(data => Array.isArray(data) ? setFaculties(data) : setFaculties([]))
+      .catch(() => setFaculties([]));
   }, []);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/profile`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setProfile({ email: data.email, password: "" });
-        }
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      }
-    };
-    fetchProfile();
-  }, []);
-
-  // Funktionen für Fakultäten
   const addFaculty = async (name) => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/faculties`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({ name }),
-        }
-      );
-      if (response.ok) {
-        const newFaculty = await response.json();
-        setFaculties([newFaculty, ...faculties]);
-      }
-    } catch (error) {
-      console.error("Fehler beim Hinzufügen eines Fachbereichs:", error);
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/faculties`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
+      body: JSON.stringify({ name }),
+    });
+    if (res.ok) setFaculties([await res.json(), ...faculties]);
+  };
+
+  const updateFaculty = async (id, name) => {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/faculties/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
+      body: JSON.stringify({ name }),
+    });
+    if (res.ok) {
+      const updated = await res.json();
+      setFaculties(faculties.map(f => f.id === id ? updated : f));
+      setEditFaculty(null);
     }
   };
 
-  const handleDeleteFaculty = (id) => {
+  const deleteFaculty = (id) => {
     setConfirmModal({
       isOpen: true,
-      message: "Möchten Sie diesen Fachbereich wirklich löschen?",
+      message: "Fachbereich wirklich löschen?",
       onConfirm: async () => {
-        try {
-          const response = await fetch(
-            `${process.env.REACT_APP_API_URL}/api/faculties/${id}`,
-            {
-              method: "DELETE",
-              headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-            }
-          );
-          if (response.ok) {
-            setFaculties(faculties.filter((faculty) => faculty.id !== id));
-          }
-        } catch (error) {
-          console.error("Fehler beim Entfernen eines Fachbereichs:", error);
-        } finally {
-          setConfirmModal({ isOpen: false, message: "", onConfirm: null });
-        }
+        await fetch(`${process.env.REACT_APP_API_URL}/api/faculties/${id}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        setFaculties(faculties.filter(f => f.id !== id));
+        setConfirmModal({ isOpen: false, message: "", onConfirm: null });
       },
     });
   };
 
-  const editFacultyHandler = async (id, name) => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/faculties/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({ name }),
-        }
-      );
-      if (response.ok) {
-        const updatedFaculty = await response.json();
-        setFaculties(
-          faculties.map((faculty) =>
-            faculty.id === id ? updatedFaculty : faculty
-          )
-        );
-        setEditFaculty(null);
-      }
-    } catch (error) {
-      console.error("Fehler beim Bearbeiten eines Fachbereichs:", error);
+  // CATEGORY CRUD
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_API_URL}/api/categories`)
+      .then((res) => res.json())
+      .then(data => Array.isArray(data) ? setCategories(data) : setCategories([]))
+      .catch(() => setCategories([]));
+  }, []);
+
+  const addCategory = async (name) => {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/categories`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
+      body: JSON.stringify({ name }),
+    });
+    if (res.ok) setCategories([await res.json(), ...categories]);
+  };
+
+  const updateCategory = async (id, name) => {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/categories/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
+      body: JSON.stringify({ name }),
+    });
+    if (res.ok) {
+      const updated = await res.json();
+      setCategories(categories.map(c => c.id === id ? updated : c));
+      setEditCategory(null);
     }
   };
 
-  // Funktionen für H5P-Inhalte
-  const addH5PContent = (newContent) => {
-    setH5pContents([newContent, ...h5pContents]);
-  };
-
-  const handleDeleteH5PContent = (id) => {
+  const deleteCategory = (id) => {
     setConfirmModal({
       isOpen: true,
-      message: "Möchten Sie diesen H5P-Inhalt wirklich löschen?",
+      message: "Kategorie wirklich löschen?",
       onConfirm: async () => {
-        try {
-          const response = await fetch(
-            `${process.env.REACT_APP_API_URL}/api/h5p-contents/${id}`,
-            {
-              method: "DELETE",
-              headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-            }
-          );
-          if (response.ok) {
-            setH5pContents(h5pContents.filter((content) => content.id !== id));
-          }
-        } catch (error) {
-          console.error("Fehler beim Entfernen eines H5P-Inhalts:", error);
-        } finally {
-          setConfirmModal({ isOpen: false, message: "", onConfirm: null });
-        }
+        await fetch(`${process.env.REACT_APP_API_URL}/api/categories/${id}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        setCategories(categories.filter(c => c.id !== id));
+        setConfirmModal({ isOpen: false, message: "", onConfirm: null });
       },
     });
-  };
-
-  const editH5PContentHandler = async (id, updates) => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/h5p-contents/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify(updates),
-        }
-      );
-      if (response.ok) {
-        const updatedContent = await response.json();
-        setH5pContents(
-          h5pContents.map((content) =>
-            content.id === id ? updatedContent : content
-          )
-        );
-        setEditH5PContent(null);
-      }
-    } catch (error) {
-      console.error("Fehler beim Bearbeiten eines H5P-Inhalts:", error);
-    }
-  };
-
-  // Profil aktualisieren
-  const updateProfile = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/profile`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(profile),
-      });
-      if (response.ok) {
-        const updatedProfile = await response.json();
-        setProfile({ email: updatedProfile.email, password: "" });
-        setIsProfileEdit(false);
-      }
-    } catch (error) {
-      console.error("Error updating profile:", error);
-    }
   };
 
   return (
-    <div
-      className="admin-panel"
-      style={
-        isContrast
-          ? { "--primary-color": "#000", "--primary-hover": "#000" }
-          : {}
-      }
-    >
+    <div>
       <ConfirmModal
         isOpen={confirmModal.isOpen}
         message={confirmModal.message}
         onConfirm={confirmModal.onConfirm}
-        onCancel={() =>
-          setConfirmModal({ isOpen: false, message: "", onConfirm: null })
-        }
+        onCancel={() => setConfirmModal({ isOpen: false, message: "", onConfirm: null })}
       />
 
-      {/* Profil-Sektion */}
-      <div className="profile-section">
-        <h3>Profil</h3>
-        {isProfileEdit ? (
-          <div className="profile-form">
-            <input
-              type="email"
-              value={profile.email}
-              onChange={(e) =>
-                setProfile({ ...profile, email: e.target.value })
-              }
-              placeholder="E-Mail"
-            />
-            <input
-              type="password"
-              value={profile.password}
-              onChange={(e) =>
-                setProfile({ ...profile, password: e.target.value })
-              }
-              placeholder="Neues Passwort (optional)"
-            />
-            <div className="form-actions">
-              <button className="save-btn" onClick={updateProfile}>
-                Speichern
-              </button>
-              <button
-                className="cancel-btn"
-                onClick={() => setIsProfileEdit(false)}
-              >
-                Abbrechen
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div>
-            <p className="profile-info">E-Mail: {profile.email}</p>
-            <button
-              className="profile-btn"
-              onClick={() => setIsProfileEdit(true)}
-            >
-              Profil bearbeiten
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Fakultäten */}
-      <div className="section">
-        <h3 style={{ color: isContrast ? "#000" : "#2c3e50" }}>Thema</h3>
-        <button
-          className="add-button"
-          style={{
-            background: "var(--primary-color)",
-            color: "#fff",
-          }}
-          onClick={() => setIsFacultyFormVisible(!isFacultyFormVisible)}
-        >
-          +
-        </button>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Aktionen</th>
+      {/* Faculty Section */}
+      <h3>Faculty:</h3>
+      <button onClick={() => setIsFacultyFormVisible(!isFacultyFormVisible)}>+</button>
+      {isFacultyFormVisible && (
+        <form onSubmit={e => { e.preventDefault(); addFaculty(e.target.name.value); e.target.reset(); }}>
+          <input name="name" placeholder="Fachbereich Name" required />
+          <button type="submit">Hinzufügen</button>
+        </form>
+      )}
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Name</th><th>Aktionen</th></tr>
+        </thead>
+        <tbody>
+          {faculties.map(faculty => (
+            <tr key={faculty.id}>
+              <td>{faculty.id}</td>
+              <td>{editFaculty?.id === faculty.id ? (
+                <input value={editFaculty.name} onChange={e => setEditFaculty({ ...editFaculty, name: e.target.value })} />
+              ) : faculty.name}</td>
+              <td>
+                {editFaculty?.id === faculty.id ? (
+                  <>
+                    <button onClick={() => updateFaculty(faculty.id, editFaculty.name)}>Speichern</button>
+                    <button onClick={() => setEditFaculty(null)}>Abbrechen</button>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => setEditFaculty(faculty)}>Bearbeiten</button>
+                    <button onClick={() => deleteFaculty(faculty.id)}>Löschen</button>
+                  </>
+                )}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {faculties.map((faculty, index) => (
-              <tr key={faculty.id}>
-                <td>{index + 1}</td>
-                <td>
-                  {editFaculty?.id === faculty.id ? (
-                    <input
-                      type="text"
-                      value={editFaculty.name}
-                      onChange={(e) =>
-                        setEditFaculty({
-                          ...editFaculty,
-                          name: e.target.value,
-                        })
-                      }
-                    />
-                  ) : (
-                    faculty.name
-                  )}
-                </td>
-                <td>
-                  {editFaculty?.id === faculty.id ? (
-                    <>
-                      <button
-                        className="icon-button save"
-                        onClick={() =>
-                          editFacultyHandler(faculty.id, editFaculty.name)
-                        }
-                      >
-                        💾
-                      </button>
-                      <button
-                        className="icon-button cancel"
-                        onClick={() => setEditFaculty(null)}
-                      >
-                        ❌
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        className="icon-button edit"
-                        onClick={() => setEditFaculty(faculty)}
-                      >
-                        ✏️
-                      </button>
-                      <button
-                        className="icon-button delete"
-                        onClick={() => handleDeleteFaculty(faculty.id)}
-                      >
-                        🗑️
-                      </button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {isFacultyFormVisible && (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              addFaculty(e.target.name.value);
-              e.target.reset();
-            }}
-          >
-            <input name="name" placeholder="Fachbereich Name" required />
-            <button
-              type="submit"
-              style={{
-                background: "var(--primary-color)",
-                color: "#fff",
-                border: "none",
-                padding: "0.5rem 1rem",
-                borderRadius: "6px",
-                cursor: "pointer",
-                marginLeft: "0.5rem",
-              }}
-            >
-              Hinzufügen
-            </button>
-          </form>
-        )}
-      </div>
+          ))}
+        </tbody>
+      </table>
 
-      {/* H5P-Inhalte */}
-      <div className="section">
-        <h3 style={{ color: isContrast ? "#000" : "#2c3e50" }}>H5P-Inhalte</h3>
-        <button
-          className="add-button"
-          style={{
-            background: "var(--primary-color)",
-            color: "#fff",
-          }}
-          onClick={() => setIsH5PFormVisible(!isH5PFormVisible)}
-        >
-          +
-        </button>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Thema</th> {/* Neue Spalte für das Thema */}
-              <th>Tag</th>
-              <th>Info</th>
-              <th>Viewe</th>
-              <th>Aktionen</th>
+      {/* Category Section */}
+      <h3>Category:</h3>
+      <button onClick={() => setIsCategoryFormVisible(!isCategoryFormVisible)}>+</button>
+      {isCategoryFormVisible && (
+        <form onSubmit={e => { e.preventDefault(); addCategory(e.target.name.value); e.target.reset(); }}>
+          <input name="name" placeholder="Kategorie Name" required />
+          <button type="submit">Hinzufügen</button>
+        </form>
+      )}
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Name</th><th>Aktionen</th></tr>
+        </thead>
+        <tbody>
+          {categories.map(category => (
+            <tr key={category.id}>
+              <td>{category.id}</td>
+              <td>{editCategory?.id === category.id ? (
+                <input value={editCategory.name} onChange={e => setEditCategory({ ...editCategory, name: e.target.value })} />
+              ) : category.name}</td>
+              <td>
+                {editCategory?.id === category.id ? (
+                  <>
+                    <button onClick={() => updateCategory(category.id, editCategory.name)}>Speichern</button>
+                    <button onClick={() => setEditCategory(null)}>Abbrechen</button>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => setEditCategory(category)}>Bearbeiten</button>
+                    <button onClick={() => deleteCategory(category.id)}>Löschen</button>
+                  </>
+                )}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {h5pContents.map((content, index) => {
-              // Finde den zugehörigen Fachbereich anhand von facultyId
-              const associatedFaculty = faculties.find(
-                (faculty) => faculty.id === content.facultyId
-              );
-              return (
-                <tr key={content.id}>
-                  <td>{index + 1}</td>
-                  <td>
-                    {editH5PContent?.id === content.id ? (
-                      <input
-                        type="text"
-                        value={editH5PContent.name}
-                        onChange={(e) =>
-                          setEditH5PContent({
-                            ...editH5PContent,
-                            name: e.target.value,
-                          })
-                        }
-                      />
-                    ) : (
-                      content.name
-                    )}
-                  </td>
-                  <td>
-                    {editH5PContent?.id === content.id ? (
-                      // Dropdown zur Auswahl des Themas (Fakultät) während der Bearbeitung
-                      <select
-                        value={editH5PContent.facultyId}
-                        onChange={(e) =>
-                          setEditH5PContent({
-                            ...editH5PContent,
-                            facultyId: parseInt(e.target.value, 10),
-                          })
-                        }
-                      >
-                        {faculties.map((faculty) => (
-                          <option key={faculty.id} value={faculty.id}>
-                            {faculty.name}
-                          </option>
-                        ))}
-                      </select>
-                    ) : associatedFaculty ? (
-                      associatedFaculty.name
-                    ) : (
-                      "Unbekannt"
-                    )}
-                  </td>
-                  <td>
-                    {editH5PContent?.id === content.id ? (
-                      <input
-                        type="text"
-                        value={editH5PContent.category}
-                        onChange={(e) =>
-                          setEditH5PContent({
-                            ...editH5PContent,
-                            category: e.target.value,
-                          })
-                        }
-                      />
-                    ) : (
-                      content.category
-                    )}
-                  </td>
-                  <td>
-                    {editH5PContent?.id === content.id ? (
-                      <textarea
-                        value={editH5PContent.info}
-                        onChange={(e) =>
-                          setEditH5PContent({
-                            ...editH5PContent,
-                            info: e.target.value,
-                          })
-                        }
-                      />
-                    ) : (
-                      content.info
-                    )}
-                  </td>
-                  <td>
-                    <Link to={`/content?id=${content.id}`}>Viewe</Link>
-                  </td>
-                  <td>
-                    {editH5PContent?.id === content.id ? (
-                      <>
-                        <button
-                          className="icon-button save"
-                          onClick={() =>
-                            editH5PContentHandler(content.id, {
-                              name: editH5PContent.name,
-                              category: editH5PContent.category,
-                              info: editH5PContent.info,
-                              facultyId: editH5PContent.facultyId, // Übergebe den neuen Wert
-                            })
-                          }
-                        >
-                          💾
-                        </button>
-                        <button
-                          className="icon-button cancel"
-                          onClick={() => setEditH5PContent(null)}
-                        >
-                          ❌
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          className="icon-button edit"
-                          onClick={() => setEditH5PContent(content)}
-                        >
-                          ✏️
-                        </button>
-                        <button
-                          className="icon-button delete"
-                          onClick={() => handleDeleteH5PContent(content.id)}
-                        >
-                          🗑️
-                        </button>
-                      </>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        {isH5PFormVisible && (
-          <AddH5PForm onAdd={(newContent) => addH5PContent(newContent)} />
-        )}
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
