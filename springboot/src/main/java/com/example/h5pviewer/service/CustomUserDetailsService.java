@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.example.h5pviewer.entity.User;
 import com.example.h5pviewer.entity.Role;
 import com.example.h5pviewer.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.transaction.annotation.Transactional;
 
