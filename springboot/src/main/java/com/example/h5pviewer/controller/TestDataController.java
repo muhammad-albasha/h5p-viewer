@@ -59,43 +59,37 @@ public class TestDataController {
     
     private List<Faculty> createFaculties() {
         List<Faculty> faculties = new ArrayList<>();
-        
-        String[] facultyNames = {
-            "Fakultät für Informatik", 
-            "Fakultät für Mathematik", 
-            "Fakultät für Physik",
-            "Fakultät für Wirtschaftswissenschaften", 
-            "Fakultät für Medizin"
-        };
-        
-        for (String name : facultyNames) {
+        Map<String, String> facultyData = new LinkedHashMap<>();
+        facultyData.put("Fakultät für Informatik", "Alles rund um Informatik und Computerwissenschaften");
+        facultyData.put("Fakultät für Mathematik", "Mathematische Forschung und Lehre");
+        facultyData.put("Fakultät für Physik", "Physikalische Grundlagen und Experimente");
+        facultyData.put("Fakultät für Wirtschaftswissenschaften", "Betriebs- und Volkswirtschaft");
+        facultyData.put("Fakultät für Medizin", "Medizinische Ausbildung und Forschung");
+        for (Map.Entry<String, String> entry : facultyData.entrySet()) {
             Faculty faculty = new Faculty();
-            faculty.setName(name);
+            faculty.setName(entry.getKey());
+            faculty.setDescription(entry.getValue());
             faculties.add(facultyRepository.save(faculty));
         }
-        
         return faculties;
     }
     
     private List<Category> createCategories() {
         List<Category> categories = new ArrayList<>();
-        
-        Map<String, String> categoryData = new HashMap<>();
-        categoryData.put("Mathematik", "Mathematische Konzepte und Übungen");
-        categoryData.put("Physik", "Physikalische Simulationen und Experimente");
-        categoryData.put("Informatik", "Programmierung und Informatikkonzepte");
-        categoryData.put("Sprachen", "Sprachkurse und Übungen");
-        categoryData.put("Medizin", "Medizinische Inhalte und Anatomie");
-        categoryData.put("Wirtschaft", "Betriebswirtschaft und Volkswirtschaft");
-        categoryData.put("Ingenieurwesen", "Technische und ingenieurwissenschaftliche Inhalte");
-        
-        for (Map.Entry<String, String> entry : categoryData.entrySet()) {
+        String[] categoryNames = {
+            "Mathematik",
+            "Physik",
+            "Informatik",
+            "Sprachen",
+            "Medizin",
+            "Wirtschaft",
+            "Ingenieurwesen"
+        };
+        for (String name : categoryNames) {
             Category category = new Category();
-            category.setName(entry.getKey());
-            category.setDescription(entry.getValue());
+            category.setName(name);
             categories.add(categoryRepository.save(category));
         }
-        
         return categories;
     }
     

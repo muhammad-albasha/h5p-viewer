@@ -24,9 +24,6 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(nullable = true)
-    private String description;
-
     @ManyToMany(mappedBy = "categories")
     @JsonIgnore
     private Set<H5PContent> h5pContents = new HashSet<>();

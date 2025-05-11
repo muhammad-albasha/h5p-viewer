@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -27,7 +28,10 @@ public class FacultyController {
     }
 
     @PostMapping
-    public Faculty createFaculty(@RequestBody Faculty faculty) {
+    public Faculty createFaculty(@RequestBody Map<String, String> facultyData) {
+        Faculty faculty = new Faculty();
+        faculty.setName(facultyData.get("name"));
+        faculty.setDescription(facultyData.get("description"));
         return facultyService.createFaculty(faculty);
     }
 

@@ -43,7 +43,7 @@ public class CategoryController {
 
         Category category = new Category();
         category.setName(name);
-        category.setDescription(categoryData.get("description"));
+        // description entfernt
 
         Category savedCategory = categoryRepository.save(category);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
@@ -68,7 +68,7 @@ public class CategoryController {
 
         Category category = existingCategory.get();
         category.setName(name);
-        category.setDescription(categoryData.get("description"));
+        // description entfernt
 
         Category updatedCategory = categoryRepository.save(category);
         return ResponseEntity.ok(updatedCategory);

@@ -23,6 +23,9 @@ public class Faculty {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = true)
+    private String description;
+
     @ManyToMany(mappedBy = "faculties")
     @JsonIgnore
     private Set<H5PContent> h5pContents = new HashSet<>();

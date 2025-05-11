@@ -42,20 +42,20 @@ const AdminPanel = () => {
       .catch(() => setFaculties([]));
   }, []);
 
-  const addFaculty = async (name) => {
+  const addFaculty = async (name, description) => {
     const res = await fetch(`${process.env.REACT_APP_API_URL}/api/faculties`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name, description }),
     });
     if (res.ok) setFaculties([await res.json(), ...faculties]);
   };
 
-  const updateFaculty = async (id, name) => {
+  const updateFaculty = async (id, name, description) => {
     const res = await fetch(`${process.env.REACT_APP_API_URL}/api/faculties/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name, description }),
     });
     if (res.ok) {
       const updated = await res.json();
@@ -137,14 +137,15 @@ const AdminPanel = () => {
       <h3>Faculty:</h3>
       <button onClick={() => setIsFacultyFormVisible(!isFacultyFormVisible)}>+</button>
       {isFacultyFormVisible && (
-        <form onSubmit={e => { e.preventDefault(); addFaculty(e.target.name.value); e.target.reset(); }}>
+        <form onSubmit={e => { e.preventDefault(); addFaculty(e.target.name.value, e.target.description.value); e.target.reset(); }}>
           <input name="name" placeholder="Fachbereich Name" required />
+          <input name="description" placeholder="Beschreibung" />
           <button type="submit">Hinzufügen</button>
         </form>
       )}
       <table>
         <thead>
-          <tr><th>ID</th><th>Name</th><th>Aktionen</th></tr>
+          <tr><th>ID</th><th>Name</th><th>Beschreibung</th><th>Aktionen</th></tr>
         </thead>
         <tbody>
           {faculties.map(faculty => (
@@ -153,10 +154,13 @@ const AdminPanel = () => {
               <td>{editFaculty?.id === faculty.id ? (
                 <input value={editFaculty.name} onChange={e => setEditFaculty({ ...editFaculty, name: e.target.value })} />
               ) : faculty.name}</td>
+              <td>{editFaculty?.id === faculty.id ? (
+                <input value={editFaculty.description || ""} onChange={e => setEditFaculty({ ...editFaculty, description: e.target.value })} />
+              ) : (faculty.description || "")}</td>
               <td>
                 {editFaculty?.id === faculty.id ? (
                   <>
-                    <button onClick={() => updateFaculty(faculty.id, editFaculty.name)}>Speichern</button>
+                    <button onClick={() => updateFaculty(faculty.id, editFaculty.name, editFaculty.description)}>Speichern</button>
                     <button onClick={() => setEditFaculty(null)}>Abbrechen</button>
                   </>
                 ) : (
