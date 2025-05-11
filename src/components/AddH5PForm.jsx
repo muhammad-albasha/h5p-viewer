@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 
-const AddH5PForm = ({ onAdd }) => {
+const AddH5PForm = forwardRef(({ onAdd }, ref) => {
   const [faculties, setFaculties] = useState([]);
-  const [selectedFaculty, setSelectedFaculty] = useState("");
-  const [category, setCategory] = useState("");
+  const [selectedFaculties, setSelectedFaculties] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [info, setInfo] = useState("");
   const [h5pFile, setH5pFile] = useState(null);
   const [imageFile, setImageFile] = useState(null);
@@ -11,25 +12,45 @@ const AddH5PForm = ({ onAdd }) => {
   const [progress, setProgress] = useState(0);
   const [notification, setNotification] = useState("");
 
-  useEffect(() => {
-    const fetchFaculties = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/faculties`
-        );
-        const data = await response.json();
-        // Alphabetisch sortieren nach dem Namen
-        const sortedFaculties = data.sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
-        setFaculties(sortedFaculties);
-      } catch (error) {
-        console.error("Fehler beim Abrufen der Fakultäten:", error);
-      }
-    };
+  const fetchFaculties = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/faculties`
+      );
+      const data = await response.json();
+      // Alphabetisch sortieren nach dem Namen
+      const sortedFaculties = data.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+      setFaculties(sortedFaculties);
+    } catch (error) {
+      console.error("Fehler beim Abrufen der Fakultäten:", error);
+    }
+  };
 
-    fetchFaculties();
-  }, []);
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/categories`
+      );
+      const data = await response.json();
+      // Alphabetisch sortieren nach dem Namen
+      const sortedCategories = data.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+      setCategories(sortedCategories);
+    } catch (error) {
+      console.error("Fehler beim Abrufen der Kategorien:", error);
+    }
+  };
+
+  useEffect(() => { fetchFaculties(); }, []);
+  useEffect(() => { fetchCategories(); }, []);
+
+  useImperativeHandle(ref, () => ({
+    refreshFaculties: fetchFaculties,
+    refreshCategories: fetchCategories
+  }));
 
   const animateProgress = () => {
     setProgress(0);
@@ -53,8 +74,8 @@ const AddH5PForm = ({ onAdd }) => {
     const formData = new FormData();
     formData.append("h5pFile", h5pFile);
     formData.append("imageFile", imageFile);
-    formData.append("facultyId", selectedFaculty);
-    formData.append("category", category);
+    selectedFaculties.forEach(facId => formData.append("facultyIds", facId));
+    selectedCategories.forEach(catId => formData.append("categoryIds", catId));
     formData.append("info", info);
 
     try {
@@ -75,8 +96,8 @@ const AddH5PForm = ({ onAdd }) => {
         setNotification("H5P-Inhalt erfolgreich hinzugefügt!");
 
         // Felder zurücksetzen
-        setSelectedFaculty("");
-        setCategory("");
+        setSelectedFaculties([]);
+        setSelectedCategories([]);
         setInfo("");
         setH5pFile(null);
         setImageFile(null);
@@ -99,15 +120,13 @@ const AddH5PForm = ({ onAdd }) => {
       {notification && <div className="notification">{notification}</div>}
 
       <div>
-        <label>Thema:</label>
+        <label>Faculty:</label>
         <select
-          value={selectedFaculty}
-          onChange={(e) => setSelectedFaculty(e.target.value)}
+          multiple
+          value={selectedFaculties}
+          onChange={e => setSelectedFaculties(Array.from(e.target.selectedOptions, o => o.value))}
           required
         >
-          <option value="" disabled>
-            Thema auswählen
-          </option>
           {faculties.map((faculty) => (
             <option key={faculty.id} value={faculty.id}>
               {faculty.name}
@@ -116,13 +135,19 @@ const AddH5PForm = ({ onAdd }) => {
         </select>
       </div>
       <div>
-        <label>Tag:</label>
-        <input
-          type="text"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+        <label>Category:</label>
+        <select
+          multiple
+          value={selectedCategories}
+          onChange={e => setSelectedCategories(Array.from(e.target.selectedOptions, o => o.value))}
           required
-        />
+        >
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
       </div>
       <div>
         <label>H5P-Datei:</label>
@@ -162,6 +187,6 @@ const AddH5PForm = ({ onAdd }) => {
       )}
     </form>
   );
-};
+});
 
 export default AddH5PForm;

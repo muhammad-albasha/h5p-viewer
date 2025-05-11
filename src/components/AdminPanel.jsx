@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import AddH5PForm from "./AddH5PForm";
 
 const ConfirmModal = ({ isOpen, message, onConfirm, onCancel }) => {
   if (!isOpen) return null;
@@ -15,7 +16,7 @@ const ConfirmModal = ({ isOpen, message, onConfirm, onCancel }) => {
   );
 };
 
-const AdminPanel = () => {
+const AdminPanel = ({ addH5PFormRef }) => {
   // Profile
   const [profile, setProfile] = useState({ firstName: '', lastName: '', email: '', password: '' });
   const [isProfileEdit, setIsProfileEdit] = useState(false);
@@ -76,7 +77,10 @@ const AdminPanel = () => {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
       body: JSON.stringify({ name, description }),
     });
-    if (res.ok) setFaculties([await res.json(), ...faculties]);
+    if (res.ok) {
+      setFaculties([await res.json(), ...faculties]);
+      if (addH5PFormRef.current) addH5PFormRef.current.refreshFaculties();
+    }
   };
 
   const updateFaculty = async (id, name, description) => {
@@ -89,6 +93,7 @@ const AdminPanel = () => {
       const updated = await res.json();
       setFaculties(faculties.map(f => f.id === id ? updated : f));
       setEditFaculty(null);
+      if (addH5PFormRef.current) addH5PFormRef.current.refreshFaculties();
     }
   };
 
@@ -103,6 +108,7 @@ const AdminPanel = () => {
         });
         setFaculties(faculties.filter(f => f.id !== id));
         setConfirmModal({ isOpen: false, message: "", onConfirm: null });
+        if (addH5PFormRef.current) addH5PFormRef.current.refreshFaculties();
       },
     });
   };
@@ -121,7 +127,10 @@ const AdminPanel = () => {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
       body: JSON.stringify({ name }),
     });
-    if (res.ok) setCategories([await res.json(), ...categories]);
+    if (res.ok) {
+      setCategories([await res.json(), ...categories]);
+      if (addH5PFormRef.current) addH5PFormRef.current.refreshCategories();
+    }
   };
 
   const updateCategory = async (id, name) => {
@@ -134,6 +143,7 @@ const AdminPanel = () => {
       const updated = await res.json();
       setCategories(categories.map(c => c.id === id ? updated : c));
       setEditCategory(null);
+      if (addH5PFormRef.current) addH5PFormRef.current.refreshCategories();
     }
   };
 
@@ -148,6 +158,7 @@ const AdminPanel = () => {
         });
         setCategories(categories.filter(c => c.id !== id));
         setConfirmModal({ isOpen: false, message: "", onConfirm: null });
+        if (addH5PFormRef.current) addH5PFormRef.current.refreshCategories();
       },
     });
   };
@@ -266,4 +277,17 @@ const AdminPanel = () => {
   );
 };
 
-export default AdminPanel;
+export default function AdminPanelWrapper() {
+  const addH5PFormRef = useRef();
+  return (
+    <>
+      <AdminPanel addH5PFormRef={addH5PFormRef} />
+      <div style={{ marginTop: 40 }}>
+        <AddH5PForm ref={addH5PFormRef} />
+      </div>
+    </>
+  );
+}
+
+// For backward compatibility
+export { AdminPanel };
