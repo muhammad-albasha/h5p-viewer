@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import java.util.HashSet;
 import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "faculties")
@@ -23,5 +24,6 @@ public class Faculty {
     private String name;
 
     @ManyToMany(mappedBy = "faculties")
+    @JsonIgnore
     private Set<H5PContent> h5pContents = new HashSet<>();
 }

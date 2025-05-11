@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "categories")
@@ -27,5 +28,6 @@ public class Category {
     private String description;
 
     @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
     private Set<H5PContent> h5pContents = new HashSet<>();
 }
