@@ -2,7 +2,6 @@ package com.example.h5pviewer.controller;
 
 import com.example.h5pviewer.entity.H5PContent;
 import com.example.h5pviewer.service.H5PContentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,7 @@ public class H5PContentController {
     
     private final H5PContentService h5pContentService;
     
-    @Autowired
+
     public H5PContentController(H5PContentService h5pContentService) {
         this.h5pContentService = h5pContentService;
     }
