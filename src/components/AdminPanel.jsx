@@ -88,10 +88,10 @@ const AdminPanel = ({ isContrast }) => {
     const fetchData = async () => {
       try {
         const facultyRes = await fetch(
-          `${process.env.REACT_APP_API_URL}/faculties`
+          `${process.env.REACT_APP_API_URL}/api/faculties`
         );
         const h5pRes = await fetch(
-          `${process.env.REACT_APP_API_URL}/h5pContent`
+          `${process.env.REACT_APP_API_URL}/api/h5p-contents`
         );
         const fetchedFaculties = await facultyRes.json();
         // Alphabetisch sortieren nach dem Namen
@@ -114,7 +114,7 @@ const AdminPanel = ({ isContrast }) => {
           `${process.env.REACT_APP_API_URL}/profile`,
           {
             headers: {
-              Authorization: localStorage.getItem("token"),
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );
@@ -133,12 +133,12 @@ const AdminPanel = ({ isContrast }) => {
   const addFaculty = async (name) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/faculties`,
+        `${process.env.REACT_APP_API_URL}/api/faculties`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token"),
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify({ name }),
         }
@@ -159,10 +159,10 @@ const AdminPanel = ({ isContrast }) => {
       onConfirm: async () => {
         try {
           const response = await fetch(
-            `${process.env.REACT_APP_API_URL}/faculties/${id}`,
+            `${process.env.REACT_APP_API_URL}/api/faculties/${id}`,
             {
               method: "DELETE",
-              headers: { Authorization: localStorage.getItem("token") },
+              headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
             }
           );
           if (response.ok) {
@@ -180,12 +180,12 @@ const AdminPanel = ({ isContrast }) => {
   const editFacultyHandler = async (id, name) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/faculties/${id}`,
+        `${process.env.REACT_APP_API_URL}/api/faculties/${id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token"),
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify({ name }),
         }
@@ -216,10 +216,10 @@ const AdminPanel = ({ isContrast }) => {
       onConfirm: async () => {
         try {
           const response = await fetch(
-            `${process.env.REACT_APP_API_URL}/h5pContent/${id}`,
+            `${process.env.REACT_APP_API_URL}/api/h5p-contents/${id}`,
             {
               method: "DELETE",
-              headers: { Authorization: localStorage.getItem("token") },
+              headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
             }
           );
           if (response.ok) {
@@ -237,12 +237,12 @@ const AdminPanel = ({ isContrast }) => {
   const editH5PContentHandler = async (id, updates) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/h5pContent/${id}`,
+        `${process.env.REACT_APP_API_URL}/api/h5p-contents/${id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token"),
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify(updates),
         }
@@ -268,7 +268,7 @@ const AdminPanel = ({ isContrast }) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(profile),
       });

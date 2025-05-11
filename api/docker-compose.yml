@@ -1,13 +1,38 @@
+version: "3.8"
+
 services:
   database:
-    image: "mysql:latest"
+    image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: "12345"
       MYSQL_DATABASE: h5p
-
     ports:
       - "3306:3306"
     restart: always
+    volumes:
+      - database_data:/var/lib/mysql
+    networks:
+      - h5p
+
+  phpmyadmin:
+    depends_on:
+      - database
+    image: phpmyadmin:latest
+    container_name: phpmyadmin_h5p
+    restart: always
+    environment:
+      PMA_HOST: database
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: "12345"
+    ports:
+      - "8081:80"
+    networks:
+      - h5p
 
 volumes:
-  database_h5p:
+  database_data:
+
+networks:
+  h5p:
+    driver: bridge

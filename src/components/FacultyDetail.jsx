@@ -22,7 +22,7 @@ const FacultyDetail = ({ isContrast }) => {
     const fetchH5PDataForFaculty = async () => {
       try {
         const facultyResponse = await fetch(
-          `${process.env.REACT_APP_API_URL}/faculties`
+          `${process.env.REACT_APP_API_URL}/api/faculties`
         );
         const faculties = await facultyResponse.json();
         // Fakultäten alphabetisch sortieren
@@ -35,7 +35,7 @@ const FacultyDetail = ({ isContrast }) => {
 
         if (matchedFaculty) {
           const h5pResponse = await fetch(
-            `${process.env.REACT_APP_API_URL}/h5pContent?facultyId=${matchedFaculty.id}`
+            `${process.env.REACT_APP_API_URL}/api/h5p-contents?facultyId=${matchedFaculty.id}`
           );
           const h5pData = await h5pResponse.json();
           // H5P-Inhalte alphabetisch sortieren

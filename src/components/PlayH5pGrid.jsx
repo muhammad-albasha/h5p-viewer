@@ -16,7 +16,7 @@ const PlayH5pGrid = ({ isContrast }) => {
 
   // H5P-Daten laden
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/h5pContent`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/h5p-contents`)
       .then((response) => response.json())
       .then((data) => {
         // Alphabetisch sortieren

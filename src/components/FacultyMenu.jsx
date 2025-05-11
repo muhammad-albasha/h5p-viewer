@@ -13,7 +13,7 @@ const FacultyMenu = ({ isContrast }) => {
     const fetchFaculties = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/faculties`
+          `${process.env.REACT_APP_API_URL}/api/faculties`
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

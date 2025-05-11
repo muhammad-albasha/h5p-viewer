@@ -15,7 +15,7 @@ const AddH5PForm = ({ onAdd }) => {
     const fetchFaculties = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/faculties`
+          `${process.env.REACT_APP_API_URL}/api/faculties`
         );
         const data = await response.json();
         // Alphabetisch sortieren nach dem Namen
@@ -59,12 +59,12 @@ const AddH5PForm = ({ onAdd }) => {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/h5pContent`,
+        `${process.env.REACT_APP_API_URL}/api/h5p-contents`,
         {
           method: "POST",
           body: formData,
           headers: {
-            Authorization: localStorage.getItem("token"),
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );

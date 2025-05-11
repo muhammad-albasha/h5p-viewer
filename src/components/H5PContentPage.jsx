@@ -39,7 +39,7 @@ const H5PContentPage = () => {
       setIsLoading(true);
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/h5pContent/${id}`
+          `${process.env.REACT_APP_API_URL}/api/h5p-contents/${id}`
         );
         if (!response.ok) {
           throw new Error(`Fehler: ${response.status}`);
