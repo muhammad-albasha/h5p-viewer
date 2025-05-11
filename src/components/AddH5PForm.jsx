@@ -86,11 +86,12 @@ const AddH5PForm = forwardRef(({ onAdd }, ref) => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
-      );
-
-      if (response.ok) {
+      );      if (response.ok) {
         const newContent = await response.json();
-        onAdd(newContent);
+        // Prüfe, ob onAdd eine Funktion ist, bevor sie aufgerufen wird
+        if (typeof onAdd === 'function') {
+          onAdd(newContent);
+        }
         setNotification("H5P-Inhalt erfolgreich hinzugefügt!");
 
         // Felder zurücksetzen

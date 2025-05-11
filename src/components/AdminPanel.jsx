@@ -277,13 +277,19 @@ const AdminPanel = ({ addH5PFormRef }) => {
   );
 };
 
-export default function AdminPanelWrapper() {
-  const addH5PFormRef = useRef();
+export default function AdminPanelWrapper() {  const addH5PFormRef = useRef();
+  
+  // Callback-Funktion für erfolgreich hinzugefügte H5P-Inhalte
+  const handleAddH5P = (newContent) => {
+    console.log("Neuer H5P-Inhalt wurde hinzugefügt:", newContent);
+    // Hier können Sie weitere Aktionen ausführen, z.B. UI aktualisieren
+  };
+  
   return (
     <>
       <AdminPanel addH5PFormRef={addH5PFormRef} />
       <div style={{ marginTop: 40 }}>
-        <AddH5PForm ref={addH5PFormRef} />
+        <AddH5PForm ref={addH5PFormRef} onAdd={handleAddH5P} />
       </div>
     </>
   );
