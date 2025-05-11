@@ -9,7 +9,6 @@ import com.example.h5pviewer.repository.FacultyRepository;
 import com.example.h5pviewer.repository.H5PContentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -18,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class H5PContentService {
@@ -30,7 +27,6 @@ public class H5PContentService {
     private final CategoryRepository categoryRepository;
     private final FacultyRepository facultyRepository;
     
-    @Autowired
     public H5PContentService(
             H5PContentRepository h5pContentRepository,
             CategoryRepository categoryRepository,

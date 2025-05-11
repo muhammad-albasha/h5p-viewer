@@ -1,14 +1,10 @@
 package com.example.h5pviewer.controller;
 
-import com.example.h5pviewer.entity.Role;
 import com.example.h5pviewer.entity.User;
 import com.example.h5pviewer.repository.UserRepository;
 import com.example.h5pviewer.service.UserService;
 import com.example.h5pviewer.config.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -28,7 +24,7 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
 
-    @Autowired
+    
     public AuthController(
             AuthenticationManager authenticationManager,
             UserRepository userRepository,
