@@ -207,4 +207,34 @@ public class H5PContentService {
     public List<H5PContent> getContentsByFacultyName(String facultyName) {
         return h5pContentRepository.findByFacultyName(facultyName);
     }
+
+    @Transactional
+    @CacheEvict(value = {"h5pContents", "h5pContent"}, allEntries = true)
+    public H5PContent createContentWithRelations(H5PContent content, List<Long> categoryIds, List<Long> facultyIds) {
+        logger.debug("Creating new H5P content with relations: {}", content.getName());
+        
+        // First save the content
+        H5PContent savedContent = h5pContentRepository.save(content);
+        
+        // Add categories
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            for (Long categoryId : categoryIds) {
+                Category category = categoryRepository.findById(categoryId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
+                savedContent.addCategory(category);
+            }
+        }
+        
+        // Add faculties
+        if (facultyIds != null && !facultyIds.isEmpty()) {
+            for (Long facultyId : facultyIds) {
+                Faculty faculty = facultyRepository.findById(facultyId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Faculty", "id", facultyId));
+                savedContent.addFaculty(faculty);
+            }
+        }
+        
+        // Save again with relationships
+        return h5pContentRepository.save(savedContent);
+    }
 }

@@ -76,11 +76,9 @@ const AddH5PForm = forwardRef(({ onAdd }, ref) => {
     formData.append("imageFile", imageFile);
     selectedFaculties.forEach(facId => formData.append("facultyIds", facId));
     selectedCategories.forEach(catId => formData.append("categoryIds", catId));
-    formData.append("info", info);
-
-    try {
+    formData.append("info", info);    try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/h5p-contents`,
+        `${process.env.REACT_APP_API_URL}/api/h5p-contents/upload`,
         {
           method: "POST",
           body: formData,
