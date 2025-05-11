@@ -5,6 +5,8 @@ import com.example.h5pviewer.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -141,5 +143,60 @@ public class UserController {
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
         User updatedUser = userService.updateUser(id, user);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    /**
+     * Get the current user's profile (self only)
+     */
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Unauthorized"));
+        }
+        String email = userDetails.getUsername();
+        Optional<User> userOpt = userService.getUserByEmail(email);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
+        }
+        User user = userOpt.get();
+        Map<String, Object> profile = new HashMap<>();
+        profile.put("id", user.getId());
+        profile.put("email", user.getEmail());
+        profile.put("firstName", user.getFirstName());
+        profile.put("lastName", user.getLastName());
+        profile.put("active", user.isActive());
+        profile.put("roles", user.getRoles());
+        return ResponseEntity.ok(profile);
+    }
+
+    /**
+     * Update the current user's profile (self only)
+     */
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateProfile(@AuthenticationPrincipal UserDetails userDetails, @RequestBody Map<String, String> updates) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Unauthorized"));
+        }
+        String email = userDetails.getUsername();
+        Optional<User> userOpt = userService.getUserByEmail(email);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
+        }
+        User user = userOpt.get();
+        if (updates.containsKey("firstName")) user.setFirstName(updates.get("firstName"));
+        if (updates.containsKey("lastName")) user.setLastName(updates.get("lastName"));
+        if (updates.containsKey("email")) user.setEmail(updates.get("email"));
+        if (updates.containsKey("password") && updates.get("password") != null && !updates.get("password").isEmpty()) {
+            user.setPassword(updates.get("password")); // Will be encoded in service
+        }
+        User updated = userService.updateUser(user);
+        Map<String, Object> profile = new HashMap<>();
+        profile.put("id", updated.getId());
+        profile.put("email", updated.getEmail());
+        profile.put("firstName", updated.getFirstName());
+        profile.put("lastName", updated.getLastName());
+        profile.put("active", updated.isActive());
+        profile.put("roles", updated.getRoles());
+        return ResponseEntity.ok(profile);
     }
 }

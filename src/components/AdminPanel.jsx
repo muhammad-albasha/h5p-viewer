@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-
 const ConfirmModal = ({ isOpen, message, onConfirm, onCancel }) => {
   if (!isOpen) return null;
   return (
@@ -17,6 +16,35 @@ const ConfirmModal = ({ isOpen, message, onConfirm, onCancel }) => {
 };
 
 const AdminPanel = () => {
+  // Profile
+  const [profile, setProfile] = useState({ firstName: '', lastName: '', email: '', password: '' });
+  const [isProfileEdit, setIsProfileEdit] = useState(false);
+
+  useEffect(() => {
+    // Beispiel: API-Call für Profil laden
+    fetch(`${process.env.REACT_APP_API_URL}/api/users/profile`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data) setProfile({
+          firstName: data.firstName || '',
+          lastName: data.lastName || '',
+          email: data.email || '',
+          password: ''
+        });
+      });
+  }, []);
+
+  const updateProfile = async () => {
+    await fetch(`${process.env.REACT_APP_API_URL}/api/users/profile`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem("token")}` },
+      body: JSON.stringify(profile)
+    });
+    setIsProfileEdit(false);
+  };
+
   // Faculty
   const [faculties, setFaculties] = useState([]);
   const [editFaculty, setEditFaculty] = useState(null);
@@ -132,6 +160,28 @@ const AdminPanel = () => {
         onConfirm={confirmModal.onConfirm}
         onCancel={() => setConfirmModal({ isOpen: false, message: "", onConfirm: null })}
       />
+
+      {/* Profile Section */}
+      <div>
+        <h3>Profil</h3>
+        {isProfileEdit ? (
+          <div>
+            <input type="text" value={profile.firstName} onChange={e => setProfile({ ...profile, firstName: e.target.value })} placeholder="Vorname" />
+            <input type="text" value={profile.lastName} onChange={e => setProfile({ ...profile, lastName: e.target.value })} placeholder="Nachname" />
+            <input type="email" value={profile.email} onChange={e => setProfile({ ...profile, email: e.target.value })} placeholder="E-Mail" />
+            <input type="password" value={profile.password} onChange={e => setProfile({ ...profile, password: e.target.value })} placeholder="Neues Passwort (optional)" />
+            <button onClick={updateProfile}>Speichern</button>
+            <button onClick={() => setIsProfileEdit(false)}>Abbrechen</button>
+          </div>
+        ) : (
+          <div>
+            <p>Vorname: {profile.firstName}</p>
+            <p>Nachname: {profile.lastName}</p>
+            <p>E-Mail: {profile.email}</p>
+            <button onClick={() => setIsProfileEdit(true)}>Profil bearbeiten</button>
+          </div>
+        )}
+      </div>
 
       {/* Faculty Section */}
       <h3>Faculty:</h3>
