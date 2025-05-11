@@ -21,12 +21,10 @@ import javax.crypto.SecretKey;
 @Component
 public class JwtUtil {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
-    private final JwtProperties jwtProperties;
     private final long jwtExpirationMs = 86400000; // 1 day
     private final SecretKey signingKey;
 
     public JwtUtil(JwtProperties jwtProperties) {
-        this.jwtProperties = jwtProperties;
         // Initialize key once at startup for better performance
         this.signingKey = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
     }
