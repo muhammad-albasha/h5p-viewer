@@ -24,14 +24,43 @@ import logo from "./logo.svg";
 import H5PContentPage from "./components/H5PContentPage";
 import Impressum from "./components/Impressum";
 
-const ProtectedRoute = ({ children }) => {
+const getUserRoles = () => {
+  const userString = localStorage.getItem("user");
+  if (userString) {
+    try {
+      const user = JSON.parse(userString);
+      return user && user.roles ? user.roles.map(role => role.name || role) : []; // Handle if roles are objects with a name property or just strings
+    } catch (error) {
+      console.error("Error parsing user data from localStorage:", error);
+      return [];
+    }
+  }
+  return [];
+};
+
+const ProtectedRoute = ({ children, requiredRoles }) => {
   const token = localStorage.getItem("token");
-  return token ? children : <Navigate to="/Login" />;
+  if (!token) {
+    return <Navigate to="/Login" />;
+  }
+
+  if (requiredRoles && requiredRoles.length > 0) {
+    const userRoles = getUserRoles();
+    const hasRequiredRole = requiredRoles.some(role => userRoles.includes(role));
+    if (!hasRequiredRole) {
+      // Optional: Redirect to an unauthorized page or home
+      // For now, redirecting to home if role not sufficient
+      alert("You do not have the necessary permissions to access this page.");
+      return <Navigate to="/" />;
+    }
+  }
+  return children;
 };
 
 export default function App() {
   const [isContrast, setIsContrast] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRoles, setUserRolesState] = useState([]); // New state for roles
   const [fontSize, setFontSize] = useState(16);
   const [lastActivity, setLastActivity] = useState(Date.now());
 
@@ -43,6 +72,11 @@ export default function App() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsAuthenticated(!!token);
+    if (token) {
+      setUserRolesState(getUserRoles()); // Set roles if authenticated
+    } else {
+      setUserRolesState([]); // Clear roles if not authenticated
+    }
   }, []);
 
   // Globaler Fetch-Interceptor: Bei 401 wird automatisch ausgeloggt und zur Login-Seite weitergeleitet
@@ -52,10 +86,16 @@ export default function App() {
       const response = await originalFetch(...args);
       if (response.status === 401) {
         localStorage.removeItem("token");
+        localStorage.removeItem("user"); // Clear user data
         setIsAuthenticated(false);
-        window.location.href = "/h5p-viewer/Login";
+        setUserRolesState([]); // Clear roles state
+        window.location.href = "/h5p-viewer/Login"; // Consider using useNavigate if within Router context
       }
       return response;
+    };
+    // Cleanup function to restore original fetch
+    return () => {
+      window.fetch = originalFetch;
     };
   }, []);
 
@@ -105,7 +145,10 @@ export default function App() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user"); // Also remove user from localStorage
     setIsAuthenticated(false);
+    setUserRolesState([]); // Clear roles state
+    // navigate('/Login'); // If using useNavigate
   };
 
   return (
@@ -239,11 +282,13 @@ export default function App() {
                 </li>
                 {isAuthenticated ? (
                   <>
-                    <li className="nav-item">
-                      <Link className="nav-link text-white" to="/admin">
-                        Verwaltung
-                      </Link>
-                    </li>
+                    {userRoles.includes('ADMIN') && ( // Check for ADMIN role
+                      <li className="nav-item">
+                        <Link className="nav-link text-white" to="/admin">
+                          Verwaltung
+                        </Link>
+                      </li>
+                    )}
                     <li className="nav-item">
                       <button
                         className="nav-link btn btn-link text-white"
@@ -297,12 +342,12 @@ export default function App() {
               <Route path="/about" element={<About />} />
               <Route
                 path="/Login"
-                element={<Login setAuthenticated={setIsAuthenticated} />}
+                element={<Login setAuthenticated={setIsAuthenticated} setAppUserRoles={setUserRolesState} />} // Pass setUserRolesState
               />
               <Route
                 path="/admin"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRoles={['ADMIN']}> {/* Add requiredRoles */}
                     <AdminPanel isContrast={isContrast} />
                   </ProtectedRoute>
                 }

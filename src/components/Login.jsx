@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Login({ setAuthenticated }) {
+export default function Login({ setAuthenticated, setAppUserRoles }) { // Add setAppUserRoles
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -25,8 +25,15 @@ export default function Login({ setAuthenticated }) {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("token", data.token); 
+        
+        let roles = [];
+        if (data.user && data.user.roles) {
+          localStorage.setItem("user", JSON.stringify(data.user));
+          roles = data.user.roles.map(role => role.name || role); // Extract role names
+        }
         setAuthenticated(true);
+        setAppUserRoles(roles); // Update roles in App.js state
         navigate("/");
       } else {
         const errorMessage = await response.text();
