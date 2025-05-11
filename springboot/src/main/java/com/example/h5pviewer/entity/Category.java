@@ -5,23 +5,27 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "faculties")
+@Table(name = "categories")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Faculty {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "faculties")
+    @Column(nullable = true)
+    private String description;
+
+    @ManyToMany(mappedBy = "categories")
     private Set<H5PContent> h5pContents = new HashSet<>();
 }
