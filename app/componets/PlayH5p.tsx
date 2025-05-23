@@ -22,6 +22,7 @@ function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
   const h5pContainer = useRef(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     const loadH5P = async () => {
       try {
