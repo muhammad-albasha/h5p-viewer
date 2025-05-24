@@ -1,0 +1,26 @@
+services:
+  database:
+    image: "mysql:latest"
+    environment:
+      MYSQL_ROOT_PASSWORD: "12345"
+      MYSQL_DATABASE: h5p
+
+    ports:
+      - "3306:3306"
+    restart: always
+    volumes:
+      - database_h5p:/var/lib/mysql
+
+  phpmyadmin:
+      image: phpmyadmin
+      restart: always
+      ports:
+        - "8080:80"
+      environment:
+        PMA_HOST: database
+        PMA_USER: root
+        PMA_PASSWORD: 12345
+      depends_on:
+        - database
+volumes:
+  database_h5p:

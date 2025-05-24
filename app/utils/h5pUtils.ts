@@ -1,0 +1,95 @@
+import fs from 'fs';
+import path from 'path';
+
+interface H5PContent {
+  name: string;
+  path: string;
+  type: string;
+  tags: string[];
+}
+
+// This function determines the content type based on library files
+const determineH5PType = (contentPath: string): string => {
+  try {
+    // Try to read the h5p.json file
+    const h5pJsonPath = path.join(contentPath, 'h5p.json');
+    if (fs.existsSync(h5pJsonPath)) {
+      const h5pJson = JSON.parse(fs.readFileSync(h5pJsonPath, 'utf-8'));
+      return h5pJson.mainLibrary || 'Unknown';
+    }
+    
+    // If no h5p.json, check for library directories
+    const dirs = fs.readdirSync(contentPath, { withFileTypes: true })
+      .filter(dirent => dirent.isDirectory())
+      .map(dirent => dirent.name);
+      
+    // Look for common H5P libraries that indicate the type
+    if (dirs.some(dir => dir.includes('MultiChoice'))) return 'Quiz';
+    if (dirs.some(dir => dir.includes('Questionnaire'))) return 'Questionnaire';
+    if (dirs.some(dir => dir.includes('InteractiveVideo'))) return 'Interactive Video';
+    if (dirs.some(dir => dir.includes('Course'))) return 'Course Presentation';
+    
+    return 'Unknown';
+  } catch (error) {
+    console.error('Error determining H5P type:', error);
+    return 'Unknown';
+  }
+};
+
+// Assign tags based on content type or other characteristics
+const assignTags = (type: string, name: string): string[] => {
+  const tags = [];
+  
+  // Tag based on type
+  if (type === 'Quiz') tags.push('Übungen', 'Fragen');
+  if (type === 'Questionnaire') tags.push('Fragen', 'Interaktiv');
+  if (type === 'Interactive Video') tags.push('Video', 'Interaktiv');
+  if (type === 'Course Presentation') tags.push('Präsentation', 'Interaktiv');
+  
+  // Tag based on name
+  if (name.toLowerCase().includes('grammar') || name.toLowerCase().includes('grammatik')) tags.push('Grammatik');
+  if (name.toLowerCase().includes('vocabulary') || name.toLowerCase().includes('vokabeln')) tags.push('Wortschatz');
+  if (name.toLowerCase().includes('for-or-since')) tags.push('Grammatik');
+  
+  return [...new Set(tags)]; // Remove duplicates
+};
+
+export async function getH5PContents(): Promise<H5PContent[]> {
+  try {
+    const h5pDir = path.join(process.cwd(), 'public', 'h5p');
+    
+    // Check if directory exists
+    if (!fs.existsSync(h5pDir)) {
+      console.error('H5P directory not found:', h5pDir);
+      return [];
+    }
+    
+    // Get subdirectories (each is an H5P content)
+    const contentDirs = fs.readdirSync(h5pDir, { withFileTypes: true })
+      .filter(dirent => dirent.isDirectory())
+      .map(dirent => dirent.name);
+    
+    const contents: H5PContent[] = contentDirs.map(dir => {
+      // Format name from directory (replace hyphens with spaces and capitalize)
+      const name = dir
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, char => char.toUpperCase());
+      
+      const contentPath = path.join(h5pDir, dir);
+      const type = determineH5PType(contentPath);
+      const tags = assignTags(type, name);
+      
+      return {
+        name,
+        path: `/h5p/${dir}`,
+        type,
+        tags
+      };
+    });
+    
+    return contents;
+  } catch (error) {
+    console.error('Error retrieving H5P contents:', error);
+    return [];
+  }
+}
