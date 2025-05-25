@@ -58,32 +58,96 @@ export async function DELETE(
       console.error("Content data missing slug property:", contentArray[0]);
       // Continue even if slug is missing
     }    try {
-      // Delete the file
+      // Delete all associated files
       const contentItem = contentArray[0] as Record<string, any>;
+      
+      // 1. Delete the uploaded file if it exists
       const filePath = contentItem.file_path;
       if (filePath) {
-        const fullPath = path.join(process.cwd(), "public", filePath);
-        console.log(`Checking if file exists at: ${fullPath}`);
+        // Ensure path is properly formatted, remove leading slash if present
+        const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
+        const fullPath = path.join(process.cwd(), "public", normalizedPath);
+        console.log(`Checking if uploaded file exists at: ${fullPath}`);
         
-        if (fs.existsSync(fullPath)) {
-          fs.unlinkSync(fullPath);
-          console.log(`File deleted: ${fullPath}`);
-        } else {
-          console.log(`File not found at ${fullPath}`);
+        try {
+          if (fs.existsSync(fullPath)) {
+            // Check if file is writable before attempting deletion
+            fs.accessSync(fullPath, fs.constants.W_OK);
+            fs.unlinkSync(fullPath);
+            console.log(`Uploaded file deleted: ${fullPath}`);
+          } else {
+            console.log(`Uploaded file not found at ${fullPath}`);
+          }
+        } catch (err) {
+          console.error(`Error deleting file ${fullPath}:`, err);
         }
       }
       
-      // Delete folder from public/h5p if it exists
+      // 2. Delete folder from public/h5p if it exists (contains the extracted H5P content)
       const slug = contentItem.slug;
       if (slug) {
         const h5pFolder = path.join(process.cwd(), "public", "h5p", slug);
-        console.log(`Checking if folder exists at: ${h5pFolder}`);
+        console.log(`Checking if H5P content folder exists at: ${h5pFolder}`);
         
-        if (fs.existsSync(h5pFolder)) {
-          fs.rmSync(h5pFolder, { recursive: true, force: true });
-          console.log(`Folder deleted: ${h5pFolder}`);
-        } else {
-          console.log(`Folder not found at ${h5pFolder}`);
+        try {
+          if (fs.existsSync(h5pFolder)) {
+            // Forcefully delete directory and all contents
+            fs.rmSync(h5pFolder, { recursive: true, force: true });
+            console.log(`H5P content folder deleted: ${h5pFolder}`);
+          } else {
+            console.log(`H5P content folder not found at ${h5pFolder}`);
+            
+            // Check if there's a folder with similar name (case sensitivity issues)
+            const h5pParentDir = path.join(process.cwd(), "public", "h5p");
+            if (fs.existsSync(h5pParentDir)) {
+              const allFolders = fs.readdirSync(h5pParentDir);
+              const similarFolders = allFolders.filter(folder => 
+                folder.toLowerCase() === slug.toLowerCase() ||
+                folder.includes(slug)
+              );
+              
+              for (const folder of similarFolders) {
+                const folderPath = path.join(h5pParentDir, folder);
+                console.log(`Found similar H5P folder, deleting: ${folderPath}`);
+                fs.rmSync(folderPath, { recursive: true, force: true });
+              }
+            }
+          }
+        } catch (err) {
+          console.error(`Error deleting H5P folder ${h5pFolder}:`, err);
+        }
+      }
+      
+      // 3. Delete any temporary folders that might have been created during upload
+      const tempFolderBase = path.join(process.cwd(), "public", "uploads", "h5p");
+      if (fs.existsSync(tempFolderBase)) {
+        try {
+          // Look for temporary folders and files that match the slug pattern
+          const tempItems = fs.readdirSync(tempFolderBase);
+          
+          // Filter both files and folders that might be related
+          for (const item of tempItems) {
+            const itemPath = path.join(tempFolderBase, item);
+            const isDirectory = fs.statSync(itemPath).isDirectory();
+            
+            // Match by slug, or by ID if slug is undefined/null
+            const shouldDelete = slug ? 
+              (item.includes(slug) || item.startsWith(slug)) : 
+              (item.includes(id) || item.endsWith(`-${id}.h5p`));
+            
+            if (shouldDelete) {
+              console.log(`Deleting temporary ${isDirectory ? 'folder' : 'file'}: ${itemPath}`);
+              
+              if (isDirectory) {
+                fs.rmSync(itemPath, { recursive: true, force: true });
+              } else {
+                fs.unlinkSync(itemPath);
+              }
+            }
+          }
+        } catch (tempErr) {
+          console.error("Error cleaning up temporary files:", tempErr);
+          // Don't throw - continue with database deletion
         }
       }
     } catch (fsError) {

@@ -15,6 +15,7 @@ interface H5PContent {
   created_at: string;
   subject_area_name?: string;
   tags?: Array<{ id: number | string; name: string }>;
+  isDeleting?: boolean; // UI-Status für das Löschen
 }
 
 export default function AdminDashboard() {
@@ -182,15 +183,24 @@ export default function AdminDashboard() {
                               className="btn btn-xs btn-warning"
                             >
                               Bearbeiten
-                            </Link>{" "}
-                            <button
+                            </Link>{" "}                            <button
                               onClick={async () => {
                                 if (
                                   confirm(
-                                    `Möchten Sie "${content.title}" wirklich löschen?`
+                                    `Möchten Sie "${content.title}" wirklich löschen? Dies löscht sowohl den Datenbankeintrag als auch alle zugehörigen Dateien vom Server.`
                                   )
                                 ) {
                                   try {
+                                    // Zeige Ladeindikator für die zu löschende Zeile
+                                    const contentBeingDeleted = content.id;
+                                    setContents(
+                                      contents.map(c => 
+                                        c.id === contentBeingDeleted 
+                                          ? {...c, isDeleting: true} 
+                                          : c
+                                      )
+                                    );
+                                    
                                     const response = await fetch(
                                       `/api/admin/content/${content.id}`,
                                       {
@@ -205,14 +215,27 @@ export default function AdminDashboard() {
                                           (c) => c.id !== content.id
                                         )
                                       );
+                                      // Erfolgsmeldung
+                                      alert("Inhalt erfolgreich gelöscht. Alle zugehörigen H5P-Dateien wurden vom Server entfernt.");
                                     } else {
-                                      const errorData = await response.json();
-                                      alert(
-                                        `Fehler: ${
-                                          errorData.error ||
-                                          "Unbekannter Fehler"
-                                        }`
+                                      // Entferne Ladeindikator
+                                      setContents(
+                                        contents.map(c => 
+                                          c.id === contentBeingDeleted 
+                                            ? {...c, isDeleting: false} 
+                                            : c
+                                        )
                                       );
+                                      
+                                      let errorMessage = "Unbekannter Fehler";
+                                      try {
+                                        const errorData = await response.json();
+                                        errorMessage = errorData.error || errorMessage;
+                                      } catch (parseError) {
+                                        console.error("Error parsing error response:", parseError);
+                                      }
+                                      
+                                      alert(`Fehler: ${errorMessage}`);
                                     }
                                   } catch (err) {
                                     console.error(
@@ -226,8 +249,11 @@ export default function AdminDashboard() {
                                 }
                               }}
                               className="btn btn-xs btn-error"
+                              disabled={content.isDeleting}
                             >
-                              Löschen
+                              {content.isDeleting ? (
+                                <span className="loading loading-spinner loading-xs"></span>
+                              ) : "Löschen"}
                             </button>
                           </div>
                         </td>

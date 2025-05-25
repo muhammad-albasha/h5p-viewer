@@ -191,13 +191,14 @@ export default function EditContent() {
     } else {
       setSelectedTags([...selectedTags, tagId]);
     }
-  };
-  const handleDelete = async () => {
+  };  const handleDelete = async () => {
     if (!content) return;
     
-    if (confirm(`Möchten Sie "${content.title}" wirklich löschen?`)) {
+    if (confirm(`Möchten Sie "${content.title}" wirklich löschen? Dies löscht sowohl den Datenbankeintrag als auch alle zugehörigen Dateien vom Server.`)) {
       try {
+        setIsSaving(true); // Nutze den gleichen Loading-Status
         console.log(`Deleting content with ID: ${contentId}`);
+        
         const response = await fetch(`/api/admin/content/${contentId}`, {
           method: "DELETE",
         });
@@ -215,13 +216,16 @@ export default function EditContent() {
         }
 
         console.log("Content deleted successfully");
-        alert("Inhalt erfolgreich gelöscht");
+        // Erfolgsmeldung mit mehr Details
+        alert("Inhalt erfolgreich gelöscht. Alle zugehörigen H5P-Dateien wurden vom Server entfernt.");
         router.push("/admin");
         
       } catch (err: any) {
         const errorMsg = err.message || "Ein unbekannter Fehler ist aufgetreten";
         console.error("Delete error:", errorMsg);
-        alert(`Fehler: ${errorMsg}`);
+        alert(`Fehler beim Löschen: ${errorMsg}`);
+      } finally {
+        setIsSaving(false);
       }
     }
   };

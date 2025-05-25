@@ -10,6 +10,7 @@ Dieses Projekt ist ein einfaches Content-Management-System für H5P-Inhalte, das
 - Anzeige von H5P-Inhalten auf der Website
 - Integration mit MySQL-Datenbank (über Docker)
 - Responsive Design
+- Vollständige Löschfunktionalität für H5P-Inhalte (Datenbank + Dateisystem)
 
 ## Voraussetzungen
 
@@ -91,12 +92,38 @@ Die Datei `docker-compose.yml` enthält:
 
 Du kannst auf PHPMyAdmin unter http://localhost:8080 zugreifen.
 
+## Maintenance-Tools
+
+Das Projekt enthält einige nützliche Wartungsskripte:
+
+1. `app/scripts/clean-h5p.js` - Bereinigt verwaiste H5P-Dateien und -Verzeichnisse, die keinen entsprechenden Datenbankeintrag haben:
+   ```bash
+   # Nur anzeigen, was gelöscht werden würde
+   node app/scripts/clean-h5p.js --dry-run
+   
+   # Tatsächlich bereinigen
+   node app/scripts/clean-h5p.js
+   ```
+
+2. `app/scripts/fix-delete.js` - Spezielles Skript zur gezielten Bereinigung von H5P-Dateien nach Löschproblemen:
+   ```bash
+   # Nur scannen ohne Dateien zu löschen
+   node app/scripts/fix-delete.js --scan
+   
+   # Bereinigen aller verwaisten Dateien
+   node app/scripts/fix-delete.js --clean
+   
+   # Gezielt Dateien für einen bestimmten Inhalt bereinigen
+   node app/scripts/fix-delete.js --id=123
+   ```
+
 ## Hinweise zur Sicherheit
 
 Diese Anwendung ist jetzt produktionsbereit mit folgenden Sicherheitsmerkmalen:
 
 1. Automatische Extraktion von H5P-Dateien in den öffentlichen Ordner
 2. Entfernung aller Testkomponenten und Entwicklungsendpunkte
+3. Vollständige Löschfunktion für H5P-Inhalte (Datenbank + Dateisystem)
 
 Für einen sicheren Produktiveinsatz empfehlen wir zusätzlich:
 
@@ -105,3 +132,4 @@ Für einen sicheren Produktiveinsatz empfehlen wir zusätzlich:
 3. Regelmäßige Backups der Datenbank durchführen
 4. Dateiberechtigungen für die hochgeladenen und extrahierten Inhalte überprüfen
 5. Zugriffskontrollen für die Admin-Bereiche implementieren
+6. Regelmäßige Ausführung des Bereinigungsskripts zur Entfernung verwaister Dateien
