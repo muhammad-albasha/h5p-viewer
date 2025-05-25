@@ -69,9 +69,8 @@ export default function Home() {
     const matchesTags = selectedTags.length === 0 || content.tags?.some(tag => selectedTags.includes(tag));
     return matchesSearch && matchesTags;
   });
-
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
       {/* 1. Navigation Bar */}
       <Navbar />
 
@@ -79,10 +78,13 @@ export default function Home() {
       <Header />
 
       {/* 3. Banner with H1 */}
-      <Banner title="H5P-Viewer" />
+      <Banner 
+        title="H5P-Viewer" 
+        subtitle="Entdecke interaktive Lerninhalte für dein Studium"
+      />
 
-      <main className="flex-grow bg-base-200 p-4">
-        <div className="container mx-auto">
+      <main className="flex-grow bg-base-100 py-8 px-4">
+        <div className="container mx-auto max-w-6xl">
           {/* 4. Filter Section */}
           <ContentFilter
             searchQuery={searchQuery}
@@ -97,11 +99,25 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="bg-neutral text-neutral-content p-6">
-        <div className="container mx-auto text-center">
-          <p>© {new Date().getFullYear()} H5P-Viewer</p>
+      <footer className="bg-base-300 text-base-content p-10 border-t border-base-200">
+        <div className="container mx-auto max-w-6xl">
+          <div className="footer">
+            <div>
+              <span className="footer-title">H5P-Viewer</span>
+              <p className="max-w-xs">Eine Plattform für interaktive Lernmaterialien, die das Lernerlebnis verbessert.</p>
+            </div>
+            <div>
+              <span className="footer-title">Links</span>
+              <a className="link link-hover">Über uns</a>
+              <a className="link link-hover">Kontakt</a>
+              <a className="link link-hover">Hilfe</a>
+            </div>
+          </div>
+          <div className="mt-8 border-t border-base-200 pt-6 text-center text-sm opacity-60">
+            <p>© {new Date().getFullYear()} H5P-Viewer. Alle Rechte vorbehalten.</p>
+          </div>
         </div>
       </footer>
-    </div>
+    </>
   );
 }

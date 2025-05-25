@@ -17,5 +17,57 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, Arial, sans-serif;
+}
+
+.h5p-container {
+  /* Ensure H5P widgets render nicely */
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/* Banner decorations */
+.banner-decoration {
+  pointer-events: none;
+}
+
+.banner-decoration-circle {
+  position: absolute;
+  border-radius: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+}
+
+.banner-circle-1 {
+  width: 300px;
+  height: 300px;
+  top: -150px;
+  right: 10%;
+}
+
+.banner-circle-2 {
+  width: 200px;
+  height: 200px;
+  bottom: -50px;
+  left: 5%;
+}
+
+.banner-circle-3 {
+  width: 100px;
+  height: 100px;
+  top: 20%;
+  left: 20%;
+}
+
+.banner-circle-4 {
+  width: 150px;
+  height: 150px;
+  bottom: 10%;
+  right: 20%;
+}
+
+.banner-circle-5 {
+  width: 80px;
+  height: 80px;
+  top: 40%;
+  right: 30%;
 }

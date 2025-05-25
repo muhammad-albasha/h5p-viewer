@@ -33,14 +33,11 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
         </div>
       </div>
     );
-  }
-
-  return (
+  }  return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {contents.map((content, index) => (
-        <Link 
+      {contents.map((content, index) => (        <Link 
           key={index} 
-          href={`/fachbereich/${encodeURIComponent(content.name)}`}
+          href={`/h5p/content?id=${index + 1}`}
           className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all"
         >
           <div className="card-body">
