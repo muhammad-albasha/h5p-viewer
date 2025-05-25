@@ -6,6 +6,7 @@ Dieses Projekt ist ein einfaches Content-Management-System für H5P-Inhalte, das
 
 - Einfaches Login-System mit vordefiniertem Administratorkonto
 - Hochladen und Verwalten von H5P-Inhalten
+- Automatische Extraktion hochgeladener H5P-Dateien in das /public/h5p/ Verzeichnis
 - Anzeige von H5P-Inhalten auf der Website
 - Integration mit MySQL-Datenbank (über Docker)
 - Responsive Design
@@ -37,7 +38,13 @@ npm run docker:up
 npm run setup
 ```
 
-5. Starte die Anwendung:
+5. Bereite die H5P-Umgebung vor:
+
+```bash
+npm run prepare-h5p
+```
+
+6. Starte die Anwendung:
 
 ```bash
 npm run dev

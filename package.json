@@ -10,9 +10,11 @@
     "setup": "node app/scripts/setup.js",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
-    "start:all": "npm run docker:up && npm run setup && npm run dev"
+    "prepare-h5p": "node app/scripts/prepare-h5p.js",
+    "start:all": "npm run docker:up && npm run setup && npm run prepare-h5p && npm run dev"
   },
   "dependencies": {
+    "adm-zip": "^0.5.16",
     "h5p-standalone": "^3.8.0",
     "mysql2": "^3.14.1",
     "next": "^15.3.2",
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/adm-zip": "^0.5.7",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

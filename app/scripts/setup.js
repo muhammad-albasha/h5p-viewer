@@ -5,11 +5,17 @@ console.log('Setting up H5P Viewer directories...');
 
 // Create upload directories
 const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'h5p');
+const h5pDir = path.join(process.cwd(), 'public', 'h5p');
 
 // Create directories if they don't exist
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
   console.log(`Created directory: ${uploadDir}`);
+}
+
+if (!fs.existsSync(h5pDir)) {
+  fs.mkdirSync(h5pDir, { recursive: true });
+  console.log(`Created directory: ${h5pDir}`);
 }
 
 console.log('Directory setup complete!');

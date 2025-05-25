@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
+import TestExtraction from "@/app/components/admin/TestExtraction";
 
 interface H5PContent {
   id: number;
@@ -179,8 +180,10 @@ export default function AdminDashboard() {
                   </tbody>
                 </table>
               </div>
-            )}
-          </div>
+            )}          </div>
+          
+          {/* Test Component for H5P Extraction */}
+          <TestExtraction />
         </div>
       </div>
     </>
