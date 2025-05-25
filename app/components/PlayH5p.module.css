@@ -1,0 +1,10 @@
+.h5pContainer {
+  position: relative;
+  z-index: 1;
+  min-height: 300px;
+}
+
+.h5pContainerHidden {
+  min-height: 0;
+  visibility: hidden;
+}

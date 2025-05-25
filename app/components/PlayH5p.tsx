@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import styles from "./PlayH5p.module.css";
 
 declare global {
   interface Window {
@@ -104,16 +105,9 @@ function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
             </div>
           </div>
         </div>
-      )}
-      
-      <div 
+      )}      <div 
         ref={h5pContainer} 
-        className="h5p-container relative z-10"
-        style={{
-          position: 'relative',
-          zIndex: 1,
-          minHeight: error || loading ? 0 : '300px'
-        }}
+        className={`h5p-container relative z-10 ${error || loading ? styles.h5pContainerHidden : styles.h5pContainer}`}
       ></div>
     </div>
   );
