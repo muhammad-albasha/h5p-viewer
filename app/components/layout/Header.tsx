@@ -13,12 +13,14 @@ const Header = () => {
             <span className="ml-3 text-xl font-semibold">H5P Viewer</span>
           </Link>
         </div>
-          <nav className="flex items-center gap-4">
-          <Link href="/" className="text-base-content hover:text-primary">
+          <nav className="flex items-center gap-4">          <Link href="/" className="text-base-content hover:text-primary">
             Startseite
           </Link>
           <Link href="/h5p" className="text-base-content hover:text-primary">
             Alle Inhalte
+          </Link>
+          <Link href="/fachbereich" className="text-base-content hover:text-primary">
+            Fachbereiche
           </Link>
           
           <Link 

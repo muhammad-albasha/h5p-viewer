@@ -22,7 +22,7 @@ export async function DELETE(
 
     // Get content info before deletion
     const [content] = await pool.query(
-      "SELECT file_path FROM h5p_content WHERE id = ?",
+      "SELECT file_path, slug FROM h5p_content WHERE id = ?",
       [id]
     );
 
@@ -40,9 +40,33 @@ export async function DELETE(
     if (fs.existsSync(fullPath)) {
       fs.unlinkSync(fullPath);
     }
+    
+    // Delete folder from public/h5p if it exists
+    const slug = (content as any[])[0].slug;
+    const h5pFolder = path.join(process.cwd(), "public", "h5p", slug);
+    if (fs.existsSync(h5pFolder)) {
+      // Recursive delete of directory
+      fs.rmSync(h5pFolder, { recursive: true, force: true });
+    }
 
-    // Delete from database
-    await pool.query("DELETE FROM h5p_content WHERE id = ?", [id]);
+    // Begin transaction
+    const connection = await pool.getConnection();
+    try {
+      await connection.beginTransaction();
+      
+      // Delete content tags first
+      await connection.query("DELETE FROM content_tags WHERE content_id = ?", [id]);
+      
+      // Delete from content table
+      await connection.query("DELETE FROM h5p_content WHERE id = ?", [id]);
+      
+      await connection.commit();
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
 
     return NextResponse.json({ message: "Content deleted successfully" });
   } catch (error: any) {

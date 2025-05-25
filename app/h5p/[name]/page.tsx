@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 // This component redirects from the old URL format (/h5p/[name]) to the new format (/h5p?id=1)
-const H5PContentRedirect = ({ params }: { params: { name: string } }) => {
+const H5PContentRedirect = () => {
   const router = useRouter();
-  const name = params.name;
+  const params = useParams();
+  const name = params.name as string;
   const decodedName = decodeURIComponent(name);
   
   useEffect(() => {
@@ -18,7 +19,8 @@ const H5PContentRedirect = ({ params }: { params: { name: string } }) => {
           throw new Error('Failed to fetch H5P content');
         }
         
-        const contents = await response.json();        const contentIndex = contents.findIndex((content: any) => 
+        const contents = await response.json();        
+        const contentIndex = contents.findIndex((content: any) => 
           content.name.toLowerCase() === decodedName.toLowerCase()
         );
         

@@ -11,14 +11,41 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get content list from database
+    // Get content list from database with subject area info
     const [rows] = await pool.query(`
-      SELECT id, title, slug, content_type, created_at
-      FROM h5p_content
-      ORDER BY created_at DESC
+      SELECT 
+        h.id, 
+        h.title, 
+        h.slug, 
+        h.content_type, 
+        h.created_at,
+        h.subject_area_id,
+        sa.name as subject_area_name,
+        sa.slug as subject_area_slug
+      FROM 
+        h5p_content h
+      LEFT JOIN 
+        subject_areas sa ON h.subject_area_id = sa.id
+      ORDER BY 
+        h.created_at DESC
     `);
 
-    return NextResponse.json(rows);
+    // For each content item, get its tags
+    const contentItems = await Promise.all((rows as any[]).map(async (content) => {
+      const [tags] = await pool.query(`
+        SELECT t.id, t.name
+        FROM tags t
+        JOIN content_tags ct ON t.id = ct.tag_id
+        WHERE ct.content_id = ?
+      `, [content.id]);
+      
+      return {
+        ...content,
+        tags: tags
+      };
+    }));
+
+    return NextResponse.json(contentItems);
   } catch (error) {
     console.error("Error fetching H5P content:", error);
     return NextResponse.json(

@@ -1,29 +1,202 @@
 "use client";
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Navbar from '@/app/components/layout/Navbar';
+import Header from '@/app/components/layout/Header';
+import ContentFilter from '@/app/components/content/ContentFilter';
+import Link from 'next/link';
 
-// This page redirects to the new URL format /h5p/content?id=X
-export default function H5PRedirect() {
+interface SubjectArea {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+interface H5PContent {
+  id: number;
+  name: string;
+  path: string;
+  type: string;
+  tags: string[];
+  slug?: string;
+  subject_area?: SubjectArea | null;
+}
+
+export default function AllH5PContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const id = searchParams.get('id');
+  const [content, setContent] = useState<H5PContent[]>([]);
+  const [filteredContent, setFilteredContent] = useState<H5PContent[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
+  // Filter states
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [availableTags, setAvailableTags] = useState<string[]>([]);
+  const [subjectAreas, setSubjectAreas] = useState<SubjectArea[]>([]);
+  const [selectedSubjectArea, setSelectedSubjectArea] = useState('');
+  
+  // Fetch content and subject areas
   useEffect(() => {
-    // If there's an ID in the URL, redirect to the new format
-    if (id) {
-      router.replace(`/h5p/content?id=${id}`);
-    } else {
-      // If no ID, just go to the homepage
-      router.replace('/');
-    }
-  }, [id, router]);
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Fetch H5P content
+        const contentResponse = await fetch('/api/h5p-content');
+        if (!contentResponse.ok) {
+          throw new Error('Failed to fetch content');
+        }
+        const contentData = await contentResponse.json();
+        setContent(contentData);
+        
+        // Extract all unique tags
+        const allTags = new Set<string>();
+        contentData.forEach((item: H5PContent) => {
+          item.tags?.forEach(tag => allTags.add(tag));
+        });
+        setAvailableTags(Array.from(allTags));
+        
+        // Fetch subject areas
+        const subjectAreaResponse = await fetch('/api/admin/subject-areas');
+        if (!subjectAreaResponse.ok) {
+          throw new Error('Failed to fetch subject areas');
+        }
+        const subjectAreaData = await subjectAreaResponse.json();
+        setSubjectAreas(subjectAreaData);
+        
+      } catch (err: any) {
+        setError(err.message || 'An error occurred');
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, []);
   
-  // Show loading state while redirecting
+  // Filter content whenever filters change
+  useEffect(() => {
+    if (!content) return;
+    
+    let result = [...content];
+    
+    // Filter by search query
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(item => 
+        item.name.toLowerCase().includes(query) ||
+        item.type?.toLowerCase().includes(query) ||
+        item.tags?.some(tag => tag.toLowerCase().includes(query))
+      );
+    }
+    
+    // Filter by selected tags
+    if (selectedTags.length > 0) {
+      result = result.filter(item => 
+        item.tags?.some(tag => selectedTags.includes(tag))
+      );
+    }
+    
+    // Filter by subject area
+    if (selectedSubjectArea) {
+      result = result.filter(item => 
+        item.subject_area && item.subject_area.slug === selectedSubjectArea
+      );
+    }
+    
+    setFilteredContent(result);
+  }, [content, searchQuery, selectedTags, selectedSubjectArea]);
+  
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag) 
+        : [...prev, tag]
+    );
+  };
+  
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <span className="loading loading-spinner loading-lg"></span>
-      <p className="ml-3">Redirecting...</p>
-    </div>
+    <>
+      <Navbar />
+      <Header />
+      
+      <div className="bg-gradient-to-br from-primary to-secondary text-primary-content py-12">
+        <div className="container mx-auto max-w-6xl px-4">
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+            H5P-Inhalte
+          </h1>
+          <p className="text-primary-content/80 mt-2">
+            Entdecken Sie alle verfügbaren interaktiven Lerninhalte
+          </p>
+        </div>
+      </div>
+      
+      <div className="bg-base-200 min-h-screen py-10">
+        <div className="container mx-auto max-w-6xl px-4">
+          <ContentFilter 
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedTags={selectedTags}
+            availableTags={availableTags}
+            toggleTag={toggleTag}
+            subjectAreas={subjectAreas}
+            selectedSubjectArea={selectedSubjectArea}
+            setSelectedSubjectArea={setSelectedSubjectArea}
+          />
+          
+          {isLoading ? (
+            <div className="flex justify-center p-8">
+              <div className="loading loading-spinner loading-lg"></div>
+            </div>
+          ) : error ? (
+            <div className="alert alert-error">
+              <p>{error}</p>
+            </div>
+          ) : filteredContent.length === 0 ? (
+            <div className="alert alert-info">
+              <p>Keine Inhalte gefunden. Bitte ändern Sie die Filter oder versuchen Sie eine andere Suche.</p>
+            </div>          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {filteredContent.map(item => (
+                <div 
+                  key={item.id}
+                  className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow cursor-pointer"
+                  onClick={() => router.push(`/h5p/${item.slug}`)}
+                >
+                  <div className="card-body">
+                    <h2 className="card-title">{item.name}</h2>
+                    <p>Typ: {item.type || "Unbekannt"}</p>
+                    
+                    {item.subject_area && (
+                      <span 
+                        className="badge badge-outline hover:badge-primary cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(`/fachbereich/${item.subject_area!.slug}`);
+                        }}
+                      >
+                        {item.subject_area.name}
+                      </span>
+                    )}
+                    
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {item.tags?.map((tag, idx) => (
+                        <span key={idx} className="badge badge-primary">{tag}</span>
+                      ))}
+                    </div>
+                    <div className="card-actions justify-end mt-4">
+                      <button className="btn btn-primary">Öffnen</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </>
   );
 }

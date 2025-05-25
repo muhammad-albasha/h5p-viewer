@@ -13,6 +13,8 @@ interface H5PContent {
   slug: string;
   content_type: string;
   created_at: string;
+  subject_area_name?: string;
+  tags?: Array<{ id: number | string; name: string }>;
 }
 
 export default function AdminDashboard() {
@@ -21,25 +23,25 @@ export default function AdminDashboard() {
   const [contents, setContents] = useState<H5PContent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Redirect to login if not authenticated
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
     }
   }, [status, router]);
-  
+
   // Fetch H5P contents when component loads
   useEffect(() => {
     const fetchContents = async () => {
       try {
         setIsLoading(true);
         const response = await fetch("/api/admin/content");
-        
+
         if (!response.ok) {
           throw new Error("Failed to fetch content");
         }
-        
+
         const data = await response.json();
         setContents(data);
       } catch (err) {
@@ -49,7 +51,7 @@ export default function AdminDashboard() {
         setIsLoading(false);
       }
     };
-    
+
     if (status === "authenticated") {
       fetchContents();
     }
@@ -67,8 +69,9 @@ export default function AdminDashboard() {
     <>
       <Navbar />
       <Header />
-      
+
       <div className="bg-gradient-to-br from-primary to-secondary text-primary-content py-12">
+        {" "}
         <div className="container mx-auto max-w-6xl px-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
@@ -79,16 +82,27 @@ export default function AdminDashboard() {
                 Verwalten Sie Ihre H5P Inhalte
               </p>
             </div>
-            <Link 
-              href="/admin/upload" 
-              className="btn btn-accent hover:btn-accent-focus"
-            >
-              Neuen H5P-Inhalt hochladen
-            </Link>
+            <div className="flex gap-2">
+              <Link
+                href="/admin/subject-areas"
+                className="btn btn-sm btn-outline"
+              >
+                Fachbereiche
+              </Link>
+              <Link href="/admin/tags" className="btn btn-sm btn-outline">
+                Tags
+              </Link>
+              <Link
+                href="/admin/upload"
+                className="btn btn-accent hover:btn-accent-focus"
+              >
+                Neuen H5P-Inhalt hochladen
+              </Link>
+            </div>
           </div>
         </div>
       </div>
-      
+
       <div className="bg-base-200 min-h-screen py-10">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="bg-base-100 rounded-xl shadow-xl overflow-hidden">
@@ -98,7 +112,6 @@ export default function AdminDashboard() {
                 Alle hochgeladenen interaktiven Lerninhalte
               </p>
             </div>
-            
             {isLoading ? (
               <div className="flex justify-center p-8">
                 <div className="loading loading-spinner loading-md"></div>
@@ -116,12 +129,15 @@ export default function AdminDashboard() {
               </div>
             ) : (
               <div className="overflow-x-auto">
+                {" "}
                 <table className="table w-full">
                   <thead>
                     <tr>
                       <th>ID</th>
                       <th>Titel</th>
                       <th>Typ</th>
+                      <th>Fachbereich</th>
+                      <th>Tags</th>
                       <th>Erstellt am</th>
                       <th>Aktionen</th>
                     </tr>
@@ -132,39 +148,85 @@ export default function AdminDashboard() {
                         <td>{content.id}</td>
                         <td>{content.title}</td>
                         <td>{content.content_type || "Unbekannt"}</td>
-                        <td>{new Date(content.created_at).toLocaleDateString()}</td>
+                        <td>
+                          {content.subject_area_name ? (
+                            <span className="badge badge-outline">
+                              {content.subject_area_name}
+                            </span>
+                          ) : (
+                            <span className="text-opacity-50">-</span>
+                          )}
+                        </td>
+                        <td>
+                          <div className="flex flex-wrap gap-1">
+                            {content.tags && content.tags.length > 0 ? (
+                              content.tags.map((tag) => (
+                                <span key={tag.id} className="badge badge-sm">
+                                  {tag.name}
+                                </span>
+                              ))
+                            ) : (
+                              <span className="text-opacity-50">-</span>
+                            )}
+                          </div>
+                        </td>
+                        <td>
+                          {new Date(content.created_at).toLocaleDateString()}
+                        </td>
                         <td>
                           <div className="flex gap-2">
-                            <Link 
-                              href={`/h5p/content?id=${content.id}`} 
+                            <Link
+                              href={`/h5p/content?id=${content.id}`}
                               className="btn btn-xs btn-info"
                               target="_blank"
                             >
                               Ansehen
                             </Link>
-                            <Link 
-                              href={`/admin/edit/${content.id}`} 
+                            <Link
+                              href={`/admin/edit/${content.id}`}
                               className="btn btn-xs btn-warning"
                             >
                               Bearbeiten
-                            </Link>                            <button 
+                            </Link>{" "}
+                            <button
                               onClick={async () => {
-                                if (confirm(`Möchten Sie "${content.title}" wirklich löschen?`)) {
+                                if (
+                                  confirm(
+                                    `Möchten Sie "${content.title}" wirklich löschen?`
+                                  )
+                                ) {
                                   try {
-                                    const response = await fetch(`/api/admin/content/${content.id}`, {
-                                      method: 'DELETE'
-                                    });
-                                    
+                                    const response = await fetch(
+                                      `/api/admin/content/${content.id}`,
+                                      {
+                                        method: "DELETE",
+                                      }
+                                    );
+
                                     if (response.ok) {
                                       // Remove from state to update UI
-                                      setContents(contents.filter(c => c.id !== content.id));
+                                      setContents(
+                                        contents.filter(
+                                          (c) => c.id !== content.id
+                                        )
+                                      );
                                     } else {
                                       const errorData = await response.json();
-                                      alert(`Fehler: ${errorData.error || 'Unbekannter Fehler'}`);
+                                      alert(
+                                        `Fehler: ${
+                                          errorData.error ||
+                                          "Unbekannter Fehler"
+                                        }`
+                                      );
                                     }
                                   } catch (err) {
-                                    console.error('Error deleting content:', err);
-                                    alert('Beim Löschen ist ein Fehler aufgetreten');
+                                    console.error(
+                                      "Error deleting content:",
+                                      err
+                                    );
+                                    alert(
+                                      "Beim Löschen ist ein Fehler aufgetreten"
+                                    );
                                   }
                                 }
                               }}
@@ -178,7 +240,9 @@ export default function AdminDashboard() {
                     ))}
                   </tbody>
                 </table>
-              </div>            )}          </div>
+              </div>
+            )}{" "}
+          </div>
         </div>
       </div>
     </>

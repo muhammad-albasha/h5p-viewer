@@ -54,6 +54,25 @@ export async function initializeDatabase() {
       console.log('Default admin user created');
     }
 
+    // Create subject areas (Fachbereiche) table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS subject_areas (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL UNIQUE,
+        slug VARCHAR(255) NOT NULL UNIQUE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Create tags table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS tags (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL UNIQUE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     // Create h5p_content table for tracking uploaded content
     await pool.query(`
       CREATE TABLE IF NOT EXISTS h5p_content (
@@ -62,10 +81,23 @@ export async function initializeDatabase() {
         slug VARCHAR(255) NOT NULL UNIQUE,
         file_path VARCHAR(255) NOT NULL,
         content_type VARCHAR(100),
+        subject_area_id INT,
         created_by INT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (created_by) REFERENCES users(id)
+        FOREIGN KEY (created_by) REFERENCES users(id),
+        FOREIGN KEY (subject_area_id) REFERENCES subject_areas(id) ON DELETE SET NULL
+      )
+    `);
+
+    // Create content_tags relation table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS content_tags (
+        content_id INT NOT NULL,
+        tag_id INT NOT NULL,
+        PRIMARY KEY (content_id, tag_id),
+        FOREIGN KEY (content_id) REFERENCES h5p_content(id) ON DELETE CASCADE,
+        FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
       )
     `);
 

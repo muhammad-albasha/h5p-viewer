@@ -24,18 +24,42 @@ export async function POST(req: NextRequest) {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Parse the formData
+    }    // Parse the formData
     const formData = await req.formData();
     const title = formData.get('title') as string;
     const file = formData.get('file') as File;
+    const subjectAreaId = formData.get('subjectAreaId') as string;
+    const tagsString = formData.get('tags') as string;
+    
+    // Parse tags if provided
+    const tagIds: number[] = [];
+    if (tagsString) {
+      try {
+        const parsedTags = JSON.parse(tagsString);
+        if (Array.isArray(parsedTags)) {
+          parsedTags.forEach(tag => {
+            if (typeof tag === 'number') tagIds.push(tag);
+          });
+        }
+      } catch (e) {
+        console.error("Failed to parse tags:", e);
+      }
+    }
 
     if (!title || !file) {
       return NextResponse.json(
         { error: "Title and file are required" },
         { status: 400 }
       );
+    }
+    
+    // Validate subject area ID if provided
+    let validSubjectAreaId: number | null = null;
+    if (subjectAreaId && subjectAreaId !== "none") {
+      const parsedId = parseInt(subjectAreaId);
+      if (!isNaN(parsedId)) {
+        validSubjectAreaId = parsedId;
+      }
     }
 
     // Create unique slug and folder name
@@ -80,21 +104,46 @@ export async function POST(req: NextRequest) {
           console.error(`Error parsing h5p.json for ${slug}:`, err);
         }
       }
-      
-      // Save the file info in the database
+        // Save the file info in the database
       const relativeFilePath = `/h5p/${slug}`; // Path to the extracted directory, not the file
-      const [result] = await pool.query(
-        `INSERT INTO h5p_content (title, slug, file_path, content_type, created_by) 
-         VALUES (?, ?, ?, ?, ?)`,
-        [title, slug, relativeFilePath, contentType, session.user.id]
-      );
       
-      return NextResponse.json({
-        message: "Upload successful, H5P content extracted",
-        success: true,
-        contentId: (result as any).insertId,
-        extractedTo: relativeFilePath
-      });
+      // Start a database transaction to handle content and tags
+      const connection = await pool.getConnection();
+      try {
+        await connection.beginTransaction();
+        
+        // Insert content record
+        const [result] = await connection.query(
+          `INSERT INTO h5p_content (title, slug, file_path, content_type, subject_area_id, created_by) 
+           VALUES (?, ?, ?, ?, ?, ?)`,
+          [title, slug, relativeFilePath, contentType, validSubjectAreaId, session.user.id]
+        );
+        
+        const contentId = (result as any).insertId;
+        
+        // Insert tags if any
+        if (tagIds.length > 0) {
+          const tagValues = tagIds.map(tagId => [contentId, tagId]);
+          await connection.query(
+            'INSERT INTO content_tags (content_id, tag_id) VALUES ?',
+            [tagValues]
+          );
+        }
+        
+        await connection.commit();
+        
+        return NextResponse.json({
+          message: "Upload successful, H5P content extracted",
+          success: true,
+          contentId: contentId,
+          extractedTo: relativeFilePath
+        });
+      } catch (dbError) {
+        await connection.rollback();
+        throw dbError;
+      } finally {
+        connection.release();
+      }
     } catch (extractError: unknown) {
       // If extraction fails, delete the temporary file and throw error
       fs.unlinkSync(tempFilePath);

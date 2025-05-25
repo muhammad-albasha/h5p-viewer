@@ -1,20 +1,77 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
 
+interface SubjectArea {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+interface Tag {
+  id: number;
+  name: string;
+}
+
 export default function UploadH5P() {
   const router = useRouter();
   const { data: session } = useSession();
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
+  const [subjectAreas, setSubjectAreas] = useState<SubjectArea[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [selectedSubjectArea, setSelectedSubjectArea] = useState<string>("none");
+  const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [isLoadingOptions, setIsLoadingOptions] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
+  
+  // Fetch subject areas and tags when component loads
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        setIsLoadingOptions(true);
+        
+        // Fetch subject areas
+        const subjectAreaResponse = await fetch("/api/admin/subject-areas");
+        if (!subjectAreaResponse.ok) {
+          throw new Error("Failed to fetch subject areas");
+        }
+        const subjectAreaData = await subjectAreaResponse.json();
+        setSubjectAreas(subjectAreaData);
+        
+        // Fetch tags
+        const tagsResponse = await fetch("/api/admin/tags");
+        if (!tagsResponse.ok) {
+          throw new Error("Failed to fetch tags");
+        }
+        const tagsData = await tagsResponse.json();
+        setTags(tagsData);
+      } catch (err) {
+        console.error("Error loading options:", err);
+      } finally {
+        setIsLoadingOptions(false);
+      }
+    };
+    
+    fetchOptions();
+  }, []);
+  
+  const handleTagToggle = (tagId: number) => {
+    setSelectedTags(prev => {
+      if (prev.includes(tagId)) {
+        return prev.filter(id => id !== tagId);
+      } else {
+        return [...prev, tagId];
+      }
+    });
+  };
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,11 +95,12 @@ export default function UploadH5P() {
     try {
       setIsUploading(true);
       setError(null);
-      
-      // Create FormData object to send the file and metadata
+        // Create FormData object to send the file and metadata
       const formData = new FormData();
       formData.append("file", file);
       formData.append("title", title);
+      formData.append("subjectAreaId", selectedSubjectArea);
+      formData.append("tags", JSON.stringify(selectedTags));
       
       // Simulate upload progress for demo purposes
       const progressInterval = setInterval(() => {
@@ -139,6 +197,57 @@ export default function UploadH5P() {
                   placeholder="z.B. Grammatik-Quiz: For oder Since"
                   required
                 />
+              </div>
+              
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text font-medium">Fachbereich</span>
+                </label>                <select 
+                  className="select select-bordered w-full" 
+                  value={selectedSubjectArea}
+                  onChange={(e) => setSelectedSubjectArea(e.target.value)}
+                  disabled={isLoadingOptions}
+                  aria-label="Fachbereich auswählen"
+                >
+                  <option value="none">Keinen Fachbereich auswählen</option>
+                  {subjectAreas.map(area => (
+                    <option key={area.id} value={area.id}>
+                      {area.name}
+                    </option>
+                  ))}
+                </select>
+                {selectedSubjectArea === "none" && (
+                  <label className="label">
+                    <span className="label-text-alt text-warning">
+                      Empfohlen: Wählen Sie einen Fachbereich
+                    </span>
+                  </label>
+                )}
+              </div>
+              
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text font-medium">Tags</span>
+                </label>
+                <div className="flex flex-wrap gap-2 p-4 border border-base-300 rounded-lg min-h-16">
+                  {isLoadingOptions ? (
+                    <div className="loading loading-spinner loading-sm"></div>
+                  ) : tags.length === 0 ? (
+                    <p className="text-sm opacity-70">Keine Tags verfügbar</p>
+                  ) : (
+                    tags.map(tag => (
+                      <div 
+                        key={tag.id} 
+                        className={`badge ${selectedTags.includes(tag.id) 
+                          ? 'badge-primary' 
+                          : 'badge-outline'} cursor-pointer`}
+                        onClick={() => handleTagToggle(tag.id)}
+                      >
+                        {tag.name}
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
               
               <div className="form-control w-full">

@@ -10,6 +10,11 @@ interface H5PContent {
   tags: string[];
   slug?: string;
   created_at?: string;
+  subject_area?: {
+    id: number;
+    name: string;
+    slug: string;
+  } | null;
 }
 
 // This function determines the content type based on library files
@@ -60,24 +65,61 @@ const assignTags = (type: string, name: string): string[] => {
 
 export async function getH5PContents(): Promise<H5PContent[]> {
   try {
-    // First try to get contents from the database
+    // Get content from database with subject area information
     const [rows] = await pool.query(`
-      SELECT id, title as name, file_path as path, content_type as type, slug, created_at
-      FROM h5p_content
-      ORDER BY created_at DESC
+      SELECT 
+        h.id, 
+        h.title as name, 
+        h.slug, 
+        h.file_path as path, 
+        h.content_type as type, 
+        h.created_at,
+        h.subject_area_id,
+        sa.name as subject_area_name,
+        sa.slug as subject_area_slug
+      FROM 
+        h5p_content h
+      LEFT JOIN 
+        subject_areas sa ON h.subject_area_id = sa.id
+      ORDER BY 
+        h.created_at DESC
     `);
     
-    // If we have content in the database, use that
+    // If we have content in the database, use that with tags
     if (Array.isArray(rows) && rows.length > 0) {
-      return rows.map((row: any) => ({
-        id: row.id,
-        name: row.name,
-        path: row.path,
-        type: row.type || 'Unknown',
-        tags: assignTags(row.type || 'Unknown', row.name),
-        slug: row.slug,
-        created_at: row.created_at
+      // For each content item, get its tags
+      const contentsWithTags = await Promise.all((rows as any[]).map(async (row) => {
+        // Get tags from database
+        const [tagsRows] = await pool.query(`
+          SELECT t.id, t.name
+          FROM tags t
+          JOIN content_tags ct ON t.id = ct.tag_id
+          WHERE ct.content_id = ?
+        `, [row.id]);
+        
+        // Extract tag names
+        const tagNames = (tagsRows as any[]).map(tag => tag.name);
+        
+        // If no tags are found in the database, use the automatically assigned tags
+        const tags = tagNames.length > 0 ? tagNames : assignTags(row.type || 'Unknown', row.name);
+        
+        return {
+          id: row.id,
+          name: row.name,
+          path: row.path,
+          type: row.type || 'Unknown',
+          tags: tags,
+          slug: row.slug,
+          created_at: row.created_at,
+          subject_area: row.subject_area_name ? {
+            id: row.subject_area_id,
+            name: row.subject_area_name,
+            slug: row.subject_area_slug
+          } : null
+        };
       }));
+      
+      return contentsWithTags;
     }
 
     // If no database content, fall back to file system
@@ -103,15 +145,15 @@ export async function getH5PContents(): Promise<H5PContent[]> {
       const contentPath = path.join(h5pDir, dir);
       const type = determineH5PType(contentPath);
       const tags = assignTags(type, name);
-      
-      return {
+        return {
         id: index + 1,
         name,
         path: `/h5p/${dir}`,
         type,
         tags,
         slug: dir,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        subject_area: null
       };
     });
     
