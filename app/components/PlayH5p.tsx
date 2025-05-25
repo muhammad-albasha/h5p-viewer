@@ -38,17 +38,28 @@ function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
           H5PConstructor = H5PModule.H5PStandalone;
         } else {
           throw new Error("Could not find H5P constructor in the module");
+        }        const el = h5pContainer.current;
+        
+        // Ensure path is correctly formatted for the H5P library
+        // The library expects a directory path and will append h5p.json itself
+        let correctPath = h5pJsonPath;
+        
+        // Remove h5p.json from the end if it exists
+        if (correctPath.endsWith('/h5p.json')) {
+          correctPath = correctPath.substring(0, correctPath.length - 9); // Remove '/h5p.json'
         }
-
-        const el = h5pContainer.current;
+        
+        console.log('Loading H5P from path:', correctPath);
+        
         const h5p = new H5PConstructor(el, {
-          h5pJsonPath,
+          h5pJsonPath: correctPath, // Path to the directory containing h5p.json
           frameJs: "/assets/frame.bundle.js",
           frameCss: "/assets/styles/h5p.css",
         });
 
         h5p
           .then(() => {
+            console.log('H5P loaded successfully!');
             setLoading(false);
           })
           .catch((err: Error) => {
