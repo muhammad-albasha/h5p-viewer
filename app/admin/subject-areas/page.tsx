@@ -20,11 +20,14 @@ export default function SubjectAreasPage() {
   const [subjectAreas, setSubjectAreas] = useState<SubjectArea[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-  // For new subject area form
+    // For new subject area form
   const [newSubjectName, setNewSubjectName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  
+  // For editing subject area
+  const [editingAreaId, setEditingAreaId] = useState<number | null>(null);
+  const [editingAreaName, setEditingAreaName] = useState("");
   
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -90,6 +93,61 @@ export default function SubjectAreasPage() {
       
       // Reset form
       setNewSubjectName("");
+      
+    } catch (err: any) {
+      setFormError(err.message || "Ein unbekannter Fehler ist aufgetreten");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  const handleStartEdit = (area: SubjectArea) => {
+    setEditingAreaId(area.id);
+    setEditingAreaName(area.name);
+    setFormError(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingAreaId(null);
+    setEditingAreaName("");
+    setFormError(null);
+  };
+
+  const handleUpdateArea = async () => {
+    if (!editingAreaId) return;
+    
+    if (!editingAreaName.trim()) {
+      setFormError("Bitte geben Sie einen Namen für den Fachbereich ein");
+      return;
+    }
+    
+    try {
+      setIsSubmitting(true);
+      setFormError(null);
+      
+      const response = await fetch(`/api/admin/subject-areas/${editingAreaId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: editingAreaName }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || "Fehler beim Aktualisieren des Fachbereichs");
+      }
+      
+      // Update the subject area in the list
+      setSubjectAreas(subjectAreas.map(area => 
+        area.id === editingAreaId ? 
+        { ...area, name: editingAreaName, slug: data.slug } : 
+        area
+      ));
+      
+      // Reset edit mode
+      setEditingAreaId(null);
+      setEditingAreaName("");
       
     } catch (err: any) {
       setFormError(err.message || "Ein unbekannter Fehler ist aufgetreten");
@@ -219,37 +277,72 @@ export default function SubjectAreasPage() {
                     <p>Keine Fachbereiche gefunden</p>
                   </div>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <table className="table w-full">
-                      <thead>
+                  <div className="overflow-x-auto">                    <table className="table w-full"><thead>
                         <tr>
                           <th>ID</th>
                           <th>Name</th>
                           <th>Slug</th>
                           <th>Aktionen</th>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {subjectAreas.map((area) => (
-                          <tr key={area.id}>
-                            <td>{area.id}</td>
-                            <td>{area.name}</td>
+                      </thead><tbody>{subjectAreas.map((area) => (
+                          <tr key={area.id}><td>{area.id}</td>
+                            <td>{editingAreaId === area.id ? (
+                                <input
+                                  type="text"
+                                  className="input input-bordered input-sm w-full"
+                                  value={editingAreaName}
+                                  onChange={e => setEditingAreaName(e.target.value)}
+                                  title="Fachbereich Name bearbeiten"
+                                  placeholder="Fachbereich Name eingeben"
+                                  autoFocus
+                                />
+                              ) : (
+                                area.name
+                              )}
+                            </td>
                             <td>{area.slug}</td>
                             <td>
                               <div className="flex gap-2">
-                                <Link 
-                                  href={`/fachbereich/${area.slug}`} 
-                                  className="btn btn-xs btn-info"
-                                  target="_blank"
-                                >
-                                  Ansehen
-                                </Link>
-                                <button
-                                  onClick={() => handleDelete(area.id)}
-                                  className="btn btn-xs btn-error"
-                                >
-                                  Löschen
-                                </button>
+                                {editingAreaId === area.id ? (
+                                  <>
+                                    <button
+                                      onClick={handleUpdateArea}
+                                      className={`btn btn-xs btn-success ${isSubmitting ? "loading" : ""}`}
+                                      disabled={isSubmitting}
+                                    >
+                                      Speichern
+                                    </button>
+                                    <button
+                                      onClick={handleCancelEdit}
+                                      className="btn btn-xs btn-ghost"
+                                      disabled={isSubmitting}
+                                    >
+                                      Abbrechen
+                                    </button>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Link 
+                                      href={`/fachbereich/${area.slug}`} 
+                                      className="btn btn-xs btn-info"
+                                      target="_blank"
+                                    >
+                                      Ansehen
+                                    </Link>
+                                    <button
+                                      onClick={() => handleStartEdit(area)}
+                                      className="btn btn-xs btn-warning"
+                                    >
+                                      Bearbeiten
+                                    </button>
+                                    <button
+                                      onClick={() => handleDelete(area.id)}
+                                      className="btn btn-xs btn-error"
+                                    >
+                                      Löschen
+                                    </button>
+                                  </>
+                                )}
                               </div>
                             </td>
                           </tr>

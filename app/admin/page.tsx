@@ -127,11 +127,7 @@ export default function AdminDashboard() {
                   Ersten Inhalt hochladen
                 </Link>
               </div>
-            ) : (
-              <div className="overflow-x-auto">
-                {" "}
-                <table className="table w-full">
-                  <thead>
+            ) : (                <div className="overflow-x-auto">                <table className="table w-full"><thead>
                     <tr>
                       <th>ID</th>
                       <th>Titel</th>
@@ -141,8 +137,7 @@ export default function AdminDashboard() {
                       <th>Erstellt am</th>
                       <th>Aktionen</th>
                     </tr>
-                  </thead>
-                  <tbody>
+                  </thead><tbody>
                     {contents.map((content) => (
                       <tr key={content.id}>
                         <td>{content.id}</td>

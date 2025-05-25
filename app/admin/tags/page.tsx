@@ -19,11 +19,14 @@ export default function TagsPage() {
   const [tags, setTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-  // For new tag form
+    // For new tag form
   const [newTagName, setNewTagName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  
+  // For editing tag
+  const [editingTagId, setEditingTagId] = useState<number | null>(null);
+  const [editingTagName, setEditingTagName] = useState("");
   
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -89,6 +92,57 @@ export default function TagsPage() {
       
       // Reset form
       setNewTagName("");
+      
+    } catch (err: any) {
+      setFormError(err.message || "Ein unbekannter Fehler ist aufgetreten");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  const handleStartEdit = (tag: Tag) => {
+    setEditingTagId(tag.id);
+    setEditingTagName(tag.name);
+    setFormError(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingTagId(null);
+    setEditingTagName("");
+    setFormError(null);
+  };
+
+  const handleUpdateTag = async () => {
+    if (!editingTagId) return;
+    
+    if (!editingTagName.trim()) {
+      setFormError("Bitte geben Sie einen Namen für den Tag ein");
+      return;
+    }
+    
+    try {
+      setIsSubmitting(true);
+      setFormError(null);
+      
+      const response = await fetch(`/api/admin/tags/${editingTagId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: editingTagName }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || "Fehler beim Aktualisieren des Tags");
+      }
+      
+      // Update the tag in the list
+      setTags(tags.map(tag => tag.id === editingTagId ? { ...tag, name: editingTagName } : tag));
+      
+      // Reset edit mode
+      setEditingTagId(null);
+      setEditingTagName("");
       
     } catch (err: any) {
       setFormError(err.message || "Ein unbekannter Fehler ist aufgetreten");
@@ -217,28 +271,63 @@ export default function TagsPage() {
                     <p>Keine Tags gefunden</p>
                   </div>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <table className="table w-full">
-                      <thead>
+                  <div className="overflow-x-auto">                    <table className="table w-full"><thead>
                         <tr>
                           <th>ID</th>
                           <th>Name</th>
                           <th>Aktionen</th>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {tags.map((tag) => (
-                          <tr key={tag.id}>
-                            <td>{tag.id}</td>
-                            <td>{tag.name}</td>
+                      </thead><tbody>{tags.map((tag) => (
+                          <tr key={tag.id}><td>{tag.id}</td>
+                            <td>{editingTagId === tag.id ? (
+                                <input
+                                  type="text"
+                                  className="input input-bordered input-sm w-full"
+                                  value={editingTagName}
+                                  onChange={e => setEditingTagName(e.target.value)}
+                                  title="Tag Name bearbeiten"
+                                  placeholder="Tag Name eingeben"
+                                  autoFocus
+                                />
+                              ) : (
+                                tag.name
+                              )}
+                            </td>
                             <td>
                               <div className="flex gap-2">
-                                <button
-                                  onClick={() => handleDelete(tag.id)}
-                                  className="btn btn-xs btn-error"
-                                >
-                                  Löschen
-                                </button>
+                                {editingTagId === tag.id ? (
+                                  <>
+                                    <button
+                                      onClick={handleUpdateTag}
+                                      className={`btn btn-xs btn-success ${isSubmitting ? "loading" : ""}`}
+                                      disabled={isSubmitting}
+                                    >
+                                      Speichern
+                                    </button>
+                                    <button
+                                      onClick={handleCancelEdit}
+                                      className="btn btn-xs btn-ghost"
+                                      disabled={isSubmitting}
+                                    >
+                                      Abbrechen
+                                    </button>
+                                  </>
+                                ) : (
+                                  <>
+                                    <button
+                                      onClick={() => handleStartEdit(tag)}
+                                      className="btn btn-xs btn-warning"
+                                    >
+                                      Bearbeiten
+                                    </button>
+                                    <button
+                                      onClick={() => handleDelete(tag.id)}
+                                      className="btn btn-xs btn-error"
+                                    >
+                                      Löschen
+                                    </button>
+                                  </>
+                                )}
                               </div>
                             </td>
                           </tr>
