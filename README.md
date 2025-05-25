@@ -72,8 +72,8 @@ Es wird dringend empfohlen, das Passwort nach dem ersten Login zu ändern.
 - `/app/api` - API-Endpunkte für H5P-Verwaltung und Authentifizierung
 - `/app/admin` - Administrator-Dashboard und Upload-Seite
 - `/app/h5p` - H5P-Anzeigeseiten 
-- `/public/h5p` - Vorinstallierte H5P-Inhalte
-- `/public/uploads/h5p` - Hochgeladene H5P-Inhalte
+- `/public/h5p` - Extrahierte H5P-Inhalte
+- `/public/uploads/h5p` - Temporärer Speicher für hochgeladene H5P-Dateien
 
 ## Datenbankstruktur
 
@@ -93,8 +93,15 @@ Du kannst auf PHPMyAdmin unter http://localhost:8080 zugreifen.
 
 ## Hinweise zur Sicherheit
 
-Dieses System ist für lokale Entwicklung konzipiert. Für den Produktiveinsatz sollten folgende Änderungen vorgenommen werden:
+Diese Anwendung ist jetzt produktionsbereit mit folgenden Sicherheitsmerkmalen:
+
+1. Automatische Extraktion von H5P-Dateien in den öffentlichen Ordner
+2. Entfernung aller Testkomponenten und Entwicklungsendpunkte
+
+Für einen sicheren Produktiveinsatz empfehlen wir zusätzlich:
 
 1. Sichere Passwörter verwenden (nicht im Klartext speichern)
 2. HTTPS für die sichere Datenübertragung einrichten
-3. Regelmäßige Backups der Datenbank einrichten
+3. Regelmäßige Backups der Datenbank durchführen
+4. Dateiberechtigungen für die hochgeladenen und extrahierten Inhalte überprüfen
+5. Zugriffskontrollen für die Admin-Bereiche implementieren
