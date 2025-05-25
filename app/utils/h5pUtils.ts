@@ -1,11 +1,15 @@
 import fs from 'fs';
 import path from 'path';
+import { pool } from '@/app/lib/db';
 
 interface H5PContent {
+  id: number;
   name: string;
   path: string;
   type: string;
   tags: string[];
+  slug?: string;
+  created_at?: string;
 }
 
 // This function determines the content type based on library files
@@ -56,6 +60,27 @@ const assignTags = (type: string, name: string): string[] => {
 
 export async function getH5PContents(): Promise<H5PContent[]> {
   try {
+    // First try to get contents from the database
+    const [rows] = await pool.query(`
+      SELECT id, title as name, file_path as path, content_type as type, slug, created_at
+      FROM h5p_content
+      ORDER BY created_at DESC
+    `);
+    
+    // If we have content in the database, use that
+    if (Array.isArray(rows) && rows.length > 0) {
+      return rows.map((row: any) => ({
+        id: row.id,
+        name: row.name,
+        path: row.path,
+        type: row.type || 'Unknown',
+        tags: assignTags(row.type || 'Unknown', row.name),
+        slug: row.slug,
+        created_at: row.created_at
+      }));
+    }
+
+    // If no database content, fall back to file system
     const h5pDir = path.join(process.cwd(), 'public', 'h5p');
     
     // Check if directory exists
@@ -69,7 +94,7 @@ export async function getH5PContents(): Promise<H5PContent[]> {
       .filter(dirent => dirent.isDirectory())
       .map(dirent => dirent.name);
     
-    const contents: H5PContent[] = contentDirs.map(dir => {
+    const contents: H5PContent[] = contentDirs.map((dir, index) => {
       // Format name from directory (replace hyphens with spaces and capitalize)
       const name = dir
         .replace(/-/g, ' ')
@@ -80,10 +105,13 @@ export async function getH5PContents(): Promise<H5PContent[]> {
       const tags = assignTags(type, name);
       
       return {
+        id: index + 1,
         name,
         path: `/h5p/${dir}`,
         type,
-        tags
+        tags,
+        slug: dir,
+        created_at: new Date().toISOString()
       };
     });
     

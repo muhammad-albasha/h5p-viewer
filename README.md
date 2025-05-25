@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# H5P Viewer und Verwaltungssystem
 
-## Getting Started
+Dieses Projekt ist ein einfaches Content-Management-System für H5P-Inhalte, das es ermöglicht, H5P-Dateien hochzuladen, anzuzeigen und zu verwalten. Es bietet ein Administratorsystem ohne Registrierungsprozess.
 
-First, run the development server:
+## Funktionen
+
+- Einfaches Login-System mit vordefiniertem Administratorkonto
+- Hochladen und Verwalten von H5P-Inhalten
+- Anzeige von H5P-Inhalten auf der Website
+- Integration mit MySQL-Datenbank (über Docker)
+- Responsive Design
+
+## Voraussetzungen
+
+- Node.js (18.x oder neuer)
+- Docker und Docker Compose
+- npm oder yarn
+
+## Installation und Start
+
+1. Klone dieses Repository
+2. Installiere die Abhängigkeiten:
+
+```bash
+npm install
+```
+
+3. Starte die Datenbank (MySQL in Docker):
+
+```bash
+npm run docker:up
+```
+
+4. Führe das Setup-Skript aus:
+
+```bash
+npm run setup
+```
+
+5. Starte die Anwendung:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Alternativ kannst du alle Schritte auf einmal ausführen:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run start:all
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Öffne anschließend [http://localhost:3000](http://localhost:3000) in deinem Browser, um die Anwendung zu sehen.
 
-## Learn More
+## Login-Informationen
 
-To learn more about Next.js, take a look at the following resources:
+Standardmäßig wird ein Administratorkonto erstellt:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Benutzername: `admin`
+- Passwort: `admin`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Es wird dringend empfohlen, das Passwort nach dem ersten Login zu ändern.
 
-## Deploy on Vercel
+## Projektstruktur
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `/app/api` - API-Endpunkte für H5P-Verwaltung und Authentifizierung
+- `/app/admin` - Administrator-Dashboard und Upload-Seite
+- `/app/h5p` - H5P-Anzeigeseiten 
+- `/public/h5p` - Vorinstallierte H5P-Inhalte
+- `/public/uploads/h5p` - Hochgeladene H5P-Inhalte
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Datenbankstruktur
+
+Das System verwendet eine MySQL-Datenbank mit folgenden Tabellen:
+
+- `users` - Benutzer mit Administratorrechten
+- `h5p_content` - Hochgeladene H5P-Inhalte mit Metadaten
+
+## Docker-Konfiguration
+
+Die Datei `docker-compose.yml` enthält:
+
+- MySQL-Datenbank (Port 3306)
+- PHPMyAdmin zur Datenbankadministration (Port 8080)
+
+Du kannst auf PHPMyAdmin unter http://localhost:8080 zugreifen.
+
+## Hinweise zur Sicherheit
+
+Dieses System ist für lokale Entwicklung konzipiert. Für den Produktiveinsatz sollten folgende Änderungen vorgenommen werden:
+
+1. Sichere Passwörter verwenden (nicht im Klartext speichern)
+2. HTTPS für die sichere Datenübertragung einrichten
+3. Regelmäßige Backups der Datenbank einrichten

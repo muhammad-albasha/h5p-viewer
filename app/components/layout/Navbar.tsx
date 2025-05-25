@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { FiSun, FiMoon } from 'react-icons/fi';
-import { BiFont } from 'react-icons/bi';
+import { FiSun, FiMoon, FiLogOut } from 'react-icons/fi';
+import { BiFont, BiUserCircle } from 'react-icons/bi';
 import { TbLanguage } from 'react-icons/tb';
+import { useSession, signOut } from 'next-auth/react';
 
 const Navbar = () => {
+  const { data: session, status } = useSession();
   const [darkMode, setDarkMode] = useState(false);
   
   useEffect(() => {
@@ -44,8 +46,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-base-100 shadow-md py-2 px-4">
-      <div className="container mx-auto flex justify-between items-center">
+    <nav className="bg-base-100 shadow-md py-2 px-4">      <div className="container mx-auto flex justify-between items-center">
         <div className="flex gap-3">
           <button
             className="btn btn-sm btn-ghost normal-case"
@@ -79,8 +80,33 @@ const Navbar = () => {
             >
               <BiFont className="text-lg" />
               <span className="sr-only">Schriftgröße vergrößern</span>
-            </button>
-          </div>
+            </button>          </div>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          {status === "authenticated" && session?.user ? (
+            <>
+              <Link 
+                href="/admin"
+                className="btn btn-sm btn-primary"
+              >
+                <BiUserCircle className="mr-1" />
+                Dashboard
+              </Link>
+              <button 
+                onClick={() => signOut({ callbackUrl: "/" })} 
+                className="btn btn-sm btn-ghost"
+              >
+                <FiLogOut className="mr-1" />
+                <span className="hidden md:inline">Abmelden</span>
+              </button>
+            </>
+          ) : (
+            <Link href="/login" className="btn btn-sm btn-primary">
+              <BiUserCircle className="mr-1" />
+              <span>Login</span>
+            </Link>
+          )}
         </div>
       </div>
     </nav>

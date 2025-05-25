@@ -6,14 +6,21 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup": "node app/scripts/setup.js",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "start:all": "npm run docker:up && npm run setup && npm run dev"
   },
   "dependencies": {
     "h5p-standalone": "^3.8.0",
+    "mysql2": "^3.14.1",
     "next": "^15.3.2",
+    "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
