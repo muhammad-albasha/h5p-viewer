@@ -6,6 +6,7 @@ import Header from "./components/layout/Header";
 import Banner from "./components/layout/Banner";
 import ContentFilter from "./components/content/ContentFilter";
 import ContentCardGrid from "./components/content/ContentCardGrid";
+import useTags from "./hooks/useTags";
 
 interface H5PContent {
   name: string;
@@ -18,11 +19,10 @@ export default function Home() {
   const [h5pContents, setH5pContents] = useState<H5PContent[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [availableTags, setAvailableTags] = useState<string[]>([
-    "Quiz", "Fragen", "Übungen", "Grammatik", "Wortschatz", "Interaktiv"
-  ]);
   const [loading, setLoading] = useState(true);
   const [showWelcome, setShowWelcome] = useState(true);
+    // Use the cached tags hook
+  const { tags: availableTags, isLoading: isTagsLoading } = useTags();
 
   // Fetch H5P content from our API
   useEffect(() => {
@@ -35,13 +35,6 @@ export default function Home() {
         }
         const data = await response.json();
         setH5pContents(data);
-
-        // Extract all unique tags from content
-        const allTags = data.flatMap((content: H5PContent) => content.tags || []);
-        const uniqueTags = [...new Set(allTags)] as string[];
-        if (uniqueTags.length > 0) {
-          setAvailableTags(uniqueTags);
-        }
       } catch (error) {
         console.error('Error fetching H5P content:', error);
         // Fallback to mock data if API fails
@@ -123,10 +116,8 @@ export default function Home() {
             selectedTags={selectedTags}
             availableTags={availableTags}
             toggleTag={toggleTag}
-          />
-
-          {/* 5. H5P Content Cards */}
-          <ContentCardGrid contents={filteredContent} loading={loading} />
+          />          {/* 5. H5P Content Cards */}
+          <ContentCardGrid contents={filteredContent} loading={loading || isTagsLoading} />
         </div>
       </main>
 
