@@ -82,32 +82,6 @@ const Navbar = () => {
               <span className="sr-only">Schriftgröße vergrößern</span>
             </button>          </div>
         </div>
-        
-        <div className="flex items-center gap-2">
-          {status === "authenticated" && session?.user ? (
-            <>
-              <Link 
-                href="/admin"
-                className="btn btn-sm btn-primary"
-              >
-                <BiUserCircle className="mr-1" />
-                Dashboard
-              </Link>
-              <button 
-                onClick={() => signOut({ callbackUrl: "/" })} 
-                className="btn btn-sm btn-ghost"
-              >
-                <FiLogOut className="mr-1" />
-                <span className="hidden md:inline">Abmelden</span>
-              </button>
-            </>
-          ) : (
-            <Link href="/login" className="btn btn-sm btn-primary">
-              <BiUserCircle className="mr-1" />
-              <span>Login</span>
-            </Link>
-          )}
-        </div>
       </div>
     </nav>
   )

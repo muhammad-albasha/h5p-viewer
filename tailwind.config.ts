@@ -6,7 +6,28 @@ export default {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],  safelist: [
+    'bg-primary/10',
+    'hover:bg-primary/10',
+    'bg-primary/20',
+    'bg-base-200/50',
+    'hover:bg-base-200/50',
+    'animate-fade-in-down',
+    'rotate-90',
+    'opacity-0',
+    'opacity-100',
+    'rotate-45',
+    'translate-y-2',
+    '-rotate-45',
+    '-translate-y-2',
+    'text-primary',
+    'bg-primary',
+    'animate-pulse',
+    'rotate-90'
   ],
+  future: {
+    respectDefaultRingColorOpacity: true,
+  },
   theme: {
     extend: {
       colors: {

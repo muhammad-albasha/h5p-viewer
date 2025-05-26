@@ -77,37 +77,6 @@ export default function Home() {
         subtitle="Entdecke interaktive Lerninhalte für dein Studium"
       />      <main className="flex-grow bg-base-100 py-8 px-4">
         <div className="container mx-auto max-w-6xl">
-          {showWelcome && (
-            <div className="bg-primary/10 border border-primary/20 p-6 rounded-lg mb-8 relative">
-              <button 
-                onClick={() => setShowWelcome(false)}
-                className="absolute top-2 right-2 btn btn-xs btn-ghost"
-                aria-label="Schließen"
-              >
-                ✕
-              </button>
-              
-              <h2 className="text-2xl font-bold mb-4">Willkommen zum H5P Viewer und Verwaltungssystem</h2>
-              
-              <div className="prose max-w-none">
-                <p>
-                  Dieses System ermöglicht das Anzeigen und Verwalten von H5P-Inhalten ohne Registrierung.
-                </p>
-                
-                <h3>Login-Informationen:</h3>
-                <ul>
-                  <li><strong>Benutzername:</strong> admin</li>
-                  <li><strong>Passwort:</strong> admin</li>
-                </ul>
-                
-                <p>
-                  <a href="/login" className="btn btn-primary mt-2">
-                    Zum Login
-                  </a>
-                </p>
-              </div>
-            </div>
-          )}
         
           {/* 4. Filter Section */}
           <ContentFilter
