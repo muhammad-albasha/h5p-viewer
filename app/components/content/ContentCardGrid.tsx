@@ -35,22 +35,42 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
     );
   }  return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {contents.map((content, index) => (        <Link 
-          key={index} 
-          href={`/h5p/content?id=${index + 1}`}
-          className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all"
-        >
-          <div className="card-body">
-            <h2 className="card-title">{content.name}</h2>
-            <p className="text-sm opacity-70">Typ: {content.type}</p>
-            <div className="card-actions justify-end mt-2">
-              {content.tags?.map((tag, idx) => (
-                <div key={idx} className="badge badge-outline">{tag}</div>
-              ))}
+      {contents.map((content, index) => {
+        // Korrigiere Bildpfad für Next.js public-Ordner
+        let imageUrl = content.path;
+        if (!imageUrl.startsWith('/h5p/')) {
+          imageUrl = '/h5p/' + imageUrl.replace(/^\/?h5p\/?/, '');
+        }
+        imageUrl = imageUrl.replace(/\/+$/, ''); // trailing slash entfernen
+        imageUrl = `${imageUrl}/content/images/cover.jpg`;
+        return (
+          <Link 
+            key={index} 
+            href={`/h5p/content?id=${index + 1}`}
+            className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all"
+          >
+            <figure className="h-48 w-full overflow-hidden bg-base-200 flex items-center justify-center">
+              <img
+                src={imageUrl}
+                alt={content.name}
+                className="object-cover w-full h-full"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = '/assets/placeholder-image.svg';
+                }}
+              />
+            </figure>
+            <div className="card-body">
+              <h2 className="card-title">{content.name}</h2>
+              <p className="text-sm opacity-70">Typ: {content.type}</p>
+              <div className="card-actions justify-end mt-2">
+                {content.tags?.map((tag, idx) => (
+                  <div key={idx} className="badge badge-outline">{tag}</div>
+                ))}
+              </div>
             </div>
-          </div>
-        </Link>
-      ))}
+          </Link>
+        );
+      })}
     </div>
   );
 };

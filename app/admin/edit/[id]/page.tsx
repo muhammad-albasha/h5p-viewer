@@ -31,7 +31,7 @@ interface Tag {
 }
 
 export default function EditContent() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const params = useParams();
   const contentId = params.id as string;
@@ -49,6 +49,7 @@ export default function EditContent() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState(false);
+  const [coverImage, setCoverImage] = useState<File | null>(null);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -124,42 +125,31 @@ export default function EditContent() {
   }, [status, contentId]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     try {
       setIsSaving(true);
       setSaveError(null);
-      
-      console.log("Submitting content update:", {
-        contentId,
-        title,
-        subject_area_id: subjectAreaId,
-        tags: selectedTags,
-      });
-      
+      // Use FormData to support file upload
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("subject_area_id", subjectAreaId ? String(subjectAreaId) : "");
+      formData.append("tags", JSON.stringify(selectedTags));
+      if (coverImage) {
+        formData.append("coverImage", coverImage);
+      }
       const response = await fetch(`/api/admin/content/${contentId}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          subject_area_id: subjectAreaId,
-          tags: selectedTags,
-        }),
+        body: formData,
       });
-      
       if (!response.ok) {
         let errorMessage = "Failed to save changes";
         try {
           const errorData = await response.json();
           errorMessage = errorData.error || errorMessage;
         } catch (parseError) {
-          console.error("Error parsing error response:", parseError);
           errorMessage = `Server error: ${response.status} ${response.statusText}`;
         }
         throw new Error(errorMessage);
       }
-      
       // Update local content data with the new values
       if (content) {
         setContent({
@@ -173,10 +163,7 @@ export default function EditContent() {
           }),
         });
       }
-      
-      // Show success message or redirect
       alert("Änderungen erfolgreich gespeichert");
-      
     } catch (err: any) {
       setSaveError(err.message || "Ein Fehler ist aufgetreten");
       console.error(err);
@@ -191,7 +178,9 @@ export default function EditContent() {
     } else {
       setSelectedTags([...selectedTags, tagId]);
     }
-  };  const handleDelete = async () => {
+  };
+  
+  const handleDelete = async () => {
     if (!content) return;
     
     if (confirm(`Möchten Sie "${content.title}" wirklich löschen? Dies löscht sowohl den Datenbankeintrag als auch alle zugehörigen Dateien vom Server.`)) {
@@ -288,7 +277,7 @@ export default function EditContent() {
                     <h2 className="text-xl font-bold">Metadaten bearbeiten</h2>
                   </div>
                   
-                  <form className="p-6" onSubmit={handleSubmit}>
+                  <form className="p-6" onSubmit={handleSubmit} encType="multipart/form-data">
                     <div className="form-control mb-4">
                       <label className="label" htmlFor="content-title">
                         <span className="label-text">Titel</span>
@@ -346,6 +335,25 @@ export default function EditContent() {
                           ))
                         )}
                       </div>
+                    </div>
+
+  
+                    
+                    <div className="form-control w-full mb-4">
+                      <label className="label" htmlFor="cover-image">
+                        <span className="label-text font-medium">Cover-Bild (optional)</span>
+                      </label>
+                      <input
+                        id="cover-image"
+                        type="file"
+                        accept="image/*"
+                        onChange={e => setCoverImage(e.target.files?.[0] || null)}
+                        className="file-input file-input-bordered w-full"
+                        title="Cover-Bild auswählen"
+                      />
+                      <label className="label">
+                        <span className="label-text-alt">Optional: Bild für die Vorschau (jpg, png, ...)</span>
+                      </label>
                     </div>
                     
                     {saveError && (
@@ -432,7 +440,8 @@ export default function EditContent() {
                     </button>
                   </div>
                   
-                  <div className="p-6">                    {content && content.slug && (
+                  <div className="p-6">                    
+                    {content && content.slug && (
                       <div className="rounded-lg overflow-hidden border border-base-300">
                         {/* H5P component expects path to the directory containing h5p.json */}
                         <PlayH5p h5pJsonPath={`/h5p/${content.slug}`} />

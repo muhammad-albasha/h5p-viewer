@@ -31,6 +31,7 @@ export default function UploadH5P() {
   const [isLoadingOptions, setIsLoadingOptions] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
+  const [coverImage, setCoverImage] = useState<File | null>(null);
   
   // Fetch subject areas and tags when component loads
   useEffect(() => {
@@ -95,12 +96,15 @@ export default function UploadH5P() {
     try {
       setIsUploading(true);
       setError(null);
-        // Create FormData object to send the file and metadata
+      // Create FormData object to send the file and metadata
       const formData = new FormData();
       formData.append("file", file);
       formData.append("title", title);
       formData.append("subjectAreaId", selectedSubjectArea);
       formData.append("tags", JSON.stringify(selectedTags));
+      if (coverImage) {
+        formData.append("coverImage", coverImage);
+      }
       
       // Simulate upload progress for demo purposes
       const progressInterval = setInterval(() => {
@@ -265,6 +269,23 @@ export default function UploadH5P() {
                 />
                 <label className="label">
                   <span className="label-text-alt">Nur .h5p Dateien</span>
+                </label>
+              </div>
+              
+              <div className="form-control w-full">
+                <label className="label" htmlFor="cover-image">
+                  <span className="label-text font-medium">Cover-Bild (optional)</span>
+                </label>
+                <input
+                  id="cover-image"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setCoverImage(e.target.files?.[0] || null)}
+                  className="file-input file-input-bordered w-full"
+                  title="Cover-Bild auswählen"
+                />
+                <label className="label">
+                  <span className="label-text-alt">Optional: Bild für die Vorschau (jpg, png, ...)</span>
                 </label>
               </div>
               

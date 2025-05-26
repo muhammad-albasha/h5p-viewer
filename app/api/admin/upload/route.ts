@@ -86,13 +86,23 @@ export async function POST(req: NextRequest) {
       // Create directory for the H5P content in public/h5p
       const h5pDir = path.join(process.cwd(), 'public', 'h5p', slug);
       ensureDirectoryExists(h5pDir);
-      
       // Extract H5P file (which is a ZIP file) to the directory
       const zip = new AdmZip(tempFilePath);
       zip.extractAllTo(h5pDir, true);
-      
       console.log(`H5P file extracted to ${h5pDir}`);
-      
+
+      // === NEU: Cover-Bild speichern, falls vorhanden ===
+      const coverImage = formData.get('coverImage') as File | null;
+      if (coverImage) {
+        const coverArrayBuffer = await coverImage.arrayBuffer();
+        const coverBuffer = Buffer.from(coverArrayBuffer);
+        const imagesDir = path.join(h5pDir, 'content', 'images');
+        ensureDirectoryExists(imagesDir);
+        const coverPath = path.join(imagesDir, 'cover.jpg');
+        fs.writeFileSync(coverPath, coverBuffer);
+      }
+      // === ENDE Cover-Bild ===
+
       // Parse h5p.json to get content type if it exists
       let contentType = "Unknown";
       const h5pJsonPath = path.join(h5pDir, 'h5p.json');

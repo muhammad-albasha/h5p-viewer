@@ -226,20 +226,46 @@ export async function PUT(
     const id = params.id;
     console.log(`Updating content with ID: ${id}`);
 
-    // Get updated content data
-    let reqData;
-    try {
-      reqData = await request.json();
-      console.log("Request data parsed successfully");
-    } catch (err) {
-      console.error("Error parsing request JSON:", err);
-      return NextResponse.json(
-        { error: "Invalid request data format" },
-        { status: 400 }
-      );
-    }
+    let title = "";
+    let subject_area_id: string | null = null;
+    let tags: number[] = [];
+    let coverImage: File | null = null;
+    let isMultipart = false;
 
-    const { title, subject_area_id, tags } = reqData;
+    // Detect content type and parse accordingly
+    const contentType = request.headers.get("content-type") || "";
+    if (contentType.includes("multipart/form-data")) {
+      isMultipart = true;
+      const formData = await request.formData();
+      title = formData.get("title") as string;
+      subject_area_id = formData.get("subject_area_id") as string;
+      const tagsString = formData.get("tags") as string;
+      if (tagsString) {
+        try {
+          const parsedTags = JSON.parse(tagsString);
+          if (Array.isArray(parsedTags)) {
+            tags = parsedTags;
+          }
+        } catch (e) {
+          console.error("Failed to parse tags:", e);
+        }
+      }
+      coverImage = formData.get("coverImage") as File | null;
+    } else {
+      // fallback: JSON
+      let reqData;
+      try {
+        reqData = await request.json();
+      } catch (err) {
+        return NextResponse.json(
+          { error: "Invalid request data format" },
+          { status: 400 }
+        );
+      }
+      title = reqData.title;
+      subject_area_id = reqData.subject_area_id;
+      tags = reqData.tags || [];
+    }
 
     if (!title || title.trim() === "") {
       return NextResponse.json(
@@ -248,101 +274,85 @@ export async function PUT(
       );
     }
 
-    // Check if content exists
+    // Check if content exists and get slug
     let contentCheck;
+    let slug = null;
     try {
       [contentCheck] = await pool.query(
-        "SELECT id FROM h5p_content WHERE id = ?",
+        "SELECT id, slug FROM h5p_content WHERE id = ?",
         [id]
       );
-      console.log(`Content check completed, result length: ${(contentCheck as any[]).length}`);
+      if (Array.isArray(contentCheck) && contentCheck.length > 0) {
+        // MySQL2 returns RowDataPacket[]
+        const row = contentCheck[0] as { id: number; slug: string };
+        slug = row.slug;
+      }
     } catch (err) {
-      console.error("Database error checking content existence:", err);
       return NextResponse.json(
         { error: "Database error when checking content" },
         { status: 500 }
       );
     }
-
-    if (Array.isArray(contentCheck) && contentCheck.length === 0) {
-      console.log("Content not found");
+    if (!slug) {
       return NextResponse.json(
         { error: "Content not found" },
         { status: 404 }
       );
     }
 
+    // === Save cover image if provided ===
+    if (coverImage && slug) {
+      try {
+        const coverArrayBuffer = await coverImage.arrayBuffer();
+        const coverBuffer = Buffer.from(coverArrayBuffer);
+        const imagesDir = path.join(process.cwd(), 'public', 'h5p', slug, 'content', 'images');
+        if (!fs.existsSync(imagesDir)) {
+          fs.mkdirSync(imagesDir, { recursive: true });
+        }
+        const coverPath = path.join(imagesDir, 'cover.jpg');
+        fs.writeFileSync(coverPath, coverBuffer);
+        console.log(`Cover image updated at: ${coverPath}`);
+      } catch (err) {
+        console.error("Error saving cover image:", err);
+      }
+    }
+    // === End cover image ===
+
     // Begin transaction
     let connection;
     try {
       connection = await pool.getConnection();
-      console.log("Database connection established");
     } catch (err) {
-      console.error("Error getting database connection:", err);
       return NextResponse.json(
         { error: "Database connection error" },
         { status: 500 }
       );
     }
-
     try {
       await connection.beginTransaction();
-      console.log("Transaction started");
-      
-      // Update content basic info
       await connection.query(
         "UPDATE h5p_content SET title = ?, subject_area_id = ? WHERE id = ?",
         [title, subject_area_id || null, id]
       );
-      console.log("Content basic info updated");
-      
-      // Update tags - first delete existing tags
       await connection.query("DELETE FROM content_tags WHERE content_id = ?", [id]);
-      console.log("Existing tags deleted");
-      
-      // Then add new tags if provided
       if (tags && Array.isArray(tags) && tags.length > 0) {
-        console.log(`Adding ${tags.length} new tags`);
         const tagValues = tags.map(tagId => [id, tagId]);
         await connection.query(
           "INSERT INTO content_tags (content_id, tag_id) VALUES ?",
           [tagValues]
         );
-        console.log("New tags added");
-      } else {
-        console.log("No tags to add");
       }
-      
       await connection.commit();
-      console.log("Transaction committed");
     } catch (error) {
-      console.error("Transaction error:", error);
       if (connection) {
-        try {
-          await connection.rollback();
-          console.log("Transaction rolled back");
-        } catch (rollbackErr) {
-          console.error("Error during rollback:", rollbackErr);
-        }
+        try { await connection.rollback(); } catch {}
       }
       throw error;
     } finally {
-      if (connection) {
-        connection.release();
-        console.log("Database connection released");
-      }
+      if (connection) connection.release();
     }
-
-    console.log("Successfully updated content");
-    return NextResponse.json({ 
-      id,
-      title,
-      subject_area_id,
-      tags,
-      updated_at: new Date()
-    });
+    return NextResponse.json({ id, title, subject_area_id, tags, updated_at: new Date() });
   } catch (error: any) {
-    console.error("Error updating H5P content:", error);
     return NextResponse.json(
       { error: error.message || "Failed to update content" },
       { status: 500 }
