@@ -60,29 +60,12 @@ const Navbar = () => {
       }rem`
     );
   };
-
   return (
     <nav className="bg-base-100 shadow-md py-2 px-4">
       {" "}
-      <div className="container mx-auto flex justify-between items-center">
+      <div className="container mx-auto flex justify-end items-center">
         <div className="flex gap-3">
-          <button
-            className="btn btn-sm btn-ghost normal-case"
-            onClick={toggleDarkMode}
-            aria-label={
-              darkMode
-                ? "Zum hellen Modus wechseln"
-                : "Zum dunklen Modus wechseln"
-            }
-          >
-            {darkMode ? <FiSun /> : <FiMoon />}
-            <span className="hidden md:inline ml-1">Kontrast</span>
-          </button>
 
-          <Link href="#" className="btn btn-sm btn-ghost normal-case">
-            <TbLanguage className="mr-1" />
-            <span className="hidden md:inline">Leichte Sprache</span>
-          </Link>
 
           <div className="flex items-center gap-1">
             <button
@@ -103,6 +86,22 @@ const Navbar = () => {
               <BiFont className="text-lg" />
               <span className="sr-only">Schriftgröße vergrößern</span>
             </button>{" "}
+          <button
+            className="btn btn-sm btn-ghost normal-case"
+            onClick={toggleDarkMode}
+            aria-label={
+              darkMode
+                ? "Zum hellen Modus wechseln"
+                : "Zum dunklen Modus wechseln"
+            }
+          >
+            {darkMode ? <FiSun /> : <FiMoon />}
+            <span className="hidden md:inline ml-1">Kontrast</span>
+          </button>
+          <Link href="#" className="btn btn-sm btn-ghost normal-case">
+            <TbLanguage className="mr-1" />
+            <span className="hidden md:inline">Leichte Sprache</span>
+          </Link>
           </div>
         </div>
       </div>
