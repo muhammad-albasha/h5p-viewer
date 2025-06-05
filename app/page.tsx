@@ -21,7 +21,7 @@ export default function Home() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [showWelcome, setShowWelcome] = useState(true);
-    // Use the cached tags hook
+  // Use the cached tags hook
   const { tags: availableTags, isLoading: isTagsLoading } = useTags();
 
   // Fetch H5P content from our API
@@ -29,18 +29,28 @@ export default function Home() {
     const fetchH5PContents = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/h5p-content');
+        const response = await fetch("/api/h5p-content");
         if (!response.ok) {
-          throw new Error('Failed to fetch H5P content');
+          throw new Error("Failed to fetch H5P content");
         }
         const data = await response.json();
         setH5pContents(data);
       } catch (error) {
-        console.error('Error fetching H5P content:', error);
+        console.error("Error fetching H5P content:", error);
         // Fallback to mock data if API fails
         setH5pContents([
-          { name: "For or Since", path: "/h5p/for-or-since", type: "Quiz", tags: ["Grammatik", "Übungen"] },
-          { name: "Test Questionnaire", path: "/h5p/test-questionnaire", type: "Questionnaire", tags: ["Fragen", "Interaktiv"] },
+          {
+            name: "For or Since",
+            path: "/h5p/for-or-since",
+            type: "Quiz",
+            tags: ["Grammatik", "Übungen"],
+          },
+          {
+            name: "Test Questionnaire",
+            path: "/h5p/test-questionnaire",
+            type: "Questionnaire",
+            tags: ["Fragen", "Interaktiv"],
+          },
         ]);
       } finally {
         setLoading(false);
@@ -52,32 +62,34 @@ export default function Home() {
 
   const toggleTag = (tag: string) => {
     if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter(t => t !== tag));
+      setSelectedTags(selectedTags.filter((t) => t !== tag));
     } else {
       setSelectedTags([...selectedTags, tag]);
     }
   };
 
-  const filteredContent = h5pContents.filter(content => {
-    const matchesSearch = content.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesTags = selectedTags.length === 0 || content.tags?.some(tag => selectedTags.includes(tag));
+  const filteredContent = h5pContents.filter((content) => {
+    const matchesSearch = content.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesTags =
+      selectedTags.length === 0 ||
+      content.tags?.some((tag) => selectedTags.includes(tag));
     return matchesSearch && matchesTags;
   });
   return (
     <>
       {/* 1. Navigation Bar */}
       <Navbar />
-
       {/* 2. Header with Logo and Settings */}
       <Header />
-
       {/* 3. Banner with H1 */}
-      <Banner 
-        title="H5P-Viewer" 
+      <Banner
+        title="H5P-Viewer"
         subtitle="Entdecke interaktive Lerninhalte für dein Studium"
-      />      <main className="flex-grow bg-base-100 py-8 px-4">
+      />{" "}
+      <main className="flex-grow bg-base-100 py-8 px-4">
         <div className="container mx-auto max-w-6xl">
-        
           {/* 4. Filter Section */}
           <ContentFilter
             searchQuery={searchQuery}
@@ -85,17 +97,23 @@ export default function Home() {
             selectedTags={selectedTags}
             availableTags={availableTags}
             toggleTag={toggleTag}
-          />          {/* 5. H5P Content Cards */}
-          <ContentCardGrid contents={filteredContent} loading={loading || isTagsLoading} />
+          />{" "}
+          {/* 5. H5P Content Cards */}
+          <ContentCardGrid
+            contents={filteredContent}
+            loading={loading || isTagsLoading}
+          />
         </div>
       </main>
-
       <footer className="bg-base-300 text-base-content p-10 border-t border-base-200">
         <div className="container mx-auto max-w-6xl">
           <div className="footer">
             <div>
               <span className="footer-title">H5P-Viewer</span>
-              <p className="max-w-xs">Eine Plattform für interaktive Lernmaterialien, die das Lernerlebnis verbessert.</p>
+              <p className="max-w-xs">
+                Eine Plattform für interaktive Lernmaterialien, die das
+                Lernerlebnis verbessert.
+              </p>
             </div>
             <div>
               <span className="footer-title">Links</span>
@@ -105,7 +123,9 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-8 border-t border-base-200 pt-6 text-center text-sm opacity-60">
-            <p>© {new Date().getFullYear()} H5P-Viewer. Alle Rechte vorbehalten.</p>
+            <p>
+              © {new Date().getFullYear()} H5P-Viewer. Alle Rechte vorbehalten.
+            </p>
           </div>
         </div>
       </footer>

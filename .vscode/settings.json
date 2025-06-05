@@ -1,0 +1,48 @@
+{
+    "piny.project_settings": {
+        "open-pages": [
+            "pinyfakepage.html"
+        ],
+        "component-settings": {
+            "app/components/layout/DatabaseErrorBanner.tsx:::Temp": {},
+            "app/components/layout/Navbar.tsx:::Temp": {
+                "route": null
+            },
+            "app/page.tsx:::Temp": {
+                "route": "/fachbereich"
+            }
+        },
+        "urls": {
+            "pinyfakepage.html": {
+                "open-page-views": [
+                    {
+                        "w": 1920,
+                        "h": 1080
+                    }
+                ]
+            }
+        },
+        "tw-external-config": {
+            "external_config_url": "tailwind.config.ts",
+            "external_source_url": "app/globals.css"
+        },
+        "source-folders": null,
+        "preview-url": "http://localhost:3000",
+        "app-routes": {
+            "routes": [
+                "/",
+                "/admin",
+                "/admin/subject-areas",
+                "/admin/tags",
+                "/admin/upload",
+                "/fachbereich",
+                "/h5p",
+                "/h5p/content",
+                "/login",
+                "/setup-help"
+            ],
+            "current_route": "/fachbereich"
+        },
+        "ai-project-brief": null
+    }
+}
