@@ -9,7 +9,7 @@ import path from "path";
 // DELETE endpoint to remove H5P content
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -209,7 +209,7 @@ export async function DELETE(
 // PUT endpoint to update H5P content metadata
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -358,7 +358,7 @@ export async function PUT(
 // GET endpoint to retrieve a single H5P content by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication

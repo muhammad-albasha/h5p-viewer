@@ -6,7 +6,7 @@ import { pool } from '@/app/lib/db';
 // Toggle featured status for H5P content
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -90,7 +90,7 @@ export async function POST(
 // Get featured status for content
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const resolvedParams = await params;

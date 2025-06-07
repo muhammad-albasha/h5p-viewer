@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import PlayH5p from '@/app/components/PlayH5p';
@@ -16,7 +16,8 @@ interface H5PContentDetails {
   tags: string[];
 }
 
-export default function H5PContentPage() {
+// Separate component that uses useSearchParams
+function H5PContentViewer() {
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
   
@@ -48,8 +49,7 @@ export default function H5PContentPage() {
         
         if (content) {
           setContentDetails(content);        } else {
-          setError(`Content mit ID "${id}" nicht gefunden`);
-        }
+          setError(`Content mit ID "${id}" nicht gefunden`);        }
       } catch (error) {
         // Error fetching content details
         setError('Failed to load content details');
@@ -62,34 +62,29 @@ export default function H5PContentPage() {
   }, [id]);
   
   return (
-    <>
-      <Navbar />
-      <Header />
+    <div className="bg-gradient-to-br from-secondary to-accent text-accent-content py-12 relative overflow-hidden">
+      <div className="absolute inset-0 pattern-dots pattern-opacity-10 pattern-white pattern-size-2"></div>
+      <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-primary/30 rounded-full blur-3xl"></div>
+      <div className="absolute -top-10 -left-10 w-48 h-48 bg-secondary/20 rounded-full blur-3xl"></div>
       
-      <div className="bg-gradient-to-br from-secondary to-accent text-accent-content py-12 relative overflow-hidden">
-        <div className="absolute inset-0 pattern-dots pattern-opacity-10 pattern-white pattern-size-2"></div>
-        <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-primary/30 rounded-full blur-3xl"></div>
-        <div className="absolute -top-10 -left-10 w-48 h-48 bg-secondary/20 rounded-full blur-3xl"></div>
-        
-        <div className="container mx-auto max-w-6xl px-4 relative z-10">
-          <div className="flex flex-col md:flex-row md:items-center gap-6 justify-between">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">
-                {contentDetails?.name || "H5P Inhalt"}
-              </h1>
-              <p className="text-accent-content/80 text-lg">Interaktives Lernmaterial</p>
-            </div>
-            <Link 
-              href="/" 
-              className="btn btn-accent btn-outline hover:btn-primary transition-all duration-300 px-6"
-            >
-              <FiArrowLeft size={16} className="mr-2" />
-              Zurück zur Übersicht
-            </Link>
+      <div className="container mx-auto max-w-6xl px-4 relative z-10">
+        <div className="flex flex-col md:flex-row md:items-center gap-6 justify-between">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">
+              {contentDetails?.name || "H5P Inhalt"}
+            </h1>
+            <p className="text-accent-content/80 text-lg">Interaktives Lernmaterial</p>
           </div>
+          <Link 
+            href="/" 
+            className="btn btn-accent btn-outline hover:btn-primary transition-all duration-300 px-6"
+          >
+            <FiArrowLeft size={16} className="mr-2" />
+            Zurück zur Übersicht
+          </Link>
         </div>
       </div>
-      
+
       <main className="bg-base-200 container mx-auto max-w-6xl py-12 px-4 -mt-8">        
         {loading ? (
           <div className="flex flex-col items-center justify-center my-24 space-y-6">
@@ -171,6 +166,59 @@ export default function H5PContentPage() {
           </div>
         )}
       </main>
+    </div>
+  );
+}
+
+// Loading component for Suspense fallback
+function LoadingFallback() {
+  return (
+    <div className="bg-gradient-to-br from-secondary to-accent text-accent-content py-12 relative overflow-hidden">
+      <div className="absolute inset-0 pattern-dots pattern-opacity-10 pattern-white pattern-size-2"></div>
+      <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-primary/30 rounded-full blur-3xl"></div>
+      <div className="absolute -top-10 -left-10 w-48 h-48 bg-secondary/20 rounded-full blur-3xl"></div>
+      
+      <div className="container mx-auto max-w-6xl px-4 relative z-10">
+        <div className="flex flex-col md:flex-row md:items-center gap-6 justify-between">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">
+              H5P Inhalt
+            </h1>
+            <p className="text-accent-content/80 text-lg">Interaktives Lernmaterial</p>
+          </div>
+          <Link 
+            href="/" 
+            className="btn btn-accent btn-outline hover:btn-primary transition-all duration-300 px-6"
+          >
+            <FiArrowLeft size={16} className="mr-2" />
+            Zurück zur Übersicht
+          </Link>
+        </div>
+      </div>
+
+      <main className="bg-base-200 container mx-auto max-w-6xl py-12 px-4 -mt-8">
+        <div className="flex flex-col items-center justify-center my-24 space-y-6">
+          <div className="relative w-24 h-24">
+            <div className="absolute top-0 left-0 w-full h-full rounded-full border-4 border-t-primary border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
+            <div className="absolute top-2 left-2 w-20 h-20 rounded-full border-4 border-t-secondary border-r-transparent border-b-transparent border-l-transparent animate-spin-slow"></div>
+            <div className="absolute top-4 left-4 w-16 h-16 rounded-full border-4 border-t-accent border-r-transparent border-b-transparent border-l-transparent animate-spin-slower"></div>
+          </div>
+          <p className="text-xl font-medium bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Inhalte werden geladen...</p>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+// Main page component with Suspense wrapper
+export default function H5PContentPage() {
+  return (
+    <>
+      <Navbar />
+      <Header />      
+      <Suspense fallback={<LoadingFallback />}>
+        <H5PContentViewer />
+      </Suspense>
       
       <footer className="bg-gradient-to-br from-neutral to-neutral-focus text-neutral-content mt-16">
         <div className="container mx-auto max-w-6xl">
