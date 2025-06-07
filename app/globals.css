@@ -286,9 +286,6 @@ body {
   transition: opacity var(--transition-fast);
 }
 
-.btn-primary:hover::before {
-  opacity: 1;
-}
 
 .btn-primary:hover {
   box-shadow: var(--shadow-lg);
