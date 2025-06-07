@@ -206,28 +206,14 @@ export default function AdminDashboard() {
                 <Link href="/admin/upload" className="btn btn-primary">
                   Ersten Inhalt hochladen
                 </Link>
-              </div>
-            ) : (                <div className="overflow-x-auto">
-                <table className="table w-full">
+              </div>            ) : (                <div className="overflow-x-auto">                <table className="table w-full">
                   <thead>
                     <tr>
-                      <th>ID</th>
-                      <th>Titel</th>
-                      <th>Typ</th>
-                      <th>Fachbereich</th>
-                      <th>Tags</th>
-                      <th>Erstellt am</th>
-                      <th>Featured</th>
-                      <th>Aktionen</th>
+                      <th>ID</th><th>Titel</th><th>Typ</th><th>Fachbereich</th><th>Tags</th><th>Erstellt am</th><th>Featured</th><th>Aktionen</th>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {contents.map((content) => (
+                  </thead><tbody>{contents.map((content) => (
                       <tr key={content.id}>
-                        <td>{content.id}</td>
-                        <td>{content.title}</td>
-                        <td>{content.content_type || "Unbekannt"}</td>
-                        <td>
+                        <td>{content.id}</td><td>{content.title}</td><td>{content.content_type || "Unbekannt"}</td><td>
                           {content.subject_area_name ? (
                             <span className="badge badge-outline">
                               {content.subject_area_name}
@@ -235,8 +221,7 @@ export default function AdminDashboard() {
                           ) : (
                             <span className="text-opacity-50">-</span>
                           )}
-                        </td>
-                        <td>
+                        </td><td>
                           <div className="flex flex-wrap gap-1">
                             {content.tags && content.tags.length > 0 ? (
                               content.tags.map((tag) => (
@@ -248,11 +233,9 @@ export default function AdminDashboard() {
                               <span className="text-opacity-50">-</span>
                             )}
                           </div>
-                        </td>
-                        <td>
+                        </td><td>
                           {new Date(content.created_at).toLocaleDateString()}
-                        </td>
-                        <td>
+                        </td><td>
                           <div className="flex items-center gap-2">
                             {content.featured && (
                               <div className="badge badge-primary badge-sm">Featured</div>
@@ -271,8 +254,7 @@ export default function AdminDashboard() {
                               <span className="loading loading-spinner loading-xs"></span>
                             )}
                           </div>
-                        </td>
-                        <td>
+                        </td><td>
                           <div className="flex gap-2">
                             <Link
                               href={`/h5p/content?id=${content.id}`}
@@ -280,7 +262,8 @@ export default function AdminDashboard() {
                               target="_blank"
                             >
                               Ansehen
-                            </Link>                            <Link
+                            </Link>
+                            <Link
                               href={`/admin/edit/${content.id}`}
                               className="btn btn-xs btn-warning"
                             >
@@ -330,7 +313,8 @@ export default function AdminDashboard() {
                                         )
                                       );
                                       
-                                      let errorMessage = "Unbekannter Fehler";                                      try {
+                                      let errorMessage = "Unbekannter Fehler";
+                                      try {
                                         const errorData = await response.json();
                                         errorMessage = errorData.error || errorMessage;
                                       } catch (parseError) {
@@ -352,12 +336,10 @@ export default function AdminDashboard() {
                             >
                               {content.isDeleting ? (
                                 <span className="loading loading-spinner loading-xs"></span>
-                              ) : "Löschen"}
-                            </button>
+                              ) : "Löschen"}                            </button>
                           </div>
-                        </td>                      </tr>
-                    ))}
-                  </tbody>
+                        </td></tr>
+                    ))}</tbody>
                 </table>
               </div>
             )}

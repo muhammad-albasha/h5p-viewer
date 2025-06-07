@@ -148,21 +148,25 @@ export default function FeaturedContent() {
             <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
               Entdecke unsere meistgenutzten interaktiven H5P-Elemente
             </p>
-          </div>
-
-          {/* Loading skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          </div>          {/* Loading skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="card bg-base-200 shadow-lg animate-pulse">
-                <div className="card-body">
-                  <div className="h-6 bg-base-300 rounded mb-4"></div>
-                  <div className="h-4 bg-base-300 rounded mb-2"></div>
-                  <div className="h-4 bg-base-300 rounded mb-4 w-3/4"></div>
-                  <div className="flex gap-2 mb-4">
-                    <div className="h-6 bg-base-300 rounded-full w-16"></div>
-                    <div className="h-6 bg-base-300 rounded-full w-20"></div>
+              <div key={i} className="card bg-gradient-to-br from-base-100 to-base-200 shadow-lg animate-pulse border border-base-300/50">
+                <div className="card-body p-6 space-y-4">
+                  <div className="flex justify-between items-start">
+                    <div className="h-7 bg-base-300 rounded-full w-20"></div>
+                    <div className="h-5 bg-base-300 rounded-full w-16"></div>
                   </div>
-                  <div className="h-10 bg-base-300 rounded"></div>
+                  <div className="h-6 bg-base-300 rounded w-3/4"></div>
+                  <div className="h-12 bg-base-300 rounded w-full"></div>
+                  <div className="flex gap-2">
+                    <div className="h-5 bg-base-300 rounded-full w-16"></div>
+                    <div className="h-5 bg-base-300 rounded-full w-20"></div>
+                    <div className="h-5 bg-base-300 rounded-full w-14"></div>
+                  </div>
+                  <div className="pt-4 border-t border-base-300/30">
+                    <div className="h-10 bg-base-300 rounded-full w-full"></div>
+                  </div>
                 </div>
               </div>
             ))}
@@ -209,61 +213,68 @@ export default function FeaturedContent() {
             </a>
           </div>
         ) : (
-          <>
-            {/* Featured Content Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <>            {/* Featured Content Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {featuredContents.map((content) => (
                 <div
                   key={content.id}
-                  className="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-300 group"
+                  className="card bg-gradient-to-br from-base-100 to-base-200 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 group border border-base-300/50"
                 >
-                  <div className="card-body">
+                  <div className="card-body p-6 space-y-4">
                     {/* Content Type Badge */}
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="badge badge-primary badge-lg font-semibold">
+                    <div className="flex justify-between items-start">
+                      <div className="badge badge-primary badge-lg font-semibold px-3 py-2 shadow-sm">
                         {content.type}
                       </div>
                       {content.subject_area && (
-                        <div className="badge badge-outline badge-sm">
+                        <div className="badge badge-outline badge-sm border-2 font-medium">
                           {content.subject_area.name}
                         </div>
                       )}
                     </div>
 
                     {/* Title */}
-                    <h3 className="card-title text-xl mb-3 group-hover:text-primary transition-colors">
+                    <h3 className="card-title text-xl font-bold leading-tight group-hover:text-primary transition-colors duration-200">
                       {content.name}
                     </h3>
 
+                    {/* Description Space */}
+                    <p className="text-base-content/70 text-sm leading-relaxed min-h-[3rem] flex items-center">
+                      Interaktiver {content.type}-Inhalt für ein besseres Lernerlebnis
+                    </p>
+
                     {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    <div className="flex flex-wrap gap-2">
                       {content.tags.slice(0, 3).map((tag, index) => (
                         <span
                           key={index}
-                          className="badge badge-ghost badge-sm text-xs"
+                          className="badge badge-secondary badge-sm text-xs font-medium px-2 py-1 hover:badge-primary transition-colors"
                         >
                           {tag}
                         </span>
                       ))}
                       {content.tags.length > 3 && (
-                        <span className="badge badge-ghost badge-sm text-xs">
-                          +{content.tags.length - 3}
+                        <span className="badge badge-ghost badge-sm text-xs font-medium">
+                          +{content.tags.length - 3} weitere
                         </span>
                       )}
                     </div>
 
                     {/* Action Button */}
-                    <div className="card-actions justify-end mt-4">
+                    <div className="card-actions justify-center pt-4 border-t border-base-300/30">
                       <Link
                         href={content.path}
-                        className="btn btn-primary btn-sm px-6 group-hover:btn-primary group-hover:scale-105 transition-all"
+                        className="btn btn-primary btn-wide hover:btn-primary-focus group-hover:scale-105 transition-all duration-200 shadow-md font-semibold"
                       >
-                        Jetzt spielen
+                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                        </svg>
+                        Jetzt starten
                       </Link>
                     </div>
                   </div>
                 </div>
-              ))}{" "}
+              ))}
             </div>
 
             {/* View All Button */}
