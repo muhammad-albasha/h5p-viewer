@@ -29,28 +29,29 @@ const ContentFilter = ({  searchQuery,
   selectedSubjectArea = "",
   setSelectedSubjectArea = () => {}
 }: ContentFilterProps) => {
-  return (
-    <div className="mb-8 bg-base-100 rounded-box p-4 shadow-lg">
+  return (    <div className="mb-8 elevated-card p-6">
       <div className="form-control">
-        <div className="input-group">
+        <div className="relative">
           <input 
             type="text" 
             placeholder="Inhalte suchen..." 
-            className="input input-bordered w-full" 
+            className="form-input w-full pr-12" 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <button className="btn btn-square" aria-label="Suchen" title="Suchen">
-            <FiSearch />
+          />          <button 
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 btn-icon p-1 rounded-md hover:bg-primary/10 transition-all duration-200" 
+            aria-label="Suchen" 
+            title="Suchen"
+          >
+            <FiSearch size={20} style={{ color: 'inherit' }} />
             <span className="sr-only">Suchen</span>
           </button>
         </div>
       </div>
-        {subjectAreas.length > 0 && (
-        <div className="mt-4">
-          <h3 className="text-sm font-semibold mb-2">Filter nach Fachbereich:</h3>
+        {subjectAreas.length > 0 && (        <div className="mt-6">
+          <h3 className="text-sm font-semibold mb-3 text-base-content">Filter nach Fachbereich:</h3>
           <select 
-            className="select select-bordered w-full" 
+            className="form-input w-full" 
             value={selectedSubjectArea}
             onChange={(e) => setSelectedSubjectArea(e.target.value)}
             aria-label="Fachbereich auswählen"
@@ -63,16 +64,15 @@ const ContentFilter = ({  searchQuery,
             ))}
           </select>
         </div>
-      )}
-      
-      <div className="mt-4">
-        <h3 className="text-sm font-semibold mb-2">Filter nach Tags:</h3>
+      )}      
+      <div className="mt-6">
+        <h3 className="text-sm font-semibold mb-3 text-base-content">Filter nach Tags:</h3>
         <div className="flex flex-wrap gap-2">
           {availableTags.map(tag => (
             <button
               key={tag}
-              className={`badge badge-outline ${
-                selectedTags.includes(tag) ? "badge-primary" : ""
+              className={`badge badge-outline transition-colors duration-200 ${
+                selectedTags.includes(tag) ? "badge-primary bg-primary/10" : "hover:bg-base-200"
               } p-3 cursor-pointer`}
               onClick={() => toggleTag(tag)}
             >

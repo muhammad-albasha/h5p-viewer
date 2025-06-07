@@ -55,16 +55,15 @@ const Header = () => {
             <span className="ml-3 text-xl font-semibold">H5P Viewer</span>
           </Link>
         </div>
-        
-        {/* Mobile Menu Button */}        <button 
-          className="md:hidden btn btn-ghost btn-sm px-2 focus:outline-none focus:ring-2 focus:ring-primary/50 rounded-lg"
+          {/* Mobile Menu Button */}        <button 
+          className={`md:hidden btn btn-ghost btn-icon btn-sm px-2 focus:outline-none focus:ring-2 focus:ring-primary/50 rounded-lg ${isMobileMenuOpen ? 'active' : ''}`}
           onClick={toggleMobileMenu}
           aria-label="Menü"
         >
           <div className="space-y-1.5">
-            <div className={`w-5 h-0.5 bg-current transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-2 bg-primary' : ''}`}></div>
+            <div className={`w-5 h-0.5 bg-current transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></div>
             <div className={`w-5 h-0.5 bg-current transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : 'opacity-100'}`}></div>
-            <div className={`w-5 h-0.5 bg-current transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-2 bg-primary' : ''}`}></div>
+            <div className={`w-5 h-0.5 bg-current transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></div>
           </div>
           <span className="sr-only">Menü</span>
         </button>
@@ -80,31 +79,28 @@ const Header = () => {
           <Link href="/fachbereich" className="text-base-content hover:text-primary transition-colors duration-200 px-2 py-1 rounded-md hover:bg-primary/10">
             Fachbereiche
           </Link>
-          
-          <div className="relative" ref={dropdownRef}>            <button 
-              className="btn btn-circle btn-ghost flex items-center justify-center relative hover:bg-base-200/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-200"
+            <div className="relative" ref={dropdownRef}>            <button 
+              className={`w-8 h-8 rounded-full hover:bg-base-content/5 flex items-center justify-center transition-all duration-150 focus:outline-none focus:bg-base-content/10 active:scale-95 ${isDropdownOpen ? 'bg-base-content/10' : ''}`}
               onClick={toggleDropdown}
               aria-label="Einstellungen"
               aria-controls="settings-dropdown"
               aria-haspopup="menu"
             >
               <FiSettings 
-                size={20} 
-                className={`transition-transform duration-300 ${isDropdownOpen ? 'rotate-90 text-primary' : ''}`} 
+                size={16} 
+                className={`transition-all duration-200 text-base-content/70 ${isDropdownOpen ? 'rotate-90 text-base-content' : ''}`}
               />
               <span className="sr-only">Einstellungen</span>
             </button>
             
-            {isDropdownOpen && (
-              <div 
+            {isDropdownOpen && (              <div 
                 id="settings-dropdown"
                 role="menu"
-                className="absolute right-0 mt-2 w-52 rounded-xl glass-card dark:glass-card-dark shadow-lg p-3 z-50 animate-fade-in-down border border-gray-200 dark:border-gray-700"
+                className="absolute right-0 mt-2 w-52 rounded-xl bg-base-100 shadow-xl p-3 z-50 animate-fade-in-down border border-base-300"
               >
                 <div className="space-y-1">
                   {status === "authenticated" && session?.user ? (
-                    <>
-                      <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 mb-2">
+                    <>                      <div className="px-3 py-2 text-sm text-base-content/70 border-b border-base-300 mb-2">
                         {session.user.name || "Benutzer"}
                       </div>
                       <Link
