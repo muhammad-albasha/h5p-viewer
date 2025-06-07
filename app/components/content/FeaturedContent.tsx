@@ -148,13 +148,25 @@ export default function FeaturedContent() {
             <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
               Entdecke unsere meistgenutzten interaktiven H5P-Elemente
             </p>
-          </div>          {/* Loading skeleton */}
+          </div>{" "}          {/* Loading skeleton */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="card bg-gradient-to-br from-base-100 to-base-200 shadow-lg animate-pulse border border-base-300/50">
+              <div
+                key={i}
+                className="card bg-gradient-to-br from-base-100 to-base-200 shadow-lg animate-pulse border border-base-300/50 overflow-hidden"
+              >
+                {/* Skeleton Image */}
+                <div className="h-48 bg-base-300 relative">
+                  <div className="absolute top-3 right-3">
+                    <div className="h-7 bg-base-300/70 rounded-full w-20"></div>
+                  </div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-16 h-16 bg-base-300/70 rounded-full"></div>
+                  </div>
+                </div>
+                
                 <div className="card-body p-6 space-y-4">
-                  <div className="flex justify-between items-start">
-                    <div className="h-7 bg-base-300 rounded-full w-20"></div>
+                  <div className="flex justify-start">
                     <div className="h-5 bg-base-300 rounded-full w-16"></div>
                   </div>
                   <div className="h-6 bg-base-300 rounded w-3/4"></div>
@@ -213,19 +225,50 @@ export default function FeaturedContent() {
             </a>
           </div>
         ) : (
-          <>            {/* Featured Content Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-              {featuredContents.map((content) => (
+          <>
+            {" "}
+            {/* Featured Content Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">              {featuredContents.map((content) => (
                 <div
                   key={content.id}
-                  className="card bg-gradient-to-br from-base-100 to-base-200 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 group border border-base-300/50"
+                  className="card bg-gradient-to-br from-base-100 to-base-200 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 group border border-base-300/50 overflow-hidden"
                 >
-                  <div className="card-body p-6 space-y-4">
-                    {/* Content Type Badge */}
-                    <div className="flex justify-between items-start">
-                      <div className="badge badge-primary badge-lg font-semibold px-3 py-2 shadow-sm">
+                  {/* Card Image */}
+                  <figure className="relative h-48 bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      {/* H5P Icon based on content type */}
+                      {content.type === "Quiz" && (
+                        <svg className="w-16 h-16 text-primary/60" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                      )}
+                      {content.type === "Questionnaire" && (
+                        <svg className="w-16 h-16 text-primary/60" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                      )}
+                      {content.type === "Exercise" && (
+                        <svg className="w-16 h-16 text-primary/60" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                      )}
+                      {!["Quiz", "Questionnaire", "Exercise"].includes(content.type) && (
+                        <svg className="w-16 h-16 text-primary/60" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2.5-9H19V1h-1.5v1H6.5V1H5v1H4.5A1.5 1.5 0 003 3.5v15A1.5 1.5 0 004.5 20h15a1.5 1.5 0 001.5-1.5v-15A1.5 1.5 0 0019.5 2z"/>
+                        </svg>
+                      )}
+                    </div>
+                    {/* Content type overlay */}
+                    <div className="absolute top-3 right-3">
+                      <div className="badge badge-primary badge-lg font-semibold px-3 py-2 shadow-lg bg-primary/90 backdrop-blur-sm">
                         {content.type}
                       </div>
+                    </div>
+                  </figure>
+
+                  <div className="card-body p-6 space-y-4">
+                    {/* Subject Area Badge */}
+                    <div className="flex justify-start items-start">
                       {content.subject_area && (
                         <div className="badge badge-outline badge-sm border-2 font-medium">
                           {content.subject_area.name}
@@ -240,7 +283,8 @@ export default function FeaturedContent() {
 
                     {/* Description Space */}
                     <p className="text-base-content/70 text-sm leading-relaxed min-h-[3rem] flex items-center">
-                      Interaktiver {content.type}-Inhalt für ein besseres Lernerlebnis
+                      Interaktiver {content.type}-Inhalt für ein besseres
+                      Lernerlebnis
                     </p>
 
                     {/* Tags */}
@@ -266,8 +310,16 @@ export default function FeaturedContent() {
                         href={content.path}
                         className="btn btn-primary btn-wide hover:btn-primary-focus group-hover:scale-105 transition-all duration-200 shadow-md font-semibold"
                       >
-                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                        <svg
+                          className="w-4 h-4 mr-2"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                         Jetzt starten
                       </Link>
@@ -276,7 +328,6 @@ export default function FeaturedContent() {
                 </div>
               ))}
             </div>
-
             {/* View All Button */}
             <div className="text-center">
               <Link href="/h5p" className="btn btn-outline btn-lg px-8 py-3">
