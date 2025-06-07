@@ -75,7 +75,7 @@ function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
 
     loadH5P();
   }, [h5pJsonPath]);  return (
-    <div className="bg-base-100 rounded-xl overflow-hidden">
+    <div className={`${styles.h5pStyleWrapper} bg-base-100 rounded-xl overflow-hidden`}>
       {loading && (
         <div className="flex flex-col items-center justify-center min-h-[300px] space-y-6 p-12 bg-base-200/50">
           <div className="relative w-16 h-16">
@@ -115,7 +115,9 @@ function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
             </div>
           </div>
         </div>
-      )}      <div 
+      )}
+
+      <div 
         ref={h5pContainer} 
         className={`h5p-container relative z-10 ${error || loading ? styles.h5pContainerHidden : styles.h5pContainer}`}
       ></div>

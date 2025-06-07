@@ -1,8 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pool } from '@/app/lib/db';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    // First, get the last modification time of featured content
+    const [lastModRows] = await pool.query(`
+      SELECT MAX(fc.created_at) as last_modified
+      FROM featured_content fc
+    `);
+    
+    const lastModified = (lastModRows as any[])[0]?.last_modified;
+    const lastModifiedTime = lastModified ? new Date(lastModified).getTime() : 0;
+    
+    // Check if client sent If-None-Match header (ETag check)
+    const clientETag = request.headers.get('If-None-Match');
+    const currentETag = `"featured-${lastModifiedTime}"`;
+    
+    // If client has the latest version, return 304 Not Modified
+    if (clientETag === currentETag) {
+      return new NextResponse(null, { 
+        status: 304,
+        headers: {
+          'ETag': currentETag,
+          'Cache-Control': 'no-cache'
+        }
+      });
+    }
+
     // Fetch ONLY actual featured H5P content from database
     const [rows] = await pool.query(`
       SELECT 
@@ -38,20 +62,18 @@ export async function GET() {
         slug: row.subject_area_slug
       } : null,
       created_at: row.created_at
-    }));    // Return with no-cache headers to ensure fresh data
+    }));
+
+    // Return with ETag for caching optimization
     const response = NextResponse.json(h5pContents);
-    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-    response.headers.set('Pragma', 'no-cache');
-    response.headers.set('Expires', '0');
-    response.headers.set('Surrogate-Control', 'no-store');
-    
-    return response;
+    response.headers.set('ETag', currentETag);
+    response.headers.set('Cache-Control', 'no-cache');
+    response.headers.set('Last-Modified', lastModified ? new Date(lastModified).toUTCString() : new Date().toUTCString());
+      return response;
   } catch (error) {
-    // Database query failed - return empty array with no fallback content
+    // Database query failed - return empty array with no ETag
     const response = NextResponse.json([]);
-    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-    response.headers.set('Pragma', 'no-cache');
-    response.headers.set('Expires', '0');
+    response.headers.set('Cache-Control', 'no-cache');
     
     return response;
   }

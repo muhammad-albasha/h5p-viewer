@@ -18,75 +18,122 @@ interface H5PContent {
 export default function FeaturedContent() {
   const [featuredContents, setFeaturedContents] = useState<H5PContent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentETag, setCurrentETag] = useState<string | null>(null);
 
-  const fetchFeaturedContents = async () => {
+  const fetchFeaturedContents = async (force: boolean = false) => {
     try {
-      setLoading(true);
-      // Add timestamp to prevent caching
-      const timestamp = Date.now();
-      const response = await fetch(`/api/featured?t=${timestamp}`, {
+      if (!force) {
+        setLoading(true);
+      }
+      
+      // Prepare headers for conditional request
+      const headers: HeadersInit = {
+        'Cache-Control': 'no-cache'
+      };
+      
+      // Add ETag for conditional request (if we have one)
+      if (currentETag && !force) {
+        headers['If-None-Match'] = currentETag;
+      }
+      
+      const response = await fetch('/api/featured', {
         cache: 'no-store',
-        headers: {
-          'Cache-Control': 'no-cache'
-        }
+        headers
       });
+      
+      // If 304 Not Modified, content hasn't changed
+      if (response.status === 304) {
+        setLoading(false);
+        return;
+      }
+      
       if (!response.ok) {
         throw new Error("Failed to fetch featured content");
-      }      const data = await response.json();
+      }
+
+      // Update ETag for future requests
+      const newETag = response.headers.get('ETag');
+      if (newETag) {
+        setCurrentETag(newETag);
+      }
+
+      const data = await response.json();
       setFeaturedContents(data);
     } catch (error) {
-      // Error fetching featured content, use fallback
-      setFeaturedContents([
-        {
-          id: 1,
-          name: "For or Since",
-          path: "/h5p/content?id=1",
-          type: "Quiz",
-          tags: ["Grammatik", "Übungen"],
-          slug: "for-or-since"
-        },
-        {
-          id: 2,
-          name: "Test Questionnaire",
-          path: "/h5p/content?id=2",
-          type: "Questionnaire",
-          tags: ["Fragen", "Interaktiv"],
-          slug: "test-questionnaire"
-        },
-        {
-          id: 3,
-          name: "Interactive Exercise",
-          path: "/h5p/content?id=3",
-          type: "Exercise",
-          tags: ["Interaktiv", "Lernen"],
-          slug: "interactive-exercise"
-        }
-      ]);
+      // Error fetching featured content, use fallback only on initial load
+      if (featuredContents.length === 0) {
+        setFeaturedContents([
+          {
+            id: 1,
+            name: "For or Since",
+            path: "/h5p/content?id=1",
+            type: "Quiz",
+            tags: ["Grammatik", "Übungen"],
+            slug: "for-or-since"
+          },
+          {
+            id: 2,
+            name: "Test Questionnaire",            path: "/h5p/content?id=2",
+            type: "Questionnaire",
+            tags: ["Fragen", "Interaktiv"],
+            slug: "test-questionnaire"
+          },
+          {
+            id: 3,
+            name: "Interactive Exercise",
+            path: "/h5p/content?id=3",
+            type: "Exercise",
+            tags: ["Interaktiv", "Lernen"],
+            slug: "interactive-exercise"
+          }
+        ]);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    // Initial fetch
-    fetchFeaturedContents();
+    // Initial fetch (force = true to always load initially)
+    fetchFeaturedContents(true);
 
-    // Set up polling every 10 seconds to check for updates
+    // Set up less frequent polling (every 30 seconds instead of 10)
+    // This will mostly return 304 Not Modified responses if nothing changed
     const pollInterval = setInterval(() => {
-      fetchFeaturedContents();
-    }, 10000); // 10 seconds
+      fetchFeaturedContents(false);
+    }, 30000); // 30 seconds
 
     // Listen for focus events to refresh when user comes back to tab
     const handleFocus = () => {
-      fetchFeaturedContents();
+      fetchFeaturedContents(false);
+    };    // Listen for visibility change to pause/resume polling
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        // User came back to tab, check for updates
+        fetchFeaturedContents(false);
+      }
+    };    // Listen for custom event when featured content changes in admin
+    const handleFeaturedContentChanged = () => {
+      fetchFeaturedContents(true); // Force fetch since we know it changed
+    };
+
+    // Listen for localStorage changes (cross-tab communication)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'featuredContentLastChange') {
+        fetchFeaturedContents(true);
+      }
     };
 
     window.addEventListener('focus', handleFocus);
-
-    // Cleanup on unmount
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('featuredContentChanged', handleFeaturedContentChanged);
+    window.addEventListener('storage', handleStorageChange);    // Cleanup on unmount
     return () => {
       clearInterval(pollInterval);
       window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('featuredContentChanged', handleFeaturedContentChanged);
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 

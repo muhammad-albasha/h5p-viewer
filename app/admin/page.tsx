@@ -98,9 +98,7 @@ export default function AdminDashboard() {
 
       if (!response.ok) {
         throw new Error(result.error || 'Toggle failed');
-      }
-
-      // Update featured status
+      }      // Update featured status
       setContents(prev => prev.map(content => 
         content.id === contentId 
           ? { ...content, featured: result.featured, isToggling: false }
@@ -108,6 +106,11 @@ export default function AdminDashboard() {
       ));
 
       setSuccessMessage(result.message);
+        // Notify other tabs/windows that featured content has changed
+      window.dispatchEvent(new CustomEvent('featuredContentChanged'));
+      
+      // Also use localStorage for cross-tab communication
+      localStorage.setItem('featuredContentLastChange', Date.now().toString());
       
       // Clear success message after 3 seconds
       setTimeout(() => setSuccessMessage(null), 3000);
@@ -204,8 +207,7 @@ export default function AdminDashboard() {
                   Ersten Inhalt hochladen
                 </Link>
               </div>
-            ) : (
-                <div className="overflow-x-auto">
+            ) : (                <div className="overflow-x-auto">
                 <table className="table w-full">
                   <thead>
                     <tr>
@@ -217,7 +219,8 @@ export default function AdminDashboard() {
                       <th>Erstellt am</th>
                       <th>Featured</th>
                       <th>Aktionen</th>
-                    </tr>                  </thead>
+                    </tr>
+                  </thead>
                   <tbody>
                     {contents.map((content) => (
                       <tr key={content.id}>
