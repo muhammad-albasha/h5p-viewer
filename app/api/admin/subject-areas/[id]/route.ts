@@ -11,7 +11,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const id = parseInt(params.id);
+    const resolvedParams = await params;
+    const id = parseInt(resolvedParams.id);
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
@@ -24,11 +25,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
     if ((rows as any[]).length === 0) {
       return NextResponse.json({ error: "Subject area not found" }, { status: 404 });
-    }
-
-    return NextResponse.json((rows as any[])[0]);
+    }    return NextResponse.json((rows as any[])[0]);
   } catch (error) {
-    console.error("Error fetching subject area details:", error);
+    // Error fetching subject area details
     return NextResponse.json(
       { error: "Failed to fetch subject area details" },
       { status: 500 }
@@ -44,7 +43,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const id = parseInt(params.id);
+    const resolvedParams = await params;
+    const id = parseInt(resolvedParams.id);
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
@@ -74,9 +74,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       [name, slug, id]
     );
 
-    return NextResponse.json({ id, name, slug });
-  } catch (error: any) {
-    console.error("Error updating subject area:", error);
+    return NextResponse.json({ id, name, slug });  } catch (error: any) {
+    // Error updating subject area
     
     // Check for duplicate entry
     if (error.code === 'ER_DUP_ENTRY') {
@@ -101,7 +100,8 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const id = parseInt(params.id);
+    const resolvedParams = await params;
+    const id = parseInt(resolvedParams.id);
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
@@ -110,8 +110,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     await pool.query('DELETE FROM subject_areas WHERE id = ?', [id]);
 
     return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Error deleting subject area:", error);
+  } catch (error) {    // Error deleting subject area
     return NextResponse.json(
       { error: "Failed to delete subject area" },
       { status: 500 }

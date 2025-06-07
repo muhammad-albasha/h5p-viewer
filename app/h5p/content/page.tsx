@@ -47,12 +47,11 @@ export default function H5PContentPage() {
         const content = contents[contentIndex] || contents.find((item: H5PContentDetails) => item.id === id);
         
         if (content) {
-          setContentDetails(content);
-        } else {
+          setContentDetails(content);        } else {
           setError(`Content mit ID "${id}" nicht gefunden`);
         }
       } catch (error) {
-        console.error('Error fetching content details:', error);
+        // Error fetching content details
         setError('Failed to load content details');
       } finally {
         setLoading(false);

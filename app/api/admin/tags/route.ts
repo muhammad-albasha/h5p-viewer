@@ -16,11 +16,9 @@ export async function GET() {
       SELECT id, name, created_at
       FROM tags
       ORDER BY name ASC
-    `);
-
-    return NextResponse.json(rows);
+    `);    return NextResponse.json(rows);
   } catch (error) {
-    console.error("Error fetching tags:", error);
+    // Error fetching tags
     return NextResponse.json(
       { error: "Failed to fetch tags" },
       { status: 500 }
@@ -54,11 +52,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       id: (result as any).insertId,
-      name,
-      created_at: new Date(),
+      name,      created_at: new Date(),
     });
   } catch (error: any) {
-    console.error("Error creating tag:", error);
+    // Error creating tag
     
     // Check for duplicate entry
     if (error.code === 'ER_DUP_ENTRY') {

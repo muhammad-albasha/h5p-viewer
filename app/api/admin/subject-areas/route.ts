@@ -16,11 +16,9 @@ export async function GET() {
       SELECT id, name, slug, created_at
       FROM subject_areas
       ORDER BY name ASC
-    `);
-
-    return NextResponse.json(rows);
+    `);    return NextResponse.json(rows);
   } catch (error) {
-    console.error("Error fetching subject areas:", error);
+    // Error fetching subject areas
     return NextResponse.json(
       { error: "Failed to fetch subject areas" },
       { status: 500 }
@@ -67,9 +65,8 @@ export async function POST(request: Request) {
       name,
       slug,
       created_at: new Date(),
-    });
-  } catch (error: any) {
-    console.error("Error creating subject area:", error);
+    });  } catch (error: any) {
+    // Error creating subject area
     
     // Check for duplicate entry
     if (error.code === 'ER_DUP_ENTRY') {

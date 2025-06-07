@@ -82,9 +82,7 @@ export async function initializeDatabase() {
         FOREIGN KEY (created_by) REFERENCES users(id),
         FOREIGN KEY (subject_area_id) REFERENCES subject_areas(id) ON DELETE SET NULL
       )
-    `);
-
-    // Create content_tags relation table
+    `);    // Create content_tags relation table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS content_tags (
         content_id INT NOT NULL,
@@ -92,6 +90,17 @@ export async function initializeDatabase() {
         PRIMARY KEY (content_id, tag_id),
         FOREIGN KEY (content_id) REFERENCES h5p_content(id) ON DELETE CASCADE,
         FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE      )    `);
+
+    // Create featured_content table for managing featured H5P content
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS featured_content (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        content_id INT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (content_id) REFERENCES h5p_content(id) ON DELETE CASCADE,
+        UNIQUE KEY unique_featured_content (content_id)
+      )
+    `);
 
   } catch (error) {
     // Database initialization failed - rethrow for caller to handle

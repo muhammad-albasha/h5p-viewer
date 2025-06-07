@@ -52,10 +52,9 @@ export default function UploadH5P() {
         if (!tagsResponse.ok) {
           throw new Error("Failed to fetch tags");
         }
-        const tagsData = await tagsResponse.json();
-        setTags(tagsData);
+        const tagsData = await tagsResponse.json();        setTags(tagsData);
       } catch (err) {
-        console.error("Error loading options:", err);
+        // Error loading options
       } finally {
         setIsLoadingOptions(false);
       }

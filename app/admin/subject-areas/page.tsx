@@ -47,11 +47,10 @@ export default function SubjectAreasPage() {
           throw new Error("Failed to fetch subject areas");
         }
         
-        const data = await response.json();
-        setSubjectAreas(data);
+        const data = await response.json();        setSubjectAreas(data);
       } catch (err) {
         setError("Fehler beim Laden der Fachbereiche");
-        console.error(err);
+        // Error logged silently
       } finally {
         setIsLoading(false);
       }

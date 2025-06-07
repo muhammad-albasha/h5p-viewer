@@ -48,8 +48,7 @@ function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
         if (correctPath.endsWith('/h5p.json')) {
           correctPath = correctPath.substring(0, correctPath.length - 9); // Remove '/h5p.json'
         }
-        
-        console.log('Loading H5P from path:', correctPath);
+          // Loading H5P from specified path
         
         const h5p = new H5PConstructor(el, {
           h5pJsonPath: correctPath, // Path to the directory containing h5p.json
@@ -59,16 +58,16 @@ function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
 
         h5p
           .then(() => {
-            console.log('H5P loaded successfully!');
+            // H5P loaded successfully
             setLoading(false);
           })
           .catch((err: Error) => {
-            console.error("H5P initialization error:", err);
+            // H5P initialization error
             setError(err.message);
             setLoading(false);
           });
       } catch (e) {
-        console.error("Error loading H5P:", e);
+        // Error loading H5P
         setError(e instanceof Error ? e.message : String(e));
         setLoading(false);
       }

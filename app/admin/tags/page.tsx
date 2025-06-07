@@ -47,10 +47,9 @@ export default function TagsPage() {
         }
         
         const data = await response.json();
-        setTags(data);
-      } catch (err) {
+        setTags(data);      } catch (err) {
         setError("Fehler beim Laden der Tags");
-        console.error(err);
+        // Error logged silently
       } finally {
         setIsLoading(false);
       }

@@ -16,6 +16,8 @@ interface H5PContent {
   subject_area_name?: string;
   tags?: Array<{ id: number | string; name: string }>;
   isDeleting?: boolean; // UI-Status für das Löschen
+  featured?: boolean; // Featured status
+  isToggling?: boolean; // UI-Status für Featured toggle
 }
 
 export default function AdminDashboard() {
@@ -24,6 +26,7 @@ export default function AdminDashboard() {
   const [contents, setContents] = useState<H5PContent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -31,7 +34,6 @@ export default function AdminDashboard() {
       router.push("/login");
     }
   }, [status, router]);
-
   // Fetch H5P contents when component loads
   useEffect(() => {
     const fetchContents = async () => {
@@ -44,10 +46,31 @@ export default function AdminDashboard() {
         }
 
         const data = await response.json();
-        setContents(data);
-      } catch (err) {
+        
+        // Load featured content to mark featured status
+        try {
+          const featuredResponse = await fetch("/api/featured");
+          if (featuredResponse.ok) {
+            const featuredData = await featuredResponse.json();
+            const featuredIds = featuredData.map((item: any) => item.id);
+            
+            // Mark featured status
+            const contentsWithFeatured = data.map((content: H5PContent) => ({
+              ...content,
+              featured: featuredIds.includes(content.id)
+            }));
+            
+            setContents(contentsWithFeatured);
+          } else {
+            setContents(data);
+          }
+        } catch (featuredError) {
+          // If featured loading fails, just set regular content
+          setContents(data);
+        }
+          } catch (err) {
         setError("Fehler beim Laden der Inhalte");
-        console.error(err);
+        // Error logged silently
       } finally {
         setIsLoading(false);
       }
@@ -57,6 +80,52 @@ export default function AdminDashboard() {
       fetchContents();
     }
   }, [status]);
+
+  const toggleFeatured = async (contentId: number) => {
+    try {
+      // Set loading state for this specific item
+      setContents(prev => prev.map(content => 
+        content.id === contentId 
+          ? { ...content, isToggling: true }
+          : content
+      ));
+
+      const response = await fetch(`/api/admin/featured/${contentId}`, {
+        method: 'POST',
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Toggle failed');
+      }
+
+      // Update featured status
+      setContents(prev => prev.map(content => 
+        content.id === contentId 
+          ? { ...content, featured: result.featured, isToggling: false }
+          : content
+      ));
+
+      setSuccessMessage(result.message);
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccessMessage(null), 3000);
+
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Fehler beim Aktualisieren');
+      
+      // Remove loading state
+      setContents(prev => prev.map(content => 
+        content.id === contentId 
+          ? { ...content, isToggling: false }
+          : content
+      ));
+
+      // Clear error after 5 seconds
+      setTimeout(() => setError(null), 5000);
+    }
+  };
 
   if (status === "loading") {
     return (
@@ -68,11 +137,9 @@ export default function AdminDashboard() {
 
   return (
     <>
-      <Navbar />
-      <Header />
+      <Navbar />      <Header />
 
       <div className="bg-gradient-to-br from-primary to-secondary text-primary-content py-12">
-        {" "}
         <div className="container mx-auto max-w-6xl px-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
@@ -100,12 +167,21 @@ export default function AdminDashboard() {
                 Neuen H5P-Inhalt hochladen
               </Link>
             </div>
-          </div>
-        </div>
+          </div>        </div>
       </div>
 
       <div className="bg-base-200 min-h-screen py-10">
         <div className="container mx-auto max-w-6xl px-4">
+          {/* Success Message */}
+          {successMessage && (
+            <div className="alert alert-success mb-6">
+              <svg className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>{successMessage}</span>
+            </div>
+          )}
+          
           <div className="bg-base-100 rounded-xl shadow-xl overflow-hidden">
             <div className="p-6 border-b border-base-300">
               <h2 className="text-xl font-bold">H5P Inhalte</h2>
@@ -128,7 +204,10 @@ export default function AdminDashboard() {
                   Ersten Inhalt hochladen
                 </Link>
               </div>
-            ) : (                <div className="overflow-x-auto">                <table className="table w-full"><thead>
+            ) : (
+                <div className="overflow-x-auto">
+                <table className="table w-full">
+                  <thead>
                     <tr>
                       <th>ID</th>
                       <th>Titel</th>
@@ -136,9 +215,10 @@ export default function AdminDashboard() {
                       <th>Fachbereich</th>
                       <th>Tags</th>
                       <th>Erstellt am</th>
+                      <th>Featured</th>
                       <th>Aktionen</th>
-                    </tr>
-                  </thead><tbody>
+                    </tr>                  </thead>
+                  <tbody>
                     {contents.map((content) => (
                       <tr key={content.id}>
                         <td>{content.id}</td>
@@ -170,6 +250,26 @@ export default function AdminDashboard() {
                           {new Date(content.created_at).toLocaleDateString()}
                         </td>
                         <td>
+                          <div className="flex items-center gap-2">
+                            {content.featured && (
+                              <div className="badge badge-primary badge-sm">Featured</div>
+                            )}
+                            <label className="cursor-pointer">
+                              <input
+                                type="checkbox"
+                                className="toggle toggle-primary toggle-sm"
+                                checked={content.featured || false}
+                                disabled={content.isToggling}
+                                onChange={() => toggleFeatured(content.id)}
+                                title={content.featured ? "Als Featured entfernen" : "Als Featured markieren"}
+                              />
+                            </label>
+                            {content.isToggling && (
+                              <span className="loading loading-spinner loading-xs"></span>
+                            )}
+                          </div>
+                        </td>
+                        <td>
                           <div className="flex gap-2">
                             <Link
                               href={`/h5p/content?id=${content.id}`}
@@ -177,13 +277,13 @@ export default function AdminDashboard() {
                               target="_blank"
                             >
                               Ansehen
-                            </Link>
-                            <Link
+                            </Link>                            <Link
                               href={`/admin/edit/${content.id}`}
                               className="btn btn-xs btn-warning"
                             >
                               Bearbeiten
-                            </Link>{" "}                            <button
+                            </Link>
+                            <button
                               onClick={async () => {
                                 if (
                                   confirm(
@@ -227,21 +327,17 @@ export default function AdminDashboard() {
                                         )
                                       );
                                       
-                                      let errorMessage = "Unbekannter Fehler";
-                                      try {
+                                      let errorMessage = "Unbekannter Fehler";                                      try {
                                         const errorData = await response.json();
                                         errorMessage = errorData.error || errorMessage;
                                       } catch (parseError) {
-                                        console.error("Error parsing error response:", parseError);
+                                        // Error parsing response, use default message
                                       }
                                       
                                       alert(`Fehler: ${errorMessage}`);
                                     }
                                   } catch (err) {
-                                    console.error(
-                                      "Error deleting content:",
-                                      err
-                                    );
+                                    // Error during deletion
                                     alert(
                                       "Beim Löschen ist ein Fehler aufgetreten"
                                     );
@@ -256,13 +352,12 @@ export default function AdminDashboard() {
                               ) : "Löschen"}
                             </button>
                           </div>
-                        </td>
-                      </tr>
+                        </td>                      </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-            )}{" "}
+            )}
           </div>
         </div>
       </div>

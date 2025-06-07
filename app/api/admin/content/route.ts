@@ -43,11 +43,9 @@ export async function GET() {
         ...content,
         tags: tags
       };
-    }));
-
-    return NextResponse.json(contentItems);
+    }));    return NextResponse.json(contentItems);
   } catch (error) {
-    console.error("Error fetching H5P content:", error);
+    // Error fetching H5P content
     return NextResponse.json(
       { error: "Failed to fetch content" },
       { status: 500 }

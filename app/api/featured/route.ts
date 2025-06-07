@@ -3,7 +3,7 @@ import { pool } from '@/app/lib/db';
 
 export async function GET() {
   try {
-    // Fetch featured H5P content from database
+    // Fetch ONLY actual featured H5P content from database
     const [rows] = await pool.query(`
       SELECT 
         hc.id,
@@ -14,18 +14,15 @@ export async function GET() {
         hc.created_at,
         sa.name as subject_area_name,
         sa.slug as subject_area_slug,
-        GROUP_CONCAT(t.name) as tags
+        GROUP_CONCAT(t.name) as tags,
+        fc.created_at as featured_at
       FROM h5p_content hc
+      INNER JOIN featured_content fc ON hc.id = fc.content_id
       LEFT JOIN subject_areas sa ON hc.subject_area_id = sa.id
       LEFT JOIN content_tags ct ON hc.id = ct.content_id
       LEFT JOIN tags t ON ct.tag_id = t.id
-      WHERE hc.id IN (
-        SELECT content_id FROM featured_content
-        UNION
-        SELECT id FROM h5p_content ORDER BY created_at DESC LIMIT 3
-      )
-      GROUP BY hc.id, hc.title, hc.slug, hc.file_path, hc.content_type, hc.created_at, sa.name, sa.slug
-      ORDER BY hc.created_at DESC
+      GROUP BY hc.id, hc.title, hc.slug, hc.file_path, hc.content_type, hc.created_at, sa.name, sa.slug, fc.created_at
+      ORDER BY fc.created_at DESC
       LIMIT 3
     `);
 
@@ -41,36 +38,21 @@ export async function GET() {
         slug: row.subject_area_slug
       } : null,
       created_at: row.created_at
-    }));
-
-    return NextResponse.json(h5pContents);
+    }));    // Return with no-cache headers to ensure fresh data
+    const response = NextResponse.json(h5pContents);
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    response.headers.set('Surrogate-Control', 'no-store');
+    
+    return response;
   } catch (error) {
-    // Return fallback data if database query fails
-    return NextResponse.json([
-      {
-        id: 1,
-        name: "For or Since",
-        path: "/h5p/content?id=1",
-        type: "Quiz",
-        tags: ["Grammatik", "Übungen"],
-        slug: "for-or-since"
-      },
-      {
-        id: 2,
-        name: "Test Questionnaire",
-        path: "/h5p/content?id=2",
-        type: "Questionnaire",
-        tags: ["Fragen", "Interaktiv"],
-        slug: "test-questionnaire"
-      },
-      {
-        id: 3,
-        name: "Interactive Exercise",
-        path: "/h5p/content?id=3",
-        type: "Exercise",
-        tags: ["Interaktiv", "Lernen"],
-        slug: "interactive-exercise"
-      }
-    ]);
+    // Database query failed - return empty array with no fallback content
+    const response = NextResponse.json([]);
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    
+    return response;
   }
 }

@@ -37,12 +37,11 @@ export async function POST(req: NextRequest) {
       try {
         const parsedTags = JSON.parse(tagsString);
         if (Array.isArray(parsedTags)) {
-          parsedTags.forEach(tag => {
-            if (typeof tag === 'number') tagIds.push(tag);
+          parsedTags.forEach(tag => {          if (typeof tag === 'number') tagIds.push(tag);
           });
         }
       } catch (e) {
-        console.error("Failed to parse tags:", e);
+        // Failed to parse tags, continue with empty tags
       }
     }
 
@@ -88,8 +87,7 @@ export async function POST(req: NextRequest) {
       ensureDirectoryExists(h5pDir);
       // Extract H5P file (which is a ZIP file) to the directory
       const zip = new AdmZip(tempFilePath);
-      zip.extractAllTo(h5pDir, true);
-      console.log(`H5P file extracted to ${h5pDir}`);
+      zip.extractAllTo(h5pDir, true);      // H5P file extracted successfully
 
       // === NEU: Cover-Bild speichern, falls vorhanden ===
       const coverImage = formData.get('coverImage') as File | null;
@@ -109,9 +107,8 @@ export async function POST(req: NextRequest) {
       if (fs.existsSync(h5pJsonPath)) {
         try {
           const h5pJson = JSON.parse(fs.readFileSync(h5pJsonPath, 'utf8'));
-          contentType = h5pJson.mainLibrary || contentType;
-        } catch (err) {
-          console.error(`Error parsing h5p.json for ${slug}:`, err);
+          contentType = h5pJson.mainLibrary || contentType;        } catch (err) {
+          // Error parsing h5p.json, using default metadata
         }
       }
         // Save the file info in the database
@@ -162,9 +159,8 @@ export async function POST(req: NextRequest) {
         : String(extractError);
       throw new Error(`Failed to extract H5P file: ${errorMessage}`);
     }
-
   } catch (error: any) {
-    console.error("Error uploading H5P content:", error);
+    // Error uploading H5P content
     return NextResponse.json(
       { error: error.message || "Upload failed" },
       { status: 500 }

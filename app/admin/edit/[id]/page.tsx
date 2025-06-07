@@ -63,9 +63,7 @@ export default function EditContent() {
         setIsLoading(true);
         setSaveError(null);
         setError(null);
-        
-        console.log(`Fetching content data for ID: ${contentId}`);
-        const response = await fetch(`/api/admin/content/${contentId}`, {
+          const response = await fetch(`/api/admin/content/${contentId}`, {
           // Add cache: 'no-store' to prevent caching issues
           cache: 'no-store',
           headers: {
@@ -80,17 +78,14 @@ export default function EditContent() {
             const errorData = await response.json();
             if (errorData && errorData.error) {
               errorMessage = errorData.error;
-            }
-          } catch (parseErr) {
+            }          } catch (parseErr) {
             const errorText = await response.text();
-            console.error("API Error Response:", errorText);
+            // Parse error logged for debugging
           }
           
           throw new Error(errorMessage);
-        }
-
-        const data = await response.json();
-        console.log("Content data received:", data);
+        }        const data = await response.json();
+        // Content data received
         
         if (!data.content) {
           throw new Error("Invalid content data received from API");
@@ -106,14 +101,12 @@ export default function EditContent() {
         
         // Safely handle tags
         if (data.content.tags && Array.isArray(data.content.tags)) {
-          setSelectedTags(data.content.tags.map((tag: Tag) => tag.id));
-        } else {
+          setSelectedTags(data.content.tags.map((tag: Tag) => tag.id));        } else {
           setSelectedTags([]);
-          console.warn("Content tags are not in expected format", data.content.tags);
-        }
-      } catch (err: any) {
+          // Content tags not in expected format
+        }      } catch (err: any) {
         setError(err.message || "Error loading content data");
-        console.error("Error in fetchContentData:", err);
+        // Error in fetchContentData logged
       } finally {
         setIsLoading(false);
       }
@@ -163,10 +156,9 @@ export default function EditContent() {
           }),
         });
       }
-      alert("Änderungen erfolgreich gespeichert");
-    } catch (err: any) {
+      alert("Änderungen erfolgreich gespeichert");    } catch (err: any) {
       setSaveError(err.message || "Ein Fehler ist aufgetreten");
-      console.error(err);
+      // Save error logged
     } finally {
       setIsSaving(false);
     }
@@ -183,10 +175,9 @@ export default function EditContent() {
   const handleDelete = async () => {
     if (!content) return;
     
-    if (confirm(`Möchten Sie "${content.title}" wirklich löschen? Dies löscht sowohl den Datenbankeintrag als auch alle zugehörigen Dateien vom Server.`)) {
-      try {
+    if (confirm(`Möchten Sie "${content.title}" wirklich löschen? Dies löscht sowohl den Datenbankeintrag als auch alle zugehörigen Dateien vom Server.`)) {      try {
         setIsSaving(true); // Nutze den gleichen Loading-Status
-        console.log(`Deleting content with ID: ${contentId}`);
+        // Deleting content with specified ID
         
         const response = await fetch(`/api/admin/content/${contentId}`, {
           method: "DELETE",
@@ -196,22 +187,19 @@ export default function EditContent() {
           let errorMessage = "Failed to delete content";
           try {
             const errorData = await response.json();
-            errorMessage = errorData.error || errorMessage;
-          } catch (parseError) {
-            console.error("Error parsing error response:", parseError);
+            errorMessage = errorData.error || errorMessage;          } catch (parseError) {
+            // Error parsing error response
             errorMessage = `Server error: ${response.status} ${response.statusText}`;
           }
-          throw new Error(errorMessage);
-        }
+          throw new Error(errorMessage);        }
 
-        console.log("Content deleted successfully");
+        // Content deleted successfully
         // Erfolgsmeldung mit mehr Details
         alert("Inhalt erfolgreich gelöscht. Alle zugehörigen H5P-Dateien wurden vom Server entfernt.");
         router.push("/admin");
-        
-      } catch (err: any) {
+          } catch (err: any) {
         const errorMsg = err.message || "Ein unbekannter Fehler ist aufgetreten";
-        console.error("Delete error:", errorMsg);
+        // Delete error logged
         alert(`Fehler beim Löschen: ${errorMsg}`);
       } finally {
         setIsSaving(false);

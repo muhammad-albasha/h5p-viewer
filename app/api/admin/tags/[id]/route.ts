@@ -11,7 +11,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const id = parseInt(params.id);
+    const resolvedParams = await params;
+    const id = parseInt(resolvedParams.id);
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
@@ -32,10 +33,9 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     return NextResponse.json({
       id,
       name,
-      updated_at: new Date(),
-    });
+      updated_at: new Date(),    });
   } catch (error: any) {
-    console.error("Error updating tag:", error);
+    // Error updating tag
     
     // Check for duplicate entry
     if (error.code === 'ER_DUP_ENTRY') {
@@ -60,7 +60,8 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const id = parseInt(params.id);
+    const resolvedParams = await params;
+    const id = parseInt(resolvedParams.id);
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
@@ -68,9 +69,8 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     // Delete tag
     await pool.query('DELETE FROM tags WHERE id = ?', [id]);
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Error deleting tag:", error);
+    return NextResponse.json({ success: true });  } catch (error) {
+    // Error deleting tag
     return NextResponse.json(
       { error: "Failed to delete tag" },
       { status: 500 }

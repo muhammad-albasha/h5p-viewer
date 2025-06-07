@@ -19,50 +19,75 @@ export default function FeaturedContent() {
   const [featuredContents, setFeaturedContents] = useState<H5PContent[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchFeaturedContents = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("/api/featured");
-        if (!response.ok) {
-          throw new Error("Failed to fetch featured content");
+  const fetchFeaturedContents = async () => {
+    try {
+      setLoading(true);
+      // Add timestamp to prevent caching
+      const timestamp = Date.now();
+      const response = await fetch(`/api/featured?t=${timestamp}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache'
         }
-        const data = await response.json();
-        setFeaturedContents(data);
-      } catch (error) {
-        // Fallback data
-        setFeaturedContents([
-          {
-            id: 1,
-            name: "For or Since",
-            path: "/h5p/content?id=1",
-            type: "Quiz",
-            tags: ["Grammatik", "Übungen"],
-            slug: "for-or-since"
-          },
-          {
-            id: 2,
-            name: "Test Questionnaire",
-            path: "/h5p/content?id=2",
-            type: "Questionnaire",
-            tags: ["Fragen", "Interaktiv"],
-            slug: "test-questionnaire"
-          },
-          {
-            id: 3,
-            name: "Interactive Exercise",
-            path: "/h5p/content?id=3",
-            type: "Exercise",
-            tags: ["Interaktiv", "Lernen"],
-            slug: "interactive-exercise"
-          }
-        ]);
-      } finally {
-        setLoading(false);
-      }
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch featured content");
+      }      const data = await response.json();
+      setFeaturedContents(data);
+    } catch (error) {
+      // Error fetching featured content, use fallback
+      setFeaturedContents([
+        {
+          id: 1,
+          name: "For or Since",
+          path: "/h5p/content?id=1",
+          type: "Quiz",
+          tags: ["Grammatik", "Übungen"],
+          slug: "for-or-since"
+        },
+        {
+          id: 2,
+          name: "Test Questionnaire",
+          path: "/h5p/content?id=2",
+          type: "Questionnaire",
+          tags: ["Fragen", "Interaktiv"],
+          slug: "test-questionnaire"
+        },
+        {
+          id: 3,
+          name: "Interactive Exercise",
+          path: "/h5p/content?id=3",
+          type: "Exercise",
+          tags: ["Interaktiv", "Lernen"],
+          slug: "interactive-exercise"
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Initial fetch
+    fetchFeaturedContents();
+
+    // Set up polling every 10 seconds to check for updates
+    const pollInterval = setInterval(() => {
+      fetchFeaturedContents();
+    }, 10000); // 10 seconds
+
+    // Listen for focus events to refresh when user comes back to tab
+    const handleFocus = () => {
+      fetchFeaturedContents();
     };
 
-    fetchFeaturedContents();
+    window.addEventListener('focus', handleFocus);
+
+    // Cleanup on unmount
+    return () => {
+      clearInterval(pollInterval);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   if (loading) {
@@ -99,7 +124,6 @@ export default function FeaturedContent() {
       </section>
     );
   }
-
   return (
     <section className="py-16 px-4 bg-base-100">
       <div className="container mx-auto max-w-6xl">
@@ -113,8 +137,31 @@ export default function FeaturedContent() {
           </p>
         </div>
 
-        {/* Featured Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {/* Check if no featured content */}
+        {featuredContents.length === 0 ? (
+          <div className="text-center py-16">
+            <div className="mb-8">
+              <svg className="w-24 h-24 mx-auto text-base-content/30" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-base-content mb-4">
+              Keine Featured-Inhalte verfügbar
+            </h3>
+            <p className="text-lg text-base-content/70 mb-8 max-w-lg mx-auto">
+              Es wurden noch keine H5P-Elemente als Featured markiert. Besuche alle verfügbaren Inhalte oder kontaktiere den Administrator.
+            </p>
+            <a 
+              href="/h5p" 
+              className="btn btn-primary btn-lg px-8"
+            >
+              Alle Inhalte entdecken
+            </a>
+          </div>
+        ) : (
+          <>
+            {/* Featured Content Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {featuredContents.map((content) => (
             <div key={content.id} className="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-300 group">
               <div className="card-body">
@@ -163,8 +210,7 @@ export default function FeaturedContent() {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+          ))}        </div>
 
         {/* View All Button */}
         <div className="text-center">
@@ -175,6 +221,8 @@ export default function FeaturedContent() {
             Alle Inhalte anzeigen
           </Link>
         </div>
+        </>
+        )}
       </div>
     </section>
   );

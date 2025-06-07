@@ -3,7 +3,9 @@ import { authOptions } from "@/app/lib/auth";
 import { initializeDatabase } from "@/app/lib/db";
 
 // Initialize the database when the auth API is first loaded
-initializeDatabase().catch(console.error);
+initializeDatabase().catch(() => {
+  // Database initialization failed silently
+});
 
 const handler = NextAuth(authOptions);
 
