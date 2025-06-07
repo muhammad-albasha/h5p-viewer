@@ -26,13 +26,12 @@ const H5PContentRedirect = () => {
         
         // If content found, redirect to new URL with the index + 1 as ID
         if (contentIndex !== -1) {
-          router.replace(`/h5p/content?id=${contentIndex + 1}`);
-        } else {
+          router.replace(`/h5p/content?id=${contentIndex + 1}`);        } else {
           // If not found, redirect to home or show error
           router.replace('/');
         }
       } catch (error) {
-        console.error('Error fetching content details for redirect:', error);
+        // Error fetching content - redirect to home
         router.replace('/');
       }
     };

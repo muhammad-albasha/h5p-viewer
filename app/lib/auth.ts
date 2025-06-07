@@ -40,11 +40,9 @@ export const authOptions: NextAuthOptions = {
               name: user.username,
               role: user.role,
             };
-          }
-
-          return null;
+          }          return null;
         } catch (error) {
-          console.error("Authentication error:", error);
+          // Authentication failed
           return null;
         }
       },

@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import Navbar from "./components/layout/Navbar";
 import Header from "./components/layout/Header";
 import Banner from "./components/layout/Banner";
-import ContentFilter from "./components/content/ContentFilter";
 import ContentCardGrid from "./components/content/ContentCardGrid";
-import useTags from "./hooks/useTags";
 
 interface H5PContent {
   name: string;
@@ -17,13 +15,7 @@ interface H5PContent {
 
 export default function Home() {
   const [h5pContents, setH5pContents] = useState<H5PContent[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showWelcome, setShowWelcome] = useState(true);
-  // Use the cached tags hook
-  const { tags: availableTags, isLoading: isTagsLoading } = useTags();
-
   // Fetch H5P content from our API
   useEffect(() => {
     const fetchH5PContents = async () => {
@@ -32,11 +24,9 @@ export default function Home() {
         const response = await fetch("/api/h5p-content");
         if (!response.ok) {
           throw new Error("Failed to fetch H5P content");
-        }
-        const data = await response.json();
+        }        const data = await response.json();
         setH5pContents(data);
       } catch (error) {
-        console.error("Error fetching H5P content:", error);
         // Fallback to mock data if API fails
         setH5pContents([
           {
@@ -59,24 +49,6 @@ export default function Home() {
 
     fetchH5PContents();
   }, []);
-
-  const toggleTag = (tag: string) => {
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter((t) => t !== tag));
-    } else {
-      setSelectedTags([...selectedTags, tag]);
-    }
-  };
-
-  const filteredContent = h5pContents.filter((content) => {
-    const matchesSearch = content.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const matchesTags =
-      selectedTags.length === 0 ||
-      content.tags?.some((tag) => selectedTags.includes(tag));
-    return matchesSearch && matchesTags;
-  });
   return (
     <>
       {/* 1. Navigation Bar */}
@@ -87,21 +59,12 @@ export default function Home() {
       <Banner
         title="H5P-Viewer"
         subtitle="Entdecke interaktive Lerninhalte für dein Studium"
-      />{" "}
-      <main className="flex-grow bg-base-100 py-8 px-4">
+      />{" "}      <main className="flex-grow bg-base-100 py-8 px-4">
         <div className="container mx-auto max-w-6xl">
-          {/* 4. Filter Section */}
-          <ContentFilter
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            selectedTags={selectedTags}
-            availableTags={availableTags}
-            toggleTag={toggleTag}
-          />{" "}
-          {/* 5. H5P Content Cards */}
+          {/* H5P Content Cards */}
           <ContentCardGrid
-            contents={filteredContent}
-            loading={loading || isTagsLoading}
+            contents={h5pContents}
+            loading={loading}
           />
         </div>
       </main>

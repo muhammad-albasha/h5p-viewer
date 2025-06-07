@@ -46,9 +46,7 @@ export default function useTags() {
         cacheTimestamp = now;
         
         // Update state with tag names
-        setTags(data.map(tag => tag.name));
-      } catch (err) {
-        console.error('Error loading tags:', err);
+        setTags(data.map(tag => tag.name));      } catch (err) {
         setError(err instanceof Error ? err : new Error('Unknown error fetching tags'));
       } finally {
         setIsLoading(false);

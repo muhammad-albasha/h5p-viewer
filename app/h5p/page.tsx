@@ -64,11 +64,10 @@ export default function AllH5PContent() {
           throw new Error('Failed to fetch subject areas');
         }
         const subjectAreaData = await subjectAreaResponse.json();
-        setSubjectAreas(subjectAreaData);
-        
+        setSubjectAreas(subjectAreaData);        
       } catch (err: any) {
         setError(err.message || 'An error occurred');
-        console.error(err);
+        // Error occurred while fetching data
       } finally {
         setIsLoading(false);
       }

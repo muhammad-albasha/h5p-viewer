@@ -36,11 +36,10 @@ const determineH5PType = (contentPath: string): string => {
     if (dirs.some(dir => dir.includes('MultiChoice'))) return 'Quiz';
     if (dirs.some(dir => dir.includes('Questionnaire'))) return 'Questionnaire';
     if (dirs.some(dir => dir.includes('InteractiveVideo'))) return 'Interactive Video';
-    if (dirs.some(dir => dir.includes('Course'))) return 'Course Presentation';
-    
+    if (dirs.some(dir => dir.includes('Course'))) return 'Course Presentation';    
     return 'Unknown';
   } catch (error) {
-    console.error('Error determining H5P type:', error);
+    // Error determining H5P type - return default
     return 'Unknown';
   }
 };
@@ -124,10 +123,9 @@ export async function getH5PContents(): Promise<H5PContent[]> {
 
     // If no database content, fall back to file system
     const h5pDir = path.join(process.cwd(), 'public', 'h5p');
-    
-    // Check if directory exists
+      // Check if directory exists
     if (!fs.existsSync(h5pDir)) {
-      console.error('H5P directory not found:', h5pDir);
+      // H5P directory not found - return empty array
       return [];
     }
     
@@ -155,11 +153,10 @@ export async function getH5PContents(): Promise<H5PContent[]> {
         created_at: new Date().toISOString(),
         subject_area: null
       };
-    });
-    
+    });    
     return contents;
   } catch (error) {
-    console.error('Error retrieving H5P contents:', error);
+    // Error retrieving H5P contents - return empty array
     return [];
   }
 }

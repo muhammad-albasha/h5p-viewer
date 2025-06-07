@@ -36,12 +36,11 @@ export default function LoginPage() {
       });
 
       if (result?.error) {
-        setError("Ungültiger Benutzername oder Passwort");
-      } else {
+        setError("Ungültiger Benutzername oder Passwort");      } else {
         router.push(callbackUrl);
       }
     } catch (error) {
-      console.error("Login error:", error);
+      // Login failed - show error message
       setError("Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.");
     } finally {
       setIsLoading(false);

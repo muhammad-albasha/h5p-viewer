@@ -12,20 +12,16 @@ try {
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
-  });
-
-  // Test connection on startup
+  });  // Test connection on startup
   (async () => {
     try {
       const connection = await pool.getConnection();
-      console.log('Database connection established successfully');
       connection.release();
     } catch (error) {
-      console.error('Error connecting to database:', error);
-    }
-  })();
+      // Silent error handling - log to system or monitoring service if needed
+    }  })();
 } catch (error) {
-  console.error('Failed to create database pool:', error);
+  // Silent error handling - database pool creation failed
 }
 
 export { pool };
@@ -45,13 +41,11 @@ export async function initializeDatabase() {
     `);
 
     // Check if admin user exists, create it if not
-    const [adminUsers] = await pool.query('SELECT * FROM users WHERE username = ?', ['admin']);
-    if (Array.isArray(adminUsers) && adminUsers.length === 0) {
+    const [adminUsers] = await pool.query('SELECT * FROM users WHERE username = ?', ['admin']);    if (Array.isArray(adminUsers) && adminUsers.length === 0) {
       // Create default admin user with password "admin"
       // In production, use a proper password hashing library like bcrypt
       await pool.query('INSERT INTO users (username, password, role) VALUES (?, ?, ?)', 
         ['admin', 'admin', 'admin']);
-      console.log('Default admin user created');
     }
 
     // Create subject areas (Fachbereiche) table
@@ -97,13 +91,10 @@ export async function initializeDatabase() {
         tag_id INT NOT NULL,
         PRIMARY KEY (content_id, tag_id),
         FOREIGN KEY (content_id) REFERENCES h5p_content(id) ON DELETE CASCADE,
-        FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
-      )
-    `);
+        FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE      )    `);
 
-    console.log('Database initialized successfully');
   } catch (error) {
-    console.error('Error initializing database:', error);
+    // Database initialization failed - rethrow for caller to handle
     throw error;
   }
 }

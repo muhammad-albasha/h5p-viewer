@@ -29,21 +29,19 @@ export async function extractH5PFile(
     let contentType = "Unknown";
     const h5pJsonPath = path.join(destinationDir, 'h5p.json');
     
-    if (fs.existsSync(h5pJsonPath)) {
-      try {
+    if (fs.existsSync(h5pJsonPath)) {      try {
         const h5pJson = JSON.parse(fs.readFileSync(h5pJsonPath, 'utf8'));
         contentType = h5pJson.mainLibrary || contentType;
       } catch (err) {
-        console.error(`Error parsing h5p.json:`, err);
+        // Error parsing h5p.json - use default content type
       }
     }
     
     return {
       success: true,
-      contentType
-    };
+      contentType    };
   } catch (error: any) {
-    console.error("H5P extraction error:", error);
+    // H5P extraction failed
     return {
       success: false,
       error: error.message
@@ -66,11 +64,10 @@ export function validateH5PFile(filePath: string): boolean {
     const hasContentJson = entries.some(entry => 
       entry.entryName === 'content/content.json' || 
       entry.entryName === 'content.json'
-    );
-    
+    );    
     return hasH5pJson && hasContentJson;
   } catch (error) {
-    console.error("H5P validation error:", error);
+    // H5P validation failed
     return false;
   }
 }
