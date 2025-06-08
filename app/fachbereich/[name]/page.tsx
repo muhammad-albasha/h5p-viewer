@@ -5,6 +5,7 @@ import Header from '@/app/components/layout/Header'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import PlayH5p from '@/app/components/PlayH5p'
+import { useSubjectAreaColor } from '@/app/components/common/SubjectAreaColorProvider'
 
 interface SubjectAreaContent {
   id: number;
@@ -13,6 +14,7 @@ interface SubjectAreaContent {
     id: number;
     name: string;
     slug: string;
+    color?: string;
   };
   path: string;
   type: string;
@@ -24,9 +26,11 @@ const Fachbereich = () => {
   const params = useParams();
   const router = useRouter();
   const subjectAreaSlug = params.name as string;
+  const { setSubjectAreaColor } = useSubjectAreaColor();
   
   const [content, setContent] = useState<SubjectAreaContent[]>([]);
   const [subjectAreaName, setSubjectAreaName] = useState<string>("");
+  const [subjectAreaColor, setSubjectAreaColorState] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedContent, setSelectedContent] = useState<SubjectAreaContent | null>(null);
@@ -48,10 +52,15 @@ const Fachbereich = () => {
         const filteredContent = allContent.filter((item: SubjectAreaContent) => 
           item.subject_area && item.subject_area.slug === subjectAreaSlug
         );
-        
-        // Get subject area name from the first content item
+          // Get subject area name from the first content item
         if (filteredContent.length > 0) {
           setSubjectAreaName(filteredContent[0].subject_area.name);
+          // Apply subject area color if available
+          const color = filteredContent[0].subject_area.color;
+          if (color) {
+            setSubjectAreaColorState(color);
+            setSubjectAreaColor(color);
+          }
         }
         
         setContent(filteredContent);
@@ -61,9 +70,15 @@ const Fachbereich = () => {
         setIsLoading(false);
       }
     };
-    
-    fetchContent();
+      fetchContent();
   }, [subjectAreaSlug]);
+
+  // Cleanup color when component unmounts
+  useEffect(() => {
+    return () => {
+      setSubjectAreaColor(null);
+    };
+  }, [setSubjectAreaColor]);
 
   const handleContentSelect = (item: SubjectAreaContent) => {
     setSelectedContent(item);
@@ -79,8 +94,11 @@ const Fachbereich = () => {
     <>
       <Navbar />
       <Header />
-      
-      <div className="bg-gradient-to-br from-primary to-secondary text-primary-content py-12">
+        <div 
+        className={`text-primary-content py-12 ${
+          subjectAreaColor ? 'subject-area-banner' : 'bg-gradient-to-br from-primary to-secondary'
+        }`}
+      >
         <div className="container mx-auto max-w-6xl px-4">
           <div className="flex items-center gap-2 mb-4">            {viewMode === 'view' ? (
               <button 

@@ -34,8 +34,7 @@ export class SubjectAreaService {
     const repo = await this.getRepository();
     return repo.findOne({ where: { name } });
   }
-
-  async create(name: string): Promise<SubjectArea> {
+  async create(name: string, color?: string): Promise<SubjectArea> {
     const repo = await this.getRepository();
     
     // Check if subject area already exists
@@ -53,11 +52,10 @@ export class SubjectAreaService {
       throw new Error('Subject area with this slug already exists');
     }
     
-    const subjectArea = repo.create({ name, slug });
+    const subjectArea = repo.create({ name, slug, color });
     return repo.save(subjectArea);
   }
-
-  async update(id: number, name: string): Promise<SubjectArea | null> {
+  async update(id: number, name: string, color?: string): Promise<SubjectArea | null> {
     const repo = await this.getRepository();
     
     // Check if another subject area with this name already exists
@@ -83,7 +81,7 @@ export class SubjectAreaService {
       throw new Error('Subject area with this slug already exists');
     }
     
-    await repo.update(id, { name, slug });
+    await repo.update(id, { name, slug, color });
     return this.findById(id);
   }
 

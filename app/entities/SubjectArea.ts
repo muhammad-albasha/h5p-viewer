@@ -7,9 +7,11 @@ export class SubjectArea {
 
   @Column({ type: 'varchar', length: 255, unique: true })
   name!: string;
-
   @Column({ type: 'varchar', length: 255, unique: true })
   slug!: string;
+
+  @Column({ type: 'varchar', length: 7, nullable: true })
+  color?: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;

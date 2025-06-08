@@ -32,10 +32,8 @@ export async function POST(request: Request) {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Parse request body
-    const { name } = await request.json();
+    }    // Parse request body
+    const { name, color } = await request.json();
     
     if (!name || name.trim() === '') {
       return NextResponse.json(
@@ -46,7 +44,7 @@ export async function POST(request: Request) {
 
     // Create new subject area
     const subjectAreaService = new SubjectAreaService();
-    const newSubjectArea = await subjectAreaService.create(name.trim());
+    const newSubjectArea = await subjectAreaService.create(name.trim(), color || undefined);
     
     return NextResponse.json(newSubjectArea);
   } catch (error: any) {

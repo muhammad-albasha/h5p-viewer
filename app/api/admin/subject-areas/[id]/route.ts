@@ -48,10 +48,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const id = parseInt(resolvedParams.id);
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
-    }
-
-    // Parse request body
-    const { name } = await request.json();
+    }    // Parse request body
+    const { name, color } = await request.json();
     
     if (!name || name.trim() === '') {
       return NextResponse.json(
@@ -62,7 +60,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     // Update subject area
     const subjectAreaService = new SubjectAreaService();
-    const updatedSubjectArea = await subjectAreaService.update(id, name.trim());
+    const updatedSubjectArea = await subjectAreaService.update(id, name.trim(), color || undefined);
     
     if (!updatedSubjectArea) {
       return NextResponse.json({ error: "Subject area not found" }, { status: 404 });

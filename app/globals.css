@@ -685,7 +685,6 @@ body {
   body {
     font-family: sans-serif;
   }
-
   *,
   *::before,
   *::after {
@@ -694,4 +693,16 @@ body {
     box-shadow: none !important;
     border-color: #ccc !important;
   }
+}
+
+/* === SUBJECT AREA BANNER === */
+.subject-area-banner {
+  background: linear-gradient(135deg, 
+    var(--subject-area-color, hsl(var(--p))), 
+    var(--subject-area-color-light, hsl(var(--s)))
+  );
+}
+
+.subject-area-banner.fallback {
+  background: linear-gradient(135deg, hsl(var(--p)), hsl(var(--s)));
 }
