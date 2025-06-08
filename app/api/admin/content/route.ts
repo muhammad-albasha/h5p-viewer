@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/lib/auth";
-import { pool } from "@/app/lib/db";
+import { H5PContentService } from "@/app/services";
 
 export async function GET() {
   try {
@@ -9,43 +9,30 @@ export async function GET() {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    }    // Get content list from database with relationships
+    const h5pContentService = new H5PContentService();
+    const contentItems = await h5pContentService.findAll();
 
-    // Get content list from database with subject area info
-    const [rows] = await pool.query(`
-      SELECT 
-        h.id, 
-        h.title, 
-        h.slug, 
-        h.content_type, 
-        h.created_at,
-        h.subject_area_id,
-        sa.name as subject_area_name,
-        sa.slug as subject_area_slug
-      FROM 
-        h5p_content h
-      LEFT JOIN 
-        subject_areas sa ON h.subject_area_id = sa.id
-      ORDER BY 
-        h.created_at DESC
-    `);
+    // Format response to match existing API
+    const formattedItems = contentItems.map(content => ({
+      id: content.id,
+      title: content.title,
+      slug: content.slug,
+      content_type: content.contentType,
+      created_at: content.createdAt,
+      subject_area_id: content.subjectArea?.id || null,
+      subject_area_name: content.subjectArea?.name || null,
+      subject_area_slug: content.subjectArea?.slug || null,
+      tags: content.tags?.map(tag => ({
+        id: tag.id,
+        name: tag.name
+      })) || []
+    }));
 
-    // For each content item, get its tags
-    const contentItems = await Promise.all((rows as any[]).map(async (content) => {
-      const [tags] = await pool.query(`
-        SELECT t.id, t.name
-        FROM tags t
-        JOIN content_tags ct ON t.id = ct.tag_id
-        WHERE ct.content_id = ?
-      `, [content.id]);
-      
-      return {
-        ...content,
-        tags: tags
-      };
-    }));    return NextResponse.json(contentItems);
+    return NextResponse.json(formattedItems);
   } catch (error) {
     // Error fetching H5P content
+    console.error('Error fetching admin content:', error);
     return NextResponse.json(
       { error: "Failed to fetch content" },
       { status: 500 }

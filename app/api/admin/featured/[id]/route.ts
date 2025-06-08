@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/lib/auth';
-import { pool } from '@/app/lib/db';
+import { FeaturedContentService, H5PContentService } from '@/app/services';
 
 // Toggle featured status for H5P content
 export async function POST(
@@ -21,30 +21,21 @@ export async function POST(
       return NextResponse.json({ error: 'Invalid content ID' }, { status: 400 });
     }
 
-    // Check if content exists
-    const [contentRows] = await pool.query(
-      'SELECT id, title FROM h5p_content WHERE id = ?',
-      [contentId]
-    );
+    const h5pContentService = new H5PContentService();
+    const featuredService = new FeaturedContentService();
 
-    if (!Array.isArray(contentRows) || contentRows.length === 0) {
+    // Check if content exists
+    const content = await h5pContentService.findById(contentId);
+    if (!content) {
       return NextResponse.json({ error: 'Content not found' }, { status: 404 });
     }
 
     // Check if already featured
-    const [featuredRows] = await pool.query(
-      'SELECT id FROM featured_content WHERE content_id = ?',
-      [contentId]
-    );
-
-    const isFeatured = Array.isArray(featuredRows) && featuredRows.length > 0;
+    const isFeatured = await featuredService.isFeatured(contentId);
 
     if (isFeatured) {
       // Remove from featured
-      await pool.query(
-        'DELETE FROM featured_content WHERE content_id = ?',
-        [contentId]
-      );
+      await featuredService.removeFromFeatured(contentId);
       
       return NextResponse.json({ 
         success: true, 
@@ -53,25 +44,16 @@ export async function POST(
       });
     } else {
       // Check if we already have 3 featured items
-      const [countRows] = await pool.query(
-        'SELECT COUNT(*) as count FROM featured_content'
-      );
-      
-      const featuredCount = Array.isArray(countRows) && countRows.length > 0 
-        ? (countRows[0] as any).count 
-        : 0;
+      const featuredContent = await featuredService.getFeaturedContent(3);
 
-      if (featuredCount >= 3) {
+      if (featuredContent.length >= 3) {
         return NextResponse.json({ 
           error: 'Maximal 3 Featured-Inhalte möglich. Bitte entfernen Sie erst einen anderen.' 
         }, { status: 400 });
       }
 
       // Add to featured
-      await pool.query(
-        'INSERT INTO featured_content (content_id, created_at) VALUES (?, NOW())',
-        [contentId]
-      );
+      await featuredService.addToFeatured(contentId);
       
       return NextResponse.json({ 
         success: true, 
@@ -81,6 +63,7 @@ export async function POST(
     }
 
   } catch (error) {
+    console.error('Error toggling featured status:', error);
     return NextResponse.json({ 
       error: 'Datenbankfehler' 
     }, { status: 500 });
@@ -99,16 +82,13 @@ export async function GET(
       return NextResponse.json({ error: 'Invalid content ID' }, { status: 400 });
     }
 
-    const [featuredRows] = await pool.query(
-      'SELECT id FROM featured_content WHERE content_id = ?',
-      [contentId]
-    );
-
-    const isFeatured = Array.isArray(featuredRows) && featuredRows.length > 0;
+    const featuredService = new FeaturedContentService();
+    const isFeatured = await featuredService.isFeatured(contentId);
 
     return NextResponse.json({ featured: isFeatured });
 
   } catch (error) {
+    console.error('Error checking featured status:', error);
     return NextResponse.json({ 
       error: 'Datenbankfehler' 
     }, { status: 500 });

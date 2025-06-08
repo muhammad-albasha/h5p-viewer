@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/lib/auth";
-import { pool } from "@/app/lib/db";
+import { H5PContentService } from "@/app/services";
 import path from "path";
 import fs from "fs";
-import { pipeline } from "stream/promises";
-import { createReadStream, createWriteStream } from "fs";
 import crypto from "crypto";
 import AdmZip from "adm-zip";
-import { ensureDirectoryExists, extractH5PFile, validateH5PFile } from "@/app/utils/h5pExtractor";
+import { ensureDirectoryExists } from "@/app/utils/h5pExtractor";
 
 // Helper function to create a slug from a title
 function createSlug(title: string): string {
@@ -110,47 +108,33 @@ export async function POST(req: NextRequest) {
           contentType = h5pJson.mainLibrary || contentType;        } catch (err) {
           // Error parsing h5p.json, using default metadata
         }
-      }
-        // Save the file info in the database
-      const relativeFilePath = `/h5p/${slug}`; // Path to the extracted directory, not the file
-      
-      // Start a database transaction to handle content and tags
-      const connection = await pool.getConnection();
-      try {
-        await connection.beginTransaction();
+      }        // Save the file info in the database using TypeORM
+        const relativeFilePath = `/h5p/${slug}`; // Path to the extracted directory, not the file
         
-        // Insert content record
-        const [result] = await connection.query(
-          `INSERT INTO h5p_content (title, slug, file_path, content_type, subject_area_id, created_by) 
-           VALUES (?, ?, ?, ?, ?, ?)`,
-          [title, slug, relativeFilePath, contentType, validSubjectAreaId, session.user.id]
-        );
-        
-        const contentId = (result as any).insertId;
-        
-        // Insert tags if any
-        if (tagIds.length > 0) {
-          const tagValues = tagIds.map(tagId => [contentId, tagId]);
-          await connection.query(
-            'INSERT INTO content_tags (content_id, tag_id) VALUES ?',
-            [tagValues]
-          );
+        try {
+          const h5pContentService = new H5PContentService();
+            const newContent = await h5pContentService.create({
+            title,
+            filePath: relativeFilePath,
+            contentType,
+            subjectAreaId: validSubjectAreaId || undefined,
+            createdById: typeof session.user.id === 'string' ? parseInt(session.user.id) : session.user.id,
+            tagIds: tagIds.length > 0 ? tagIds : undefined
+          });
+          
+          return NextResponse.json({
+            message: "Upload successful, H5P content extracted",
+            success: true,
+            contentId: newContent.id,
+            extractedTo: relativeFilePath
+          });
+        } catch (dbError) {
+          // If database save fails, clean up extracted files
+          if (fs.existsSync(h5pDir)) {
+            fs.rmSync(h5pDir, { recursive: true, force: true });
+          }
+          throw dbError;
         }
-        
-        await connection.commit();
-        
-        return NextResponse.json({
-          message: "Upload successful, H5P content extracted",
-          success: true,
-          contentId: contentId,
-          extractedTo: relativeFilePath
-        });
-      } catch (dbError) {
-        await connection.rollback();
-        throw dbError;
-      } finally {
-        connection.release();
-      }
     } catch (extractError: unknown) {
       // If extraction fails, delete the temporary file and throw error
       fs.unlinkSync(tempFilePath);

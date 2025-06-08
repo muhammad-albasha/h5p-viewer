@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import { authOptions } from "@/app/lib/auth";
-import { initializeDatabase } from "@/app/lib/db";
+import { initializeDatabase } from "@/app/lib/init";
 
 // Initialize the database when the auth API is first loaded
 initializeDatabase().catch(() => {

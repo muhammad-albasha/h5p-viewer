@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/lib/auth";
-import { pool } from "@/app/lib/db";
+import { SubjectAreaService } from "@/app/services";
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -18,16 +18,17 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     }
 
     // Get subject area details
-    const [rows] = await pool.query(
-      'SELECT id, name, slug, created_at FROM subject_areas WHERE id = ?',
-      [id]
-    );
+    const subjectAreaService = new SubjectAreaService();
+    const subjectArea = await subjectAreaService.findById(id);
 
-    if ((rows as any[]).length === 0) {
+    if (!subjectArea) {
       return NextResponse.json({ error: "Subject area not found" }, { status: 404 });
-    }    return NextResponse.json((rows as any[])[0]);
+    }
+
+    return NextResponse.json(subjectArea);
   } catch (error) {
     // Error fetching subject area details
+    console.error('Error fetching subject area details:', error);
     return NextResponse.json(
       { error: "Failed to fetch subject area details" },
       { status: 500 }
@@ -59,26 +60,21 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       );
     }
 
-    // Generate slug from name
-    const slug = name
-      .toLowerCase()
-      .replace(/[äöüß]/g, (match: string) => {
-        return { 'ä': 'ae', 'ö': 'oe', 'ü': 'ue', 'ß': 'ss' }[match as 'ä' | 'ö' | 'ü' | 'ß'] || match;
-      })
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '');
-
     // Update subject area
-    await pool.query(
-      'UPDATE subject_areas SET name = ?, slug = ? WHERE id = ?',
-      [name, slug, id]
-    );
+    const subjectAreaService = new SubjectAreaService();
+    const updatedSubjectArea = await subjectAreaService.update(id, name.trim());
+    
+    if (!updatedSubjectArea) {
+      return NextResponse.json({ error: "Subject area not found" }, { status: 404 });
+    }
 
-    return NextResponse.json({ id, name, slug });  } catch (error: any) {
+    return NextResponse.json(updatedSubjectArea);
+  } catch (error: any) {
     // Error updating subject area
+    console.error('Error updating subject area:', error);
     
     // Check for duplicate entry
-    if (error.code === 'ER_DUP_ENTRY') {
+    if (error.message.includes('already exists')) {
       return NextResponse.json(
         { error: "A subject area with this name already exists" },
         { status: 409 }
@@ -107,10 +103,17 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     }
 
     // Delete subject area
-    await pool.query('DELETE FROM subject_areas WHERE id = ?', [id]);
+    const subjectAreaService = new SubjectAreaService();
+    const deleted = await subjectAreaService.delete(id);
+    
+    if (!deleted) {
+      return NextResponse.json({ error: "Subject area not found" }, { status: 404 });
+    }
 
     return NextResponse.json({ success: true });
-  } catch (error) {    // Error deleting subject area
+  } catch (error) {
+    // Error deleting subject area
+    console.error('Error deleting subject area:', error);
     return NextResponse.json(
       { error: "Failed to delete subject area" },
       { status: 500 }

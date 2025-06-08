@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/lib/auth";
-import { pool } from "@/app/lib/db";
+import { SubjectAreaService } from "@/app/services";
 
 export async function GET() {
   try {
@@ -12,13 +12,13 @@ export async function GET() {
     }
 
     // Get subject areas list from database
-    const [rows] = await pool.query(`
-      SELECT id, name, slug, created_at
-      FROM subject_areas
-      ORDER BY name ASC
-    `);    return NextResponse.json(rows);
+    const subjectAreaService = new SubjectAreaService();
+    const subjectAreas = await subjectAreaService.findAll();
+    
+    return NextResponse.json(subjectAreas);
   } catch (error) {
     // Error fetching subject areas
+    console.error('Error fetching admin subject areas:', error);
     return NextResponse.json(
       { error: "Failed to fetch subject areas" },
       { status: 500 }
@@ -44,32 +44,17 @@ export async function POST(request: Request) {
       );
     }
 
-    // Generate slug from name
-    const slug = name
-      .toLowerCase()
-      .replace(/[äöüß]/g, (match: string) => {
-        const replacements: Record<string, string> = { 'ä': 'ae', 'ö': 'oe', 'ü': 'ue', 'ß': 'ss' };
-        return replacements[match as keyof typeof replacements] || match;
-      })
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '');
-
-    // Insert new subject area
-    const [result] = await pool.query(
-      'INSERT INTO subject_areas (name, slug) VALUES (?, ?)',
-      [name, slug]
-    );
-
-    return NextResponse.json({
-      id: (result as any).insertId,
-      name,
-      slug,
-      created_at: new Date(),
-    });  } catch (error: any) {
+    // Create new subject area
+    const subjectAreaService = new SubjectAreaService();
+    const newSubjectArea = await subjectAreaService.create(name.trim());
+    
+    return NextResponse.json(newSubjectArea);
+  } catch (error: any) {
     // Error creating subject area
+    console.error('Error creating subject area:', error);
     
     // Check for duplicate entry
-    if (error.code === 'ER_DUP_ENTRY') {
+    if (error.message.includes('already exists')) {
       return NextResponse.json(
         { error: "A subject area with this name already exists" },
         { status: 409 }

@@ -1,14 +1,16 @@
 import { NextResponse } from 'next/server';
-import { pool } from '@/app/lib/db';
+import { TagService } from '@/app/services';
 
 // GET /api/tags - Alle Tags abrufen
 export async function GET() {
   try {
-    // Rufe alle Tags aus der Datenbank ab
-    const [rows] = await pool.query('SELECT * FROM tags ORDER BY name');
-      return NextResponse.json(rows);
+    const tagService = new TagService();
+    const tags = await tagService.findAll();
+    
+    return NextResponse.json(tags);
   } catch (error: any) {
     // Error fetching tags
+    console.error('Error fetching tags:', error);
     return NextResponse.json(
       { error: 'Fehler beim Abrufen der Tags' },
       { status: 500 }

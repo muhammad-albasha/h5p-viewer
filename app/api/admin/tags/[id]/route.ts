@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/lib/auth";
-import { pool } from "@/app/lib/db";
+import { TagService } from "@/app/services";
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -28,17 +28,20 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     }
 
     // Update tag
-    await pool.query('UPDATE tags SET name = ? WHERE id = ?', [name, id]);
+    const tagService = new TagService();
+    const updatedTag = await tagService.update(id, name.trim());
+    
+    if (!updatedTag) {
+      return NextResponse.json({ error: "Tag not found" }, { status: 404 });
+    }
 
-    return NextResponse.json({
-      id,
-      name,
-      updated_at: new Date(),    });
+    return NextResponse.json(updatedTag);
   } catch (error: any) {
     // Error updating tag
+    console.error('Error updating tag:', error);
     
     // Check for duplicate entry
-    if (error.code === 'ER_DUP_ENTRY') {
+    if (error.message.includes('already exists')) {
       return NextResponse.json(
         { error: "A tag with this name already exists" },
         { status: 409 }
@@ -67,10 +70,17 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     }
 
     // Delete tag
-    await pool.query('DELETE FROM tags WHERE id = ?', [id]);
+    const tagService = new TagService();
+    const deleted = await tagService.delete(id);
+    
+    if (!deleted) {
+      return NextResponse.json({ error: "Tag not found" }, { status: 404 });
+    }
 
-    return NextResponse.json({ success: true });  } catch (error) {
+    return NextResponse.json({ success: true });
+  } catch (error) {
     // Error deleting tag
+    console.error('Error deleting tag:', error);
     return NextResponse.json(
       { error: "Failed to delete tag" },
       { status: 500 }

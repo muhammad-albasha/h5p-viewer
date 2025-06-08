@@ -1,8 +1,7 @@
-// filepath: c:\Users\Muhammad\Documents\h5p-viewer\app\api\admin\content\[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/lib/auth";
-import { pool } from "@/app/lib/db";
+import { H5PContentService, TagService, SubjectAreaService } from "@/app/services";
 import fs from "fs";
 import path from "path";
 
@@ -19,82 +18,52 @@ export async function DELETE(
     }
 
     const resolvedParams = await params;
-    const id = resolvedParams.id;
-    // Deleting content with specified ID
-
-    let content;
-    try {
-      // Get content info before deletion
-      [content] = await pool.query(
-        "SELECT file_path, slug FROM h5p_content WHERE id = ?",
-        [id]
-      );
-      // Content query executed
-    } catch (err) {
-      // Database error fetching content for deletion
-      return NextResponse.json(
-        { error: "Database error when fetching content" },
-        { status: 500 }
-      );
+    const id = parseInt(resolvedParams.id);
+    if (isNaN(id)) {
+      return NextResponse.json({ error: "Invalid content ID" }, { status: 400 });
     }
 
-    if (Array.isArray(content) && content.length === 0) {
-      // Content not found
+    const h5pContentService = new H5PContentService();
+
+    // Get content info before deletion
+    const content = await h5pContentService.findById(id);
+    if (!content) {
       return NextResponse.json(
         { error: "Content not found" },
         { status: 404 }
       );
-    }    // Make sure we have valid content info before proceeding
-    const contentArray = content as any[];
-    if (!contentArray || !contentArray[0]) {
-      // Invalid content data
-      return NextResponse.json(
-        { error: "Content data invalid" },
-        { status: 500 }
-      );
     }
-    
-    // Check if required properties exist
-    if (!contentArray[0].hasOwnProperty('slug')) {
-      // Content data missing slug property, continue anyway
-    }try {
+
+    try {
       // Delete all associated files
-      const contentItem = contentArray[0] as Record<string, any>;
-      
       // 1. Delete the uploaded file if it exists
-      const filePath = contentItem.file_path;
-      if (filePath) {        // Ensure path is properly formatted, remove leading slash if present
+      const filePath = content.filePath;
+      if (filePath) {
+        // Ensure path is properly formatted, remove leading slash if present
         const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
         const fullPath = path.join(process.cwd(), "public", normalizedPath);
-        // Checking if uploaded file exists
         
         try {
           if (fs.existsSync(fullPath)) {
             // Check if file is writable before attempting deletion
             fs.accessSync(fullPath, fs.constants.W_OK);
             fs.unlinkSync(fullPath);
-            // Uploaded file deleted successfully
-          } else {
-            // Uploaded file not found
           }
         } catch (err) {
           // Error deleting file, continue with other cleanup
-        }      }
+        }
+      }
       
       // 2. Delete folder from public/h5p if it exists (contains the extracted H5P content)
-      const slug = contentItem.slug;
+      const slug = content.slug;
       if (slug) {
         const h5pFolder = path.join(process.cwd(), "public", "h5p", slug);
-        // Checking if H5P content folder exists
         
         try {
           if (fs.existsSync(h5pFolder)) {
             // Forcefully delete directory and all contents
             fs.rmSync(h5pFolder, { recursive: true, force: true });
-            // H5P content folder deleted successfully
           } else {
-            // H5P content folder not found, checking for similar folders
-            
             // Check if there's a folder with similar name (case sensitivity issues)
             const h5pParentDir = path.join(process.cwd(), "public", "h5p");
             if (fs.existsSync(h5pParentDir)) {
@@ -106,7 +75,6 @@ export async function DELETE(
               
               for (const folder of similarFolders) {
                 const folderPath = path.join(h5pParentDir, folder);
-                // Found similar H5P folder, deleting
                 fs.rmSync(folderPath, { recursive: true, force: true });
               }
             }
@@ -120,21 +88,17 @@ export async function DELETE(
       const tempFolderBase = path.join(process.cwd(), "public", "uploads", "h5p");
       if (fs.existsSync(tempFolderBase)) {
         try {
-          // Look for temporary folders and files that match the slug pattern
           const tempItems = fs.readdirSync(tempFolderBase);
           
-          // Filter both files and folders that might be related
           for (const item of tempItems) {
             const itemPath = path.join(tempFolderBase, item);
             const isDirectory = fs.statSync(itemPath).isDirectory();
-              // Match by slug, or by ID if slug is undefined/null
+            // Match by slug, or by ID if slug is undefined/null
             const shouldDelete = slug ? 
               (item.includes(slug) || item.startsWith(slug)) :
-              (item.includes(id) || item.endsWith(`-${id}.h5p`));
+              (item.includes(id.toString()) || item.endsWith(`-${id}.h5p`));
             
             if (shouldDelete) {
-              // Deleting temporary file or folder
-              
               if (isDirectory) {
                 fs.rmSync(itemPath, { recursive: true, force: true });
               } else {
@@ -150,55 +114,18 @@ export async function DELETE(
       // File system error during deletion, continue with database deletion
     }
 
-    // Begin database transaction
-    let connection;
-    try {
-      connection = await pool.getConnection();
-      // Database connection established for deletion
-    } catch (dbConnErr) {
-      // Error getting database connection for deletion
+    // Delete from database using TypeORM service
+    const deleted = await h5pContentService.delete(id);
+    if (!deleted) {
       return NextResponse.json(
-        { error: "Database connection error" },
+        { error: "Failed to delete content from database" },
         { status: 500 }
       );
     }
 
-    try {
-      await connection.beginTransaction();
-      // Transaction started for deletion
-      
-      // Delete content tags first
-      await connection.query("DELETE FROM content_tags WHERE content_id = ?", [id]);
-      // Content tags deleted
-      
-      // Delete from content table
-      const [result] = await connection.query("DELETE FROM h5p_content WHERE id = ?", [id]);
-      // Content deleted from database
-      
-      await connection.commit();
-      // Transaction committed
-    } catch (error) {
-      // Transaction error during deletion
-      if (connection) {
-        try {
-          await connection.rollback();
-          // Transaction rolled back
-        } catch (rollbackErr) {
-          // Error during rollback
-        }
-      }
-      throw error;
-    } finally {
-      if (connection) {
-        connection.release();
-        // Database connection released
-      }
-    }
-
-    // Content successfully deleted
     return NextResponse.json({ message: "Content deleted successfully" });
   } catch (error: any) {
-    // Error deleting H5P content
+    console.error('Error deleting H5P content:', error);
     return NextResponse.json(
       { error: error.message || "Failed to delete content" },
       { status: 500 }
@@ -219,19 +146,19 @@ export async function PUT(
     }
 
     const resolvedParams = await params;
-    const id = resolvedParams.id;
-    // Updating content with specified ID
+    const id = parseInt(resolvedParams.id);
+    if (isNaN(id)) {
+      return NextResponse.json({ error: "Invalid content ID" }, { status: 400 });
+    }
 
     let title = "";
     let subject_area_id: string | null = null;
     let tags: number[] = [];
     let coverImage: File | null = null;
-    let isMultipart = false;
 
     // Detect content type and parse accordingly
     const contentType = request.headers.get("content-type") || "";
     if (contentType.includes("multipart/form-data")) {
-      isMultipart = true;
       const formData = await request.formData();
       title = formData.get("title") as string;
       subject_area_id = formData.get("subject_area_id") as string;
@@ -270,31 +197,18 @@ export async function PUT(
       );
     }
 
+    const h5pContentService = new H5PContentService();
+
     // Check if content exists and get slug
-    let contentCheck;
-    let slug = null;
-    try {
-      [contentCheck] = await pool.query(
-        "SELECT id, slug FROM h5p_content WHERE id = ?",
-        [id]
-      );
-      if (Array.isArray(contentCheck) && contentCheck.length > 0) {
-        // MySQL2 returns RowDataPacket[]
-        const row = contentCheck[0] as { id: number; slug: string };
-        slug = row.slug;
-      }
-    } catch (err) {
-      return NextResponse.json(
-        { error: "Database error when checking content" },
-        { status: 500 }
-      );
-    }
-    if (!slug) {
+    const content = await h5pContentService.findById(id);
+    if (!content) {
       return NextResponse.json(
         { error: "Content not found" },
         { status: 404 }
       );
     }
+
+    const slug = content.slug;
 
     // === Save cover image if provided ===
     if (coverImage && slug) {
@@ -303,51 +217,39 @@ export async function PUT(
         const coverBuffer = Buffer.from(coverArrayBuffer);
         const imagesDir = path.join(process.cwd(), 'public', 'h5p', slug, 'content', 'images');
         if (!fs.existsSync(imagesDir)) {
-          fs.mkdirSync(imagesDir, { recursive: true });        }
+          fs.mkdirSync(imagesDir, { recursive: true });
+        }
         const coverPath = path.join(imagesDir, 'cover.jpg');
         fs.writeFileSync(coverPath, coverBuffer);
-        // Cover image updated successfully
       } catch (err) {
         // Error saving cover image, continue with update
       }
     }
-    // === End cover image ===
 
-    // Begin transaction
-    let connection;
-    try {
-      connection = await pool.getConnection();
-    } catch (err) {
+    // Update content using TypeORM service
+    const subjectAreaId = subject_area_id && subject_area_id !== "none" ? parseInt(subject_area_id) : undefined;
+    const updatedContent = await h5pContentService.update(id, {
+      title: title.trim(),
+      subjectAreaId,
+      tagIds: tags.length > 0 ? tags : undefined
+    });
+
+    if (!updatedContent) {
       return NextResponse.json(
-        { error: "Database connection error" },
+        { error: "Failed to update content" },
         { status: 500 }
       );
     }
-    try {
-      await connection.beginTransaction();
-      await connection.query(
-        "UPDATE h5p_content SET title = ?, subject_area_id = ? WHERE id = ?",
-        [title, subject_area_id || null, id]
-      );
-      await connection.query("DELETE FROM content_tags WHERE content_id = ?", [id]);
-      if (tags && Array.isArray(tags) && tags.length > 0) {
-        const tagValues = tags.map(tagId => [id, tagId]);
-        await connection.query(
-          "INSERT INTO content_tags (content_id, tag_id) VALUES ?",
-          [tagValues]
-        );
-      }
-      await connection.commit();
-    } catch (error) {
-      if (connection) {
-        try { await connection.rollback(); } catch {}
-      }
-      throw error;
-    } finally {
-      if (connection) connection.release();
-    }
-    return NextResponse.json({ id, title, subject_area_id, tags, updated_at: new Date() });
+
+    return NextResponse.json({ 
+      id, 
+      title: updatedContent.title, 
+      subject_area_id: updatedContent.subjectArea?.id || null, 
+      tags: updatedContent.tags?.map(tag => tag.id) || [], 
+      updated_at: updatedContent.updatedAt 
+    });
   } catch (error: any) {
+    console.error('Error updating content:', error);
     return NextResponse.json(
       { error: error.message || "Failed to update content" },
       { status: 500 }
@@ -368,114 +270,59 @@ export async function GET(
     }
 
     const resolvedParams = await params;
-    const id = resolvedParams.id;
-    // Fetching content with specified ID
+    const id = parseInt(resolvedParams.id);
+    if (isNaN(id)) {
+      return NextResponse.json({ error: "Invalid content ID" }, { status: 400 });
+    }
 
-    // Get content with subject area and tags
-    let contentResult;
-    try {
-      [contentResult] = await pool.query(`
-        SELECT 
-          h.id,
-          h.title,
-          h.slug,
-          h.file_path,
-          h.content_type,
-          h.created_at,
-          h.subject_area_id,
-          sa.name AS subject_area_name
-        FROM 
-          h5p_content h
-        LEFT JOIN 
-          subject_areas sa ON h.subject_area_id = sa.id
-        WHERE 
-          h.id = ?
-      `, [id]);
-      // Content query completed
-    } catch (err) {
-      // Database error fetching content
-      return NextResponse.json(
-        { error: "Database error when fetching content" },
-        { status: 500 }
-      );
-    }    if (!Array.isArray(contentResult) || contentResult.length === 0) {
-      // Content not found
+    const h5pContentService = new H5PContentService();
+    const tagService = new TagService();
+    const subjectAreaService = new SubjectAreaService();
+
+    // Get content with all relationships
+    const content = await h5pContentService.findByIdWithDetails(id);
+    if (!content) {
       return NextResponse.json(
         { error: "Content not found" },
         { status: 404 }
       );
     }
 
-    // Get tags for this content
-    let contentTags;
-    try {
-      [contentTags] = await pool.query(`
-        SELECT 
-          t.id,
-          t.name
-        FROM 
-          tags t
-        INNER JOIN 
-          content_tags ct ON t.id = ct.tag_id
-        WHERE 
-          ct.content_id = ?        ORDER BY 
-          t.name
-      `, [id]);
-      // Tags query completed
-    } catch (err) {
-      // Database error fetching content tags
-      // Continue even if tags query fails
-      contentTags = [];
-    }
-
     // Get all available tags for the dropdown
-    let allTags;
-    try {
-      [allTags] = await pool.query(`
-        SELECT id, name
-        FROM tags
-        ORDER BY name      `);
-    } catch (err) {
-      // Database error fetching all tags
-      // Continue even if this query fails
-      allTags = [];
-    }
+    const allTags = await tagService.findAll();
 
     // Get all subject areas for the dropdown
-    let subjectAreas;
-    try {
-      [subjectAreas] = await pool.query(`
-        SELECT id, name
-        FROM subject_areas
-        ORDER BY name
-      `);
-    } catch (err) {
-      // Database error fetching subject areas
-      // Continue even if this query fails
-      subjectAreas = [];
-    }
+    const subjectAreas = await subjectAreaService.findAll();
 
-    const contentData = (contentResult as any[])[0];
-    
-    // Check if contentData is valid before adding the tags property
-    if (!contentData) {
-      // contentData is null or undefined
-      return NextResponse.json(
-        { error: "Content data could not be processed" },
-        { status: 500 }
-      );
-    }
-    
-    // Safely add tags to content data
-    contentData.tags = contentTags || [];
+    // Format content data to match existing API
+    const contentData = {
+      id: content.id,
+      title: content.title,
+      slug: content.slug,
+      file_path: content.filePath,
+      content_type: content.contentType,
+      created_at: content.createdAt,
+      subject_area_id: content.subjectArea?.id || null,
+      subject_area_name: content.subjectArea?.name || null,
+      tags: content.tags?.map(tag => ({
+        id: tag.id,
+        name: tag.name
+      })) || []
+    };
 
-    // Successfully prepared content response
     return NextResponse.json({
       content: contentData,
-      allTags: allTags || [],      subjectAreas: subjectAreas || []
+      allTags: allTags.map(tag => ({
+        id: tag.id,
+        name: tag.name
+      })),
+      subjectAreas: subjectAreas.map(sa => ({
+        id: sa.id,
+        name: sa.name
+      }))
     });
   } catch (error: any) {
-    // Error fetching H5P content
+    console.error('Error fetching H5P content:', error);
     return NextResponse.json(
       { error: error.message || "Failed to fetch content" },
       { status: 500 }

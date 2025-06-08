@@ -1,6 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { pool } from "./db";
+import { UserService } from "../services/UserService";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -9,39 +9,28 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
+      },      async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) {
           return null;
         }
 
         try {
-          // Get user from database
-          const [rows] = await pool.query(
-            "SELECT * FROM users WHERE username = ?",
-            [credentials.username]
-          );
+          const userService = new UserService();
           
-          // Convert to array of users
-          const users = rows as any[];
+          // Authenticate user with password verification
+          const user = await userService.authenticate(credentials.username, credentials.password);
           
-          // Check if user exists
-          if (users.length === 0) {
-            return null;
-          }
-
-          const user = users[0];
-
-          // In a real app, you'd use a proper password hashing library
-          // This is just for demonstration
-          if (user.password === credentials.password) {
+          if (user) {
             return {
               id: user.id.toString(),
               name: user.username,
               role: user.role,
             };
-          }          return null;
+          }
+          
+          return null;
         } catch (error) {
+          console.error('Authentication error:', error);
           // Authentication failed
           return null;
         }

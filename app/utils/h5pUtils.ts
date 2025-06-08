@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { pool } from '@/app/lib/db';
+import { H5PContentService } from '@/app/services';
 
 interface H5PContent {
   id: number;
@@ -64,66 +64,33 @@ const assignTags = (type: string, name: string): string[] => {
 
 export async function getH5PContents(): Promise<H5PContent[]> {
   try {
-    // Get content from database with subject area information
-    const [rows] = await pool.query(`
-      SELECT 
-        h.id, 
-        h.title as name, 
-        h.slug, 
-        h.file_path as path, 
-        h.content_type as type, 
-        h.created_at,
-        h.subject_area_id,
-        sa.name as subject_area_name,
-        sa.slug as subject_area_slug
-      FROM 
-        h5p_content h
-      LEFT JOIN 
-        subject_areas sa ON h.subject_area_id = sa.id
-      ORDER BY 
-        h.created_at DESC
-    `);
+    const h5pContentService = new H5PContentService();
     
-    // If we have content in the database, use that with tags
-    if (Array.isArray(rows) && rows.length > 0) {
-      // For each content item, get its tags
-      const contentsWithTags = await Promise.all((rows as any[]).map(async (row) => {
-        // Get tags from database
-        const [tagsRows] = await pool.query(`
-          SELECT t.id, t.name
-          FROM tags t
-          JOIN content_tags ct ON t.id = ct.tag_id
-          WHERE ct.content_id = ?
-        `, [row.id]);
-        
-        // Extract tag names
-        const tagNames = (tagsRows as any[]).map(tag => tag.name);
-        
-        // If no tags are found in the database, use the automatically assigned tags
-        const tags = tagNames.length > 0 ? tagNames : assignTags(row.type || 'Unknown', row.name);
-        
-        return {
-          id: row.id,
-          name: row.name,
-          path: row.path,
-          type: row.type || 'Unknown',
-          tags: tags,
-          slug: row.slug,
-          created_at: row.created_at,
-          subject_area: row.subject_area_name ? {
-            id: row.subject_area_id,
-            name: row.subject_area_name,
-            slug: row.subject_area_slug
-          } : null
-        };
+    // Get content from database with related entities
+    const dbContents = await h5pContentService.findAll();
+    
+    // If we have content in the database, use that
+    if (dbContents.length > 0) {
+      return dbContents.map(content => ({
+        id: content.id,
+        name: content.title,
+        path: content.filePath,
+        type: content.contentType || 'Unknown',
+        tags: content.tags?.map(tag => tag.name) || assignTags(content.contentType || 'Unknown', content.title),
+        slug: content.slug,
+        created_at: content.createdAt.toISOString(),
+        subject_area: content.subjectArea ? {
+          id: content.subjectArea.id,
+          name: content.subjectArea.name,
+          slug: content.subjectArea.slug
+        } : null
       }));
-      
-      return contentsWithTags;
     }
 
     // If no database content, fall back to file system
     const h5pDir = path.join(process.cwd(), 'public', 'h5p');
-      // Check if directory exists
+    
+    // Check if directory exists
     if (!fs.existsSync(h5pDir)) {
       // H5P directory not found - return empty array
       return [];
@@ -143,7 +110,8 @@ export async function getH5PContents(): Promise<H5PContent[]> {
       const contentPath = path.join(h5pDir, dir);
       const type = determineH5PType(contentPath);
       const tags = assignTags(type, name);
-        return {
+        
+      return {
         id: index + 1,
         name,
         path: `/h5p/${dir}`,
@@ -154,9 +122,11 @@ export async function getH5PContents(): Promise<H5PContent[]> {
         subject_area: null
       };
     });    
+    
     return contents;
   } catch (error) {
     // Error retrieving H5P contents - return empty array
+    console.error('Error in getH5PContents:', error);
     return [];
   }
 }

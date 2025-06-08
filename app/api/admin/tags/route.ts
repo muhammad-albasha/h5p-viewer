@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/lib/auth";
-import { pool } from "@/app/lib/db";
+import { TagService } from "@/app/services";
 
 export async function GET() {
   try {
@@ -12,13 +12,13 @@ export async function GET() {
     }
 
     // Get tags list from database
-    const [rows] = await pool.query(`
-      SELECT id, name, created_at
-      FROM tags
-      ORDER BY name ASC
-    `);    return NextResponse.json(rows);
+    const tagService = new TagService();
+    const tags = await tagService.findAll();
+    
+    return NextResponse.json(tags);
   } catch (error) {
     // Error fetching tags
+    console.error('Error fetching admin tags:', error);
     return NextResponse.json(
       { error: "Failed to fetch tags" },
       { status: 500 }
@@ -44,21 +44,17 @@ export async function POST(request: Request) {
       );
     }
 
-    // Insert new tag
-    const [result] = await pool.query(
-      'INSERT INTO tags (name) VALUES (?)',
-      [name]
-    );
-
-    return NextResponse.json({
-      id: (result as any).insertId,
-      name,      created_at: new Date(),
-    });
+    // Create new tag
+    const tagService = new TagService();
+    const newTag = await tagService.create(name.trim());
+    
+    return NextResponse.json(newTag);
   } catch (error: any) {
     // Error creating tag
+    console.error('Error creating tag:', error);
     
     // Check for duplicate entry
-    if (error.code === 'ER_DUP_ENTRY') {
+    if (error.message.includes('already exists')) {
       return NextResponse.json(
         { error: "A tag with this name already exists" },
         { status: 409 }
