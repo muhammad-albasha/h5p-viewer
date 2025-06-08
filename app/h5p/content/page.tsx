@@ -216,11 +216,9 @@ function H5PContentViewer() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Main Content */}
+      </div>      {/* Main Content */}
       <main className="bg-base-100 relative">
-        <div className="container mx-auto max-w-7xl px-4 py-12">
+        <div className="w-full px-4 py-12">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-24 space-y-8">
               {" "}
@@ -315,10 +313,8 @@ function H5PContentViewer() {
                       Interaktiver Lerninhalt
                     </h3>
                   </div>
-                </div>
-
-                <div className="p-2">
-                  <div className="bg-base-200/50 rounded-2xl p-4 border border-base-300">
+                </div>                <div className="p-1">
+                  <div className="bg-base-200/50 rounded-xl p-2 border-base-300">
                     <PlayH5p h5pJsonPath={contentDetails.path} />
                   </div>
                 </div>
