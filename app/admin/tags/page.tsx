@@ -47,9 +47,10 @@ export default function TagsPage() {
         }
         
         const data = await response.json();
-        setTags(data);      } catch (err) {
+        setTags(data);
+      } catch (err) {
         setError("Fehler beim Laden der Tags");
-        // Error logged silently
+        console.error(err);
       } finally {
         setIsLoading(false);
       }
@@ -268,16 +269,19 @@ export default function TagsPage() {
                 ) : tags.length === 0 ? (
                   <div className="p-8 text-center">
                     <p>Keine Tags gefunden</p>
-                  </div>
-                ) : (
-                  <div className="overflow-x-auto">                    <table className="table w-full"><thead>
+                  </div>                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="table w-full">
+                      <thead>
                         <tr>
                           <th>ID</th>
                           <th>Name</th>
                           <th>Aktionen</th>
                         </tr>
-                      </thead><tbody>{tags.map((tag) => (
-                          <tr key={tag.id}><td>{tag.id}</td>
+                      </thead>                      <tbody>
+                        {tags.map((tag) => (
+                          <tr key={tag.id}>
+                            <td>{tag.id}</td>
                             <td>{editingTagId === tag.id ? (
                                 <input
                                   type="text"

@@ -11,7 +11,6 @@ interface SubjectArea {
   id: number;
   name: string;
   slug: string;
-  color?: string;
   created_at: string;
 }
 
@@ -21,16 +20,14 @@ export default function SubjectAreasPage() {
   const [subjectAreas, setSubjectAreas] = useState<SubjectArea[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  // For new subject area form
+    // For new subject area form
   const [newSubjectName, setNewSubjectName] = useState("");
-  const [newSubjectColor, setNewSubjectColor] = useState("#3b82f6"); // Default blue color
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   
   // For editing subject area
   const [editingAreaId, setEditingAreaId] = useState<number | null>(null);
   const [editingAreaName, setEditingAreaName] = useState("");
-  const [editingAreaColor, setEditingAreaColor] = useState("#3b82f6");
   
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -50,10 +47,11 @@ export default function SubjectAreasPage() {
           throw new Error("Failed to fetch subject areas");
         }
         
-        const data = await response.json();        setSubjectAreas(data);
+        const data = await response.json();
+        setSubjectAreas(data);
       } catch (err) {
         setError("Fehler beim Laden der Fachbereiche");
-        // Error logged silently
+        console.error(err);
       } finally {
         setIsLoading(false);
       }
@@ -75,15 +73,13 @@ export default function SubjectAreasPage() {
     try {
       setIsSubmitting(true);
       setFormError(null);
-        const response = await fetch("/api/admin/subject-areas", {
+      
+      const response = await fetch("/api/admin/subject-areas", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
-          name: newSubjectName,
-          color: newSubjectColor 
-        }),
+        body: JSON.stringify({ name: newSubjectName }),
       });
       
       const data = await response.json();
@@ -97,23 +93,22 @@ export default function SubjectAreasPage() {
       
       // Reset form
       setNewSubjectName("");
-      setNewSubjectColor("#3b82f6");
       
     } catch (err: any) {
       setFormError(err.message || "Ein unbekannter Fehler ist aufgetreten");
     } finally {
       setIsSubmitting(false);
     }
-  };  const handleStartEdit = (area: SubjectArea) => {
+  };
+  const handleStartEdit = (area: SubjectArea) => {
     setEditingAreaId(area.id);
     setEditingAreaName(area.name);
-    setEditingAreaColor(area.color || "#3b82f6");
     setFormError(null);
   };
+
   const handleCancelEdit = () => {
     setEditingAreaId(null);
     setEditingAreaName("");
-    setEditingAreaColor("#3b82f6");
     setFormError(null);
   };
 
@@ -128,15 +123,13 @@ export default function SubjectAreasPage() {
     try {
       setIsSubmitting(true);
       setFormError(null);
-        const response = await fetch(`/api/admin/subject-areas/${editingAreaId}`, {
+      
+      const response = await fetch(`/api/admin/subject-areas/${editingAreaId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
-          name: editingAreaName,
-          color: editingAreaColor 
-        }),
+        body: JSON.stringify({ name: editingAreaName }),
       });
       
       const data = await response.json();
@@ -148,14 +141,13 @@ export default function SubjectAreasPage() {
       // Update the subject area in the list
       setSubjectAreas(subjectAreas.map(area => 
         area.id === editingAreaId ? 
-        { ...area, name: editingAreaName, color: editingAreaColor, slug: data.slug } : 
+        { ...area, name: editingAreaName, slug: data.slug } : 
         area
       ));
       
       // Reset edit mode
       setEditingAreaId(null);
       setEditingAreaName("");
-      setEditingAreaColor("#3b82f6");
       
     } catch (err: any) {
       setFormError(err.message || "Ein unbekannter Fehler ist aufgetreten");
@@ -228,7 +220,8 @@ export default function SubjectAreasPage() {
                 <div className="p-6 border-b border-base-300">
                   <h2 className="text-xl font-bold">Neuer Fachbereich</h2>
                 </div>
-                <form className="p-6" onSubmit={handleSubmit}>                  <div className="form-control mb-4">
+                <form className="p-6" onSubmit={handleSubmit}>
+                  <div className="form-control mb-4">
                     <label className="label" htmlFor="subject-name">
                       <span className="label-text">Name des Fachbereichs</span>
                     </label>
@@ -242,36 +235,6 @@ export default function SubjectAreasPage() {
                       title="Name des Fachbereichs"
                       placeholder="Name des Fachbereichs eingeben"
                     />
-                  </div>
-
-                  <div className="form-control mb-4">
-                    <label className="label" htmlFor="subject-color">
-                      <span className="label-text">Farbe des Fachbereichs</span>
-                    </label>
-                    <div className="flex items-center gap-3">
-                      <input
-                        id="subject-color"
-                        type="color"
-                        className="w-12 h-12 rounded-lg border-2 border-base-300 cursor-pointer"
-                        value={newSubjectColor}
-                        onChange={e => setNewSubjectColor(e.target.value)}
-                        title="Farbe auswählen"
-                      />
-                      <div className="flex-1">
-                        <input
-                          type="text"
-                          className="input input-bordered w-full"
-                          value={newSubjectColor}
-                          onChange={e => setNewSubjectColor(e.target.value)}
-                          placeholder="#3b82f6"
-                          pattern="^#[0-9A-Fa-f]{6}$"
-                          title="Hex-Farbcode (z.B. #3b82f6)"
-                        />
-                        <div className="text-xs text-base-content/60 mt-1">
-                          Diese Farbe ersetzt die Standard-Sekundärfarbe
-                        </div>
-                      </div>
-                    </div>
                   </div>
                   
                   {formError && (
@@ -308,11 +271,11 @@ export default function SubjectAreasPage() {
                 ) : error ? (
                   <div className="p-8 text-error">
                     <p>{error}</p>
-                  </div>
-                ) : subjectAreas.length === 0 ? (
+                  </div>                ) : subjectAreas.length === 0 ? (
                   <div className="p-8 text-center">
                     <p>Keine Fachbereiche gefunden</p>
-                  </div>                ) : (
+                  </div>
+                ) : (
                   <div className="overflow-x-auto">
                     <table className="table w-full">
                       <thead>
@@ -320,15 +283,14 @@ export default function SubjectAreasPage() {
                           <th>ID</th>
                           <th>Name</th>
                           <th>Slug</th>
-                          <th>Farbe</th>
                           <th>Aktionen</th>
-                        </tr>                      </thead>
+                        </tr>
+                      </thead>
                       <tbody>
                         {subjectAreas.map((area) => (
                           <tr key={area.id}>
                             <td>{area.id}</td>
-                            <td>
-                              {editingAreaId === area.id ? (
+                            <td>{editingAreaId === area.id ? (
                                 <input
                                   type="text"
                                   className="input input-bordered input-sm w-full"
@@ -343,39 +305,6 @@ export default function SubjectAreasPage() {
                               )}
                             </td>
                             <td>{area.slug}</td>
-                            <td>
-                              {editingAreaId === area.id ? (
-                                <div className="flex items-center gap-2">
-                                  <input
-                                    type="color"
-                                    className="w-8 h-8 rounded border cursor-pointer"
-                                    value={editingAreaColor}
-                                    onChange={e => setEditingAreaColor(e.target.value)}                                    title="Farbe auswählen"
-                                  />
-                                  <input
-                                    type="text"
-                                    className="input input-bordered input-xs w-20"
-                                    value={editingAreaColor}
-                                    onChange={e => setEditingAreaColor(e.target.value)}
-                                    pattern="^#[0-9A-Fa-f]{6}$"
-                                    title="Hex-Farbcode"
-                                    placeholder="#000000"                                  />
-                                </div>
-                              ) : (
-                                <div className="flex items-center gap-2">
-                                  <input
-                                    type="color"
-                                    className="w-6 h-6 rounded border pointer-events-none"
-                                    value={area.color || '#3b82f6'}
-                                    readOnly
-                                    title={`Farbe: ${area.color || '#3b82f6'}`}
-                                  />
-                                  <span className="text-xs font-mono">
-                                    {area.color || '#3b82f6'}
-                                  </span>
-                                </div>
-                              )}
-                            </td>
                             <td>
                               <div className="flex gap-2">
                                 {editingAreaId === area.id ? (
