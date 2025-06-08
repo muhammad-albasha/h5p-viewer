@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Navbar from '@/app/components/layout/Navbar';
 import Header from '@/app/components/layout/Header';
 import ContentFilter from '@/app/components/content/ContentFilter';
+import ContentCardGrid from '@/app/components/content/ContentCardGrid';
 import Link from 'next/link';
 
 interface SubjectArea {
@@ -21,6 +22,7 @@ interface H5PContent {
   tags: string[];
   slug?: string;
   subject_area?: SubjectArea | null;
+  coverImagePath?: string;
 }
 
 export default function AllH5PContent() {
@@ -158,41 +160,10 @@ export default function AllH5PContent() {
             <div className="alert alert-info">
               <p>Keine Inhalte gefunden. Bitte ändern Sie die Filter oder versuchen Sie eine andere Suche.</p>
             </div>          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {filteredContent.map(item => (
-                <div 
-                  key={item.id}
-                  className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow cursor-pointer"
-                  onClick={() => router.push(`/h5p/${item.slug}`)}
-                >
-                  <div className="card-body">
-                    <h2 className="card-title">{item.name}</h2>
-                    <p>Typ: {item.type || "Unbekannt"}</p>
-                    
-                    {item.subject_area && (
-                      <span 
-                        className="badge badge-outline hover:badge-primary cursor-pointer"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          router.push(`/fachbereich/${item.subject_area!.slug}`);
-                        }}
-                      >
-                        {item.subject_area.name}
-                      </span>
-                    )}
-                    
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {item.tags?.map((tag, idx) => (
-                        <span key={idx} className="badge badge-primary">{tag}</span>
-                      ))}
-                    </div>
-                    <div className="card-actions justify-end mt-4">
-                      <button className="btn btn-primary">Öffnen</button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <ContentCardGrid 
+              contents={filteredContent}
+              loading={isLoading}
+            />
           )}
         </div>
       </div>

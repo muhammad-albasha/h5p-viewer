@@ -9,6 +9,10 @@ interface H5PContent {
   tags: string[];
   slug?: string;
   coverImagePath?: string;
+  subject_area?: {
+    name: string;
+    slug: string;
+  } | null;
 }
 
 interface ContentCardGridProps {
