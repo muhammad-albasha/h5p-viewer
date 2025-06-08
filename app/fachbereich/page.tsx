@@ -1,9 +1,8 @@
-'use client'
-import { useEffect, useState } from 'react'
-import Navbar from '@/app/components/layout/Navbar'
-import Header from '@/app/components/layout/Header'
-import Link from 'next/link'
-import { useSubjectAreaColor } from '@/app/components/common/SubjectAreaColorProvider'
+"use client";
+import { useEffect, useState } from "react";
+import Navbar from "@/app/components/layout/Navbar";
+import Header from "@/app/components/layout/Header";
+import Link from "next/link";
 
 interface SubjectArea {
   id: number;
@@ -11,22 +10,20 @@ interface SubjectArea {
   slug: string;
   color?: string;
 }
-
 const FachbereichOverview = () => {
   const [subjectAreas, setSubjectAreas] = useState<SubjectArea[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);  const { setSubjectAreaColor } = useSubjectAreaColor();
-
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const fetchSubjectAreas = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('/api/admin/subject-areas');
-        
+        const response = await fetch("/api/admin/subject-areas");
+
         if (!response.ok) {
           throw new Error("Fachbereiche konnten nicht geladen werden");
         }
-        
+
         const data = await response.json();
         setSubjectAreas(data);
       } catch (err: any) {
@@ -35,7 +32,7 @@ const FachbereichOverview = () => {
         setIsLoading(false);
       }
     };
-    
+
     fetchSubjectAreas();
   }, []);
 
@@ -43,7 +40,7 @@ const FachbereichOverview = () => {
     <>
       <Navbar />
       <Header />
-      
+
       <div className="bg-gradient-to-br from-primary to-secondary text-primary-content py-12">
         <div className="container mx-auto max-w-6xl px-4">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
@@ -54,7 +51,7 @@ const FachbereichOverview = () => {
           </p>
         </div>
       </div>
-      
+
       <div className="bg-base-200 min-h-screen py-10">
         <div className="container mx-auto max-w-6xl px-4">
           {isLoading ? (
@@ -69,15 +66,19 @@ const FachbereichOverview = () => {
             <div className="alert alert-info">
               <p>Keine Fachbereiche gefunden</p>
             </div>
-          ) : (            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {subjectAreas.map(area => (                <Link 
-                  key={area.id} 
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {subjectAreas.map((area) => (
+                <Link
+                  key={area.id}
                   href={`/fachbereich/${area.slug}`}
                   className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300"
                 >
-                  <div className="card-body">                    <div className="flex items-center gap-3 mb-2">
+                  <div className="card-body">
+                    {" "}
+                    <div className="flex items-center gap-3 mb-2">
                       {area.color && (
-                        <input 
+                        <input
                           type="color"
                           value={area.color}
                           disabled
@@ -99,7 +100,7 @@ const FachbereichOverview = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default FachbereichOverview
+export default FachbereichOverview;
