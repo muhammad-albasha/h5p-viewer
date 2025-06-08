@@ -33,6 +33,7 @@ export async function GET(request: NextRequest) {
       tags: content.tags?.map(tag => tag.name) || [],
       slug: content.slug,
       coverImagePath: content.coverImagePath,
+      description: content.description,
       subject_area: content.subjectArea ? {
         name: content.subjectArea.name,
         slug: content.subjectArea.slug

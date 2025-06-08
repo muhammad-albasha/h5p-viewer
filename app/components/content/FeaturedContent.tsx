@@ -9,6 +9,7 @@ interface H5PContent {
   tags: string[];
   slug?: string;
   coverImagePath?: string;
+  description?: string;
   subject_area?: {
     name: string;
     slug: string;
@@ -265,13 +266,10 @@ export default function FeaturedContent() {
                     {/* Title */}
                     <h3 className="card-title text-xl font-bold leading-tight group-hover:text-primary transition-colors duration-200">
                       {content.name}
-                    </h3>
-
-                    {/* Description Space */}
+                    </h3>                    {/* Description Space */}
                     <p className="text-base-content/70 text-sm leading-relaxed min-h-[3rem] flex items-center">
-                      Interaktiver {content.type}-Inhalt für ein besseres
-                      Lernerlebnis
-                    </p>                    {/* Tags */}
+                      {content.description || `Interaktiver ${content.type}-Inhalt für ein besseres Lernerlebnis`}
+                    </p>{/* Tags */}
                     <div className="flex flex-wrap gap-2">
                       {content.tags.slice(0, 3).map((tag, index) => (
                         <span
