@@ -271,25 +271,21 @@ export default function SubjectAreasPage() {
                 ) : error ? (
                   <div className="p-8 text-error">
                     <p>{error}</p>
-                  </div>                ) : subjectAreas.length === 0 ? (
+                  </div>
+                ) : subjectAreas.length === 0 ? (
                   <div className="p-8 text-center">
                     <p>Keine Fachbereiche gefunden</p>
                   </div>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <table className="table w-full">
-                      <thead>
+                  <div className="overflow-x-auto">                    <table className="table w-full"><thead>
                         <tr>
                           <th>ID</th>
                           <th>Name</th>
                           <th>Slug</th>
                           <th>Aktionen</th>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {subjectAreas.map((area) => (
-                          <tr key={area.id}>
-                            <td>{area.id}</td>
+                      </thead><tbody>{subjectAreas.map((area) => (
+                          <tr key={area.id}><td>{area.id}</td>
                             <td>{editingAreaId === area.id ? (
                                 <input
                                   type="text"
