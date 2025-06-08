@@ -271,20 +271,18 @@ export default function FeaturedContent() {
                     <p className="text-base-content/70 text-sm leading-relaxed min-h-[3rem] flex items-center">
                       Interaktiver {content.type}-Inhalt für ein besseres
                       Lernerlebnis
-                    </p>
-
-                    {/* Tags */}
+                    </p>                    {/* Tags */}
                     <div className="flex flex-wrap gap-2">
                       {content.tags.slice(0, 3).map((tag, index) => (
                         <span
                           key={index}
-                          className="badge badge-secondary badge-sm text-xs font-medium px-2 py-1 hover:badge-primary transition-colors"
+                          className="badge bg-gradient-to-r from-secondary/80 to-secondary text-secondary-content border-0 shadow-sm font-medium px-3 py-1 text-xs hover:from-primary/80 hover:to-primary hover:text-primary-content transition-all duration-200 hover:shadow-md hover:scale-105"
                         >
                           {tag}
                         </span>
                       ))}
                       {content.tags.length > 3 && (
-                        <span className="badge badge-ghost badge-sm text-xs font-medium">
+                        <span className="badge bg-gradient-to-r from-base-300 to-base-200 text-base-content border-0 shadow-sm font-medium px-3 py-1 text-xs">
                           +{content.tags.length - 3} weitere
                         </span>
                       )}
