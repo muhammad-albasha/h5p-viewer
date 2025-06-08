@@ -25,15 +25,14 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch featured H5P content from database
-    const featuredContent = await featuredService.getFeaturedContent(3);
-
-    const h5pContents = featuredContent.map(content => ({
+    const featuredContent = await featuredService.getFeaturedContent(3);    const h5pContents = featuredContent.map(content => ({
       id: content.id,
       name: content.title,
       path: `/h5p/content?id=${content.id}`,
       type: content.contentType || 'Interactive Content',
       tags: content.tags?.map(tag => tag.name) || [],
       slug: content.slug,
+      coverImagePath: content.coverImagePath,
       subject_area: content.subjectArea ? {
         name: content.subjectArea.name,
         slug: content.subjectArea.slug

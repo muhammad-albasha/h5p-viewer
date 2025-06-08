@@ -85,9 +85,10 @@ export async function POST(req: NextRequest) {
       ensureDirectoryExists(h5pDir);
       // Extract H5P file (which is a ZIP file) to the directory
       const zip = new AdmZip(tempFilePath);
-      zip.extractAllTo(h5pDir, true);      // H5P file extracted successfully
-
-      // === NEU: Cover-Bild speichern, falls vorhanden ===
+      zip.extractAllTo(h5pDir, true);      // H5P file extracted successfully      // === Cover-Bild verarbeiten ===
+      let coverImagePath: string | undefined;
+      
+      // 1. Prüfen ob ein Cover-Bild hochgeladen wurde
       const coverImage = formData.get('coverImage') as File | null;
       if (coverImage) {
         const coverArrayBuffer = await coverImage.arrayBuffer();
@@ -96,6 +97,13 @@ export async function POST(req: NextRequest) {
         ensureDirectoryExists(imagesDir);
         const coverPath = path.join(imagesDir, 'cover.jpg');
         fs.writeFileSync(coverPath, coverBuffer);
+        coverImagePath = `/api/h5p/cover/${slug}/content/images/cover.jpg`;
+      } else {
+        // 2. Prüfen ob im extrahierten H5P bereits ein cover.jpg existiert
+        const extractedCoverPath = path.join(h5pDir, 'content', 'images', 'cover.jpg');
+        if (fs.existsSync(extractedCoverPath)) {
+          coverImagePath = `/api/h5p/cover/${slug}/content/images/cover.jpg`;
+        }
       }
       // === ENDE Cover-Bild ===
 
@@ -112,10 +120,10 @@ export async function POST(req: NextRequest) {
         const relativeFilePath = `/h5p/${slug}`; // Path to the extracted directory, not the file
         
         try {
-          const h5pContentService = new H5PContentService();
-            const newContent = await h5pContentService.create({
+          const h5pContentService = new H5PContentService();          const newContent = await h5pContentService.create({
             title,
             filePath: relativeFilePath,
+            coverImagePath, // Cover-Bild-Pfad hinzufügen
             contentType,
             subjectAreaId: validSubjectAreaId || undefined,
             createdById: typeof session.user.id === 'string' ? parseInt(session.user.id) : session.user.id,

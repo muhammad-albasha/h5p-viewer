@@ -8,6 +8,7 @@ interface H5PContent {
   type: string;
   tags: string[];
   slug?: string;
+  coverImagePath?: string;
   subject_area?: {
     name: string;
     slug: string;
@@ -232,32 +233,17 @@ export default function FeaturedContent() {
                 <div
                   key={content.id}
                   className="card bg-gradient-to-br from-base-100 to-base-200 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 group border border-base-300/50 overflow-hidden"
-                >
-                  {/* Card Image */}
+                >                  {/* Card Image */}
                   <figure className="relative h-48 bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      {/* H5P Icon based on content type */}
-                      {content.type === "Quiz" && (
-                        <svg className="w-16 h-16 text-primary/60" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                        </svg>
-                      )}
-                      {content.type === "Questionnaire" && (
-                        <svg className="w-16 h-16 text-primary/60" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-                        </svg>
-                      )}
-                      {content.type === "Exercise" && (
-                        <svg className="w-16 h-16 text-primary/60" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                      )}
-                      {!["Quiz", "Questionnaire", "Exercise"].includes(content.type) && (
-                        <svg className="w-16 h-16 text-primary/60" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2.5-9H19V1h-1.5v1H6.5V1H5v1H4.5A1.5 1.5 0 003 3.5v15A1.5 1.5 0 004.5 20h15a1.5 1.5 0 001.5-1.5v-15A1.5 1.5 0 0019.5 2z"/>
-                        </svg>
-                      )}
-                    </div>
+                    <img
+                      src={content.coverImagePath || `/api/h5p/cover/${content.slug}/content/images/cover.jpg`}
+                      alt={content.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // Fallback to placeholder
+                        (e.currentTarget as HTMLImageElement).src = '/assets/placeholder-image.svg';
+                      }}
+                    />
                     {/* Content type overlay */}
                     <div className="absolute top-3 right-3">
                       <div className="badge badge-primary badge-lg font-semibold px-3 py-2 shadow-lg bg-primary/90 backdrop-blur-sm">

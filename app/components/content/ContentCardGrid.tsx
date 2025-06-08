@@ -2,10 +2,13 @@ import Link from 'next/link';
 import React from 'react';
 
 interface H5PContent {
+  id?: number;
   name: string;
   path: string;
   type: string;
   tags: string[];
+  slug?: string;
+  coverImagePath?: string;
 }
 
 interface ContentCardGridProps {
@@ -35,18 +38,28 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
     );
   }  return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {contents.map((content, index) => {
-        // Korrigiere Bildpfad für Next.js public-Ordner
-        let imageUrl = content.path;
-        if (!imageUrl.startsWith('/h5p/')) {
-          imageUrl = '/h5p/' + imageUrl.replace(/^\/?h5p\/?/, '');
+      {contents.map((content, index) => {        // Determine image URL - prioritize coverImagePath from database
+        let imageUrl = content.coverImagePath;
+        
+        // If no coverImagePath, construct from slug or path
+        if (!imageUrl) {
+          if (content.slug) {
+            imageUrl = `/api/h5p/cover/${content.slug}/content/images/cover.jpg`;
+          } else {
+            // Fallback: construct from path
+            let pathSlug = content.path;
+            if (pathSlug.startsWith('/h5p/')) {
+              pathSlug = pathSlug.replace('/h5p/', '');
+            }
+            pathSlug = pathSlug.replace(/^\/?h5p\/?/, '').replace(/\/+$/, '');
+            imageUrl = `/api/h5p/cover/${pathSlug}/content/images/cover.jpg`;
+          }
         }
-        imageUrl = imageUrl.replace(/\/+$/, ''); // trailing slash entfernen
-        imageUrl = `${imageUrl}/content/images/cover.jpg`;
+        
         return (
           <Link 
-            key={index} 
-            href={`/h5p/content?id=${index + 1}`}
+            key={content.id || index} 
+            href={`/h5p/content?id=${content.id || index + 1}`}
             className="card bg-base-100 shadow-xl hover:shadow-2xl transition-all"
           >
             <figure className="h-48 w-full overflow-hidden bg-base-200 flex items-center justify-center">

@@ -9,6 +9,7 @@ interface H5PContent {
   type: string;
   tags: string[];
   slug?: string;
+  coverImagePath?: string;
   created_at?: string;
   subject_area?: {
     id: number;
@@ -68,8 +69,7 @@ export async function getH5PContents(): Promise<H5PContent[]> {
     
     // Get content from database with related entities
     const dbContents = await h5pContentService.findAll();
-    
-    // If we have content in the database, use that
+      // If we have content in the database, use that
     if (dbContents.length > 0) {
       return dbContents.map(content => ({
         id: content.id,
@@ -78,6 +78,7 @@ export async function getH5PContents(): Promise<H5PContent[]> {
         type: content.contentType || 'Unknown',
         tags: content.tags?.map(tag => tag.name) || assignTags(content.contentType || 'Unknown', content.title),
         slug: content.slug,
+        coverImagePath: content.coverImagePath,
         created_at: content.createdAt.toISOString(),
         subject_area: content.subjectArea ? {
           id: content.subjectArea.id,
@@ -100,8 +101,7 @@ export async function getH5PContents(): Promise<H5PContent[]> {
     const contentDirs = fs.readdirSync(h5pDir, { withFileTypes: true })
       .filter(dirent => dirent.isDirectory())
       .map(dirent => dirent.name);
-    
-    const contents: H5PContent[] = contentDirs.map((dir, index) => {
+      const contents: H5PContent[] = contentDirs.map((dir, index) => {
       // Format name from directory (replace hyphens with spaces and capitalize)
       const name = dir
         .replace(/-/g, ' ')
@@ -110,6 +110,8 @@ export async function getH5PContents(): Promise<H5PContent[]> {
       const contentPath = path.join(h5pDir, dir);
       const type = determineH5PType(contentPath);
       const tags = assignTags(type, name);
+        // Construct cover image path
+      const coverImagePath = `/api/h5p/cover/${dir}/content/images/cover.jpg`;
         
       return {
         id: index + 1,
@@ -118,10 +120,11 @@ export async function getH5PContents(): Promise<H5PContent[]> {
         type,
         tags,
         slug: dir,
+        coverImagePath,
         created_at: new Date().toISOString(),
         subject_area: null
       };
-    });    
+    });
     
     return contents;
   } catch (error) {
