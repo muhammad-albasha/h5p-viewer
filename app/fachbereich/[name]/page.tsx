@@ -159,29 +159,105 @@ const Fachbereich = () => {
                   <PlayH5p h5pJsonPath={selectedContent.path} />
                 </div>
               </div>
-            </div>
-          ) : viewMode === 'list' && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {content.map(item => (
-                <div 
-                  key={item.id}
-                  className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow cursor-pointer"
-                  onClick={() => handleContentSelect(item)}
-                >
-                  <div className="card-body">
-                    <h2 className="card-title">{item.name}</h2>
-                    <p>Typ: {item.type || "Unbekannt"}</p>
-                    <div className="flex flex-wrap gap-1 mt-2 mb-2">
-                      {item.tags.map((tag, idx) => (
-                        <span key={idx} className="badge badge-primary">{tag}</span>
-                      ))}
-                    </div>
-                    <div className="card-actions justify-end">
-                      <button className="btn btn-primary">Anzeigen</button>
+            </div>          ) : viewMode === 'list' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {content.map(item => {
+                // Determine image URL from path or slug
+                let imageUrl;
+                if (item.slug) {
+                  imageUrl = `/api/h5p/cover/${item.slug}/content/images/cover.jpg`;
+                } else {
+                  // Fallback: construct from path
+                  let pathSlug = item.path;
+                  if (pathSlug.startsWith('/h5p/')) {
+                    pathSlug = pathSlug.replace('/h5p/', '');
+                  }
+                  pathSlug = pathSlug.replace(/^\/?h5p\/?/, '').replace(/\/+$/, '');
+                  imageUrl = `/api/h5p/cover/${pathSlug}/content/images/cover.jpg`;
+                }
+
+                return (
+                  <div
+                    key={item.id}
+                    className="card bg-gradient-to-br from-base-100 to-base-200 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 group border border-base-300/50 overflow-hidden cursor-pointer"
+                    onClick={() => handleContentSelect(item)}
+                  >
+                    {/* Card Image */}
+                    <figure className="relative h-48 bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden">
+                      <img
+                        src={imageUrl}
+                        alt={item.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).src = '/assets/placeholder-image.svg';
+                        }}
+                      />
+                      {/* Content type overlay */}
+                      <div className="absolute top-3 right-3">
+                        <div className="badge badge-primary badge-lg font-semibold px-3 py-2 shadow-lg bg-primary/90 backdrop-blur-sm">
+                          {item.type}
+                        </div>
+                      </div>
+                    </figure>
+
+                    <div className="card-body p-6 space-y-4">
+                      {/* Subject Area Badge */}
+                      <div className="flex justify-start items-start">
+                        {item.subject_area && (
+                          <div className="badge badge-outline badge-sm border-2 font-medium">
+                            {item.subject_area.name}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="card-title text-xl font-bold leading-tight group-hover:text-primary transition-colors duration-200">
+                        {item.name}
+                      </h3>
+
+                      {/* Description Space */}
+                      <p className="text-base-content/70 text-sm leading-relaxed min-h-[3rem] flex items-center">
+                        Interaktiver {item.type}-Inhalt für ein besseres Lernerlebnis
+                      </p>
+
+                      {/* Tags */}
+                      <div className="flex flex-wrap gap-2">
+                        {item.tags?.slice(0, 3).map((tag, idx) => (
+                          <span
+                            key={idx}
+                            className="badge bg-gradient-to-r from-secondary/80 to-secondary text-secondary-content border-0 shadow-sm font-medium px-3 py-1 text-xs hover:from-primary/80 hover:to-primary hover:text-primary-content transition-all duration-200 hover:shadow-md hover:scale-105"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                        {item.tags && item.tags.length > 3 && (
+                          <span className="badge bg-gradient-to-r from-base-300 to-base-200 text-base-content border-0 shadow-sm font-medium px-3 py-1 text-xs">
+                            +{item.tags.length - 3} weitere
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Action Button */}
+                      <div className="card-actions justify-center pt-4 border-t border-base-300/30">
+                        <button className="btn btn-primary btn-wide hover:btn-primary-focus group-hover:scale-105 transition-all duration-200 shadow-md font-semibold">
+                          <svg
+                            className="w-4 h-4 mr-2"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          Jetzt starten
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
