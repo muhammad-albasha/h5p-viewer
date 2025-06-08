@@ -9,6 +9,7 @@ export interface CreateH5PContentData {
   filePath: string;
   coverImagePath?: string;
   contentType?: string;
+  description?: string;
   subjectAreaId?: number;
   createdById?: number;
   tagIds?: number[];
@@ -18,6 +19,7 @@ export interface UpdateH5PContentData {
   title?: string;
   coverImagePath?: string;
   contentType?: string;
+  description?: string;
   subjectAreaId?: number;
   tagIds?: number[];
 }
@@ -107,14 +109,14 @@ export class H5PContentService {
     
     // Generate slug from title
     const slug = await this.generateUniqueSlug(data.title);
-    
-    // Create content entity
+      // Create content entity
     const content = h5pContentRepo.create({
       title: data.title,
       slug,
       filePath: data.filePath,
       coverImagePath: data.coverImagePath,
       contentType: data.contentType,
+      description: data.description,
       subjectAreaId: data.subjectAreaId,
       createdById: data.createdById
     });
@@ -144,11 +146,11 @@ export class H5PContentService {
     if (!content) {
       return null;
     }
-    
-    // Update basic fields
+      // Update basic fields
     if (data.title !== undefined) content.title = data.title;
     if (data.coverImagePath !== undefined) content.coverImagePath = data.coverImagePath;
     if (data.contentType !== undefined) content.contentType = data.contentType;
+    if (data.description !== undefined) content.description = data.description;
     if (data.subjectAreaId !== undefined) content.subjectAreaId = data.subjectAreaId;
     
     // Update tags if provided

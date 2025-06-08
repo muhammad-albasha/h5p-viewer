@@ -11,6 +11,7 @@ import PlayH5p from "@/app/components/PlayH5p";
 interface ContentData {
   id: number;
   title: string;
+  description?: string;
   slug: string;
   file_path: string;
   content_type: string;
@@ -41,9 +42,9 @@ export default function EditContent() {
   const [subjectAreas, setSubjectAreas] = useState<SubjectArea[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   // Form state
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [subjectAreaId, setSubjectAreaId] = useState<number | null>(null);
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [isSaving, setIsSaving] = useState(false);
@@ -97,10 +98,9 @@ export default function EditContent() {
         setAllTags(Array.isArray(data.allTags) ? data.allTags : []);
         setSubjectAreas(
           Array.isArray(data.subjectAreas) ? data.subjectAreas : []
-        );
-
-        // Initialize form state with safe defaults
+        );        // Initialize form state with safe defaults
         setTitle(data.content.title || "");
+        setDescription(data.content.description || "");
         setSubjectAreaId(data.content.subject_area_id || null);
 
         // Safely handle tags
@@ -126,10 +126,10 @@ export default function EditContent() {
     e.preventDefault();
     try {
       setIsSaving(true);
-      setSaveError(null);
-      // Use FormData to support file upload
+      setSaveError(null);      // Use FormData to support file upload
       const formData = new FormData();
       formData.append("title", title);
+      formData.append("description", description);
       formData.append(
         "subject_area_id",
         subjectAreaId ? String(subjectAreaId) : ""
@@ -150,13 +150,13 @@ export default function EditContent() {
         } catch (parseError) {
           errorMessage = `Server error: ${response.status} ${response.statusText}`;
         }
-        throw new Error(errorMessage);
-      }
+        throw new Error(errorMessage);      }
       // Update local content data with the new values
       if (content) {
         setContent({
           ...content,
           title,
+          description,
           subject_area_id: subjectAreaId,
           subject_area_name:
             subjectAreas.find((sa) => sa.id === subjectAreaId)?.name || null,
@@ -309,8 +309,7 @@ export default function EditContent() {
                     className="p-6"
                     onSubmit={handleSubmit}
                     encType="multipart/form-data"
-                  >
-                    <div className="form-control mb-4">
+                  >                    <div className="form-control mb-4">
                       <label className="label" htmlFor="content-title">
                         <span className="label-text">Titel</span>
                       </label>
@@ -324,6 +323,23 @@ export default function EditContent() {
                         title="Titel des H5P-Inhalts"
                         required
                       />
+                    </div>
+
+                    <div className="form-control mb-4">
+                      <label className="label" htmlFor="content-description">
+                        <span className="label-text">Beschreibung (optional)</span>
+                      </label>
+                      <textarea
+                        id="content-description"
+                        className="textarea textarea-bordered w-full h-24"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="z.B. Interaktiver Questionnaire-Inhalt für ein besseres Lernerlebnis"
+                        title="Beschreibung des H5P-Inhalts"
+                      />
+                      <label className="label">
+                        <span className="label-text-alt">Diese Beschreibung wird auf der Inhaltsseite angezeigt</span>
+                      </label>
                     </div>
 
                     <div className="form-control mb-4">

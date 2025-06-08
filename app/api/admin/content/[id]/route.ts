@@ -149,9 +149,8 @@ export async function PUT(
     const id = parseInt(resolvedParams.id);
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid content ID" }, { status: 400 });
-    }
-
-    let title = "";
+    }    let title = "";
+    let description = "";
     let subject_area_id: string | null = null;
     let tags: number[] = [];
     let coverImage: File | null = null;
@@ -161,6 +160,7 @@ export async function PUT(
     if (contentType.includes("multipart/form-data")) {
       const formData = await request.formData();
       title = formData.get("title") as string;
+      description = formData.get("description") as string || "";
       subject_area_id = formData.get("subject_area_id") as string;
       const tagsString = formData.get("tags") as string;
       if (tagsString) {
@@ -183,9 +183,9 @@ export async function PUT(
         return NextResponse.json(
           { error: "Invalid request data format" },
           { status: 400 }
-        );
-      }
+        );      }
       title = reqData.title;
+      description = reqData.description || "";
       subject_area_id = reqData.subject_area_id;
       tags = reqData.tags || [];
     }
@@ -224,12 +224,11 @@ export async function PUT(
       } catch (err) {
         // Error saving cover image, continue with update
       }
-    }
-
-    // Update content using TypeORM service
+    }    // Update content using TypeORM service
     const subjectAreaId = subject_area_id && subject_area_id !== "none" ? parseInt(subject_area_id) : undefined;
     const updatedContent = await h5pContentService.update(id, {
       title: title.trim(),
+      description: description.trim() || undefined,
       subjectAreaId,
       tagIds: tags.length > 0 ? tags : undefined
     });
@@ -292,12 +291,11 @@ export async function GET(
     const allTags = await tagService.findAll();
 
     // Get all subject areas for the dropdown
-    const subjectAreas = await subjectAreaService.findAll();
-
-    // Format content data to match existing API
+    const subjectAreas = await subjectAreaService.findAll();    // Format content data to match existing API
     const contentData = {
       id: content.id,
       title: content.title,
+      description: content.description,
       slug: content.slug,
       file_path: content.filePath,
       content_type: content.contentType,

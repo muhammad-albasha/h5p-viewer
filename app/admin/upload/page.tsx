@@ -20,9 +20,9 @@ interface Tag {
 
 export default function UploadH5P() {
   const router = useRouter();
-  const { data: session } = useSession();
-  const [file, setFile] = useState<File | null>(null);
+  const { data: session } = useSession();  const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [subjectAreas, setSubjectAreas] = useState<SubjectArea[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [selectedSubjectArea, setSelectedSubjectArea] = useState<string>("none");
@@ -94,11 +94,11 @@ export default function UploadH5P() {
     
     try {
       setIsUploading(true);
-      setError(null);
-      // Create FormData object to send the file and metadata
+      setError(null);      // Create FormData object to send the file and metadata
       const formData = new FormData();
       formData.append("file", file);
       formData.append("title", title);
+      formData.append("description", description);
       formData.append("subjectAreaId", selectedSubjectArea);
       formData.append("tags", JSON.stringify(selectedTags));
       if (coverImage) {
@@ -187,8 +187,7 @@ export default function UploadH5P() {
                   <p className="text-error">{error}</p>
                 </div>
               )}
-              
-              <div className="form-control w-full">
+                <div className="form-control w-full">
                 <label className="label">
                   <span className="label-text font-medium">Titel des Inhalts</span>
                 </label>
@@ -200,6 +199,21 @@ export default function UploadH5P() {
                   placeholder="z.B. Grammatik-Quiz: For oder Since"
                   required
                 />
+              </div>
+              
+              <div className="form-control w-full">
+                <label className="label">
+                  <span className="label-text font-medium">Beschreibung (optional)</span>
+                </label>
+                <textarea 
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="textarea textarea-bordered w-full h-24" 
+                  placeholder="z.B. Interaktiver Questionnaire-Inhalt für ein besseres Lernerlebnis"
+                />
+                <label className="label">
+                  <span className="label-text-alt">Diese Beschreibung wird auf der Inhaltsseite angezeigt</span>
+                </label>
               </div>
               
               <div className="form-control w-full">

@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
     }    // Parse the formData
     const formData = await req.formData();
     const title = formData.get('title') as string;
+    const description = formData.get('description') as string;
     const file = formData.get('file') as File;
     const subjectAreaId = formData.get('subjectAreaId') as string;
     const tagsString = formData.get('tags') as string;
@@ -122,6 +123,7 @@ export async function POST(req: NextRequest) {
         try {
           const h5pContentService = new H5PContentService();          const newContent = await h5pContentService.create({
             title,
+            description: description || undefined,
             filePath: relativeFilePath,
             coverImagePath, // Cover-Bild-Pfad hinzufügen
             contentType,

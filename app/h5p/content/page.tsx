@@ -14,6 +14,7 @@ interface H5PContentDetails {
   path: string;
   type: string;
   tags: string[];
+  description?: string;
 }
 
 // Separate component that uses useSearchParams
@@ -123,10 +124,13 @@ function H5PContentViewer() {
                   ) : (
                     contentDetails?.name || "H5P Inhalt"
                   )}
-                </h1>
-
-                <p className="text-xl lg:text-2xl opacity-90 leading-relaxed max-w-2xl">
-                  Interaktives Lernmaterial für ein besseres Lernerlebnis
+                </h1>                <p className="text-xl lg:text-2xl opacity-90 leading-relaxed max-w-2xl">
+                  {!loading && contentDetails && contentDetails.description 
+                    ? contentDetails.description
+                    : !loading && contentDetails 
+                    ? `Interaktiver ${contentDetails.type}-Inhalt für ein besseres Lernerlebnis`
+                    : "Interaktives Lernmaterial für ein besseres Lernerlebnis"
+                  }
                 </p>
               </div>
 
