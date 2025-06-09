@@ -24,6 +24,7 @@ export default function HeroSection({
   const [coverImages, setCoverImages] = useState<string[]>([])
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
+  const [showControls, setShowControls] = useState(false)
 
   useEffect(() => {
     const fetchCoverImages = async () => {
@@ -137,9 +138,12 @@ export default function HeroSection({
                   <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent rounded-2xl"></div>
                 </div>
               ) : (
-                <div className="relative bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl overflow-hidden shadow-2xl">
-                  {!isLoading && coverImages.length > 0 ? (
-                    <div className="relative w-full aspect-[4/3] min-h-[320px]">
+                <div className="relative bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl overflow-hidden shadow-2xl">                  {!isLoading && coverImages.length > 0 ? (
+                    <div 
+                      className="relative w-full aspect-[4/3] min-h-[320px]"
+                      onMouseEnter={() => setShowControls(true)}
+                      onMouseLeave={() => setShowControls(false)}
+                    >
                       {/* Render all images for slider */}
                       {coverImages.map((imagePath, index) => (
                         <div
@@ -170,11 +174,11 @@ export default function HeroSection({
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent rounded-2xl"></div>
                         </div>
-                      ))}
-
-                      {/* Navigation dots for multiple images */}
+                      ))}                      {/* Navigation dots for multiple images */}
                       {coverImages.length > 1 && (
-                        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+                        <div className={`absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20 transition-all duration-300 ${
+                          showControls ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+                        }`}>
                           {coverImages.map((_, index) => (
                             <button
                               key={index}
@@ -188,16 +192,16 @@ export default function HeroSection({
                             />
                           ))}
                         </div>
-                      )}
-
-                      {/* Navigation arrows for multiple images */}
+                      )}{/* Navigation arrows for multiple images */}
                       {coverImages.length > 1 && (
                         <>
                           <button
                             onClick={() => setCurrentImageIndex(prev => 
                               prev === 0 ? coverImages.length - 1 : prev - 1
                             )}
-                            className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-all duration-200 z-10 backdrop-blur-sm"
+                            className={`absolute left-3 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-all duration-300 z-10 backdrop-blur-sm ${
+                              showControls ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+                            }`}
                             aria-label="Vorheriges Bild"
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -208,7 +212,9 @@ export default function HeroSection({
                             onClick={() => setCurrentImageIndex(prev => 
                               prev === coverImages.length - 1 ? 0 : prev + 1
                             )}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-all duration-200 z-10 backdrop-blur-sm"
+                            className={`absolute right-3 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-all duration-300 z-10 backdrop-blur-sm ${
+                              showControls ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+                            }`}
                             aria-label="Nächstes Bild"
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
