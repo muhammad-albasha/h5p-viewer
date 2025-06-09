@@ -1,10 +1,11 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import Navbar from '@/app/components/layout/Navbar'
 import Header from '@/app/components/layout/Header'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import PlayH5p from '@/app/components/PlayH5p'
+import ContentFilter from '@/app/components/content/ContentFilter'
 
 interface SubjectAreaContent {
   id: number;
@@ -25,13 +26,16 @@ const Fachbereich = () => {
   const params = useParams();
   const router = useRouter();
   const subjectAreaSlug = params.name as string;
-  
-  const [content, setContent] = useState<SubjectAreaContent[]>([]);
+    const [content, setContent] = useState<SubjectAreaContent[]>([]);
   const [subjectAreaName, setSubjectAreaName] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedContent, setSelectedContent] = useState<SubjectAreaContent | null>(null);
   const [viewMode, setViewMode] = useState<'list' | 'view'>('list');
+  
+  // Filter states
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   
   useEffect(() => {
     const fetchContent = async () => {
@@ -70,10 +74,44 @@ const Fachbereich = () => {
     setSelectedContent(item);
     setViewMode('view');
   };
-
   const handleBackToList = () => {
     setSelectedContent(null);
     setViewMode('list');
+  };
+
+  // Get available tags from content
+  const availableTags = useMemo(() => {
+    const tags = new Set<string>();
+    content.forEach(item => {
+      item.tags.forEach(tag => tags.add(tag));
+    });
+    return Array.from(tags).sort();
+  }, [content]);
+
+  // Filter content based on search and tags
+  const filteredContent = useMemo(() => {
+    return content.filter(item => {
+      // Search filter
+      const matchesSearch = searchQuery === "" || 
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      // Tag filter
+      const matchesTags = selectedTags.length === 0 || 
+        selectedTags.every(selectedTag => item.tags.includes(selectedTag));
+
+      return matchesSearch && matchesTags;
+    });
+  }, [content, searchQuery, selectedTags]);
+
+  // Toggle tag selection
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
   };
 
   return (
@@ -159,9 +197,63 @@ const Fachbereich = () => {
                 <div className="rounded-xl overflow-hidden shadow-lg border border-base-300">
                   <PlayH5p h5pJsonPath={selectedContent.path} />
                 </div>
-              </div>
-            </div>          ) : viewMode === 'list' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">              {content.map(item => {
+              </div>            </div>          ) : viewMode === 'list' && (
+            <>
+              {/* Content Filter */}
+              <ContentFilter
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                selectedTags={selectedTags}
+                availableTags={availableTags}
+                toggleTag={toggleTag}
+              />
+
+              {/* Results Summary */}
+              {(searchQuery || selectedTags.length > 0) && (
+                <div className="mb-6 p-4 bg-base-100 rounded-lg shadow-sm border border-base-300">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm text-base-content/70">
+                        {filteredContent.length} von {content.length} Inhalten gefunden
+                      </p>
+                      {searchQuery && (
+                        <p className="text-sm text-primary font-medium">
+                          Suche nach: "{searchQuery}"
+                        </p>
+                      )}
+                      {selectedTags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          <span className="text-sm text-base-content/70">Tags: </span>
+                          {selectedTags.map(tag => (
+                            <span key={tag} className="badge badge-primary badge-sm">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => {
+                        setSearchQuery("");
+                        setSelectedTags([]);
+                      }}
+                      className="btn btn-outline btn-sm"
+                    >
+                      Filter zurücksetzen
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* No results message */}
+              {filteredContent.length === 0 && content.length > 0 ? (
+                <div className="alert alert-warning">
+                  <p>Keine Inhalte entsprechen den aktuellen Filterkriterien.</p>
+                </div>
+              ) : (
+                /* Content Grid */
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {filteredContent.map(item => {
                 // Determine image URL - prioritize coverImagePath from database
                 let imageUrl = item.coverImagePath;
                 
@@ -259,10 +351,11 @@ const Fachbereich = () => {
                         </button>
                       </div>
                     </div>
-                  </div>
-                );
+                  </div>                );
               })}
-            </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
