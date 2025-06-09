@@ -208,23 +208,52 @@ export async function PUT(
       );
     }
 
-    const slug = content.slug;
-
-    // === Save cover image if provided ===
+    const slug = content.slug;    // === Save cover image if provided ===
     if (coverImage && slug) {
       try {
         const coverArrayBuffer = await coverImage.arrayBuffer();
         const coverBuffer = Buffer.from(coverArrayBuffer);
-        const imagesDir = path.join(process.cwd(), 'public', 'h5p', slug, 'content', 'images');
+        
+        // Find the actual H5P directory (handle potential slug/directory mismatches)
+        const h5pBaseDir = path.join(process.cwd(), 'public', 'h5p');
+        let actualSlug = slug;
+        
+        // Check if directory with exact slug exists
+        const exactSlugDir = path.join(h5pBaseDir, slug);
+        if (!fs.existsSync(exactSlugDir)) {
+          // Look for directories that start with the slug
+          if (fs.existsSync(h5pBaseDir)) {
+            const allDirs = fs.readdirSync(h5pBaseDir, { withFileTypes: true })
+              .filter(dirent => dirent.isDirectory())
+              .map(dirent => dirent.name);
+            
+            const matchingDir = allDirs.find(dir => 
+              dir.startsWith(slug + '-') || dir === slug
+            );
+            
+            if (matchingDir) {
+              actualSlug = matchingDir;
+            }
+          }
+        }
+        
+        const imagesDir = path.join(h5pBaseDir, actualSlug, 'content', 'images');
         if (!fs.existsSync(imagesDir)) {
           fs.mkdirSync(imagesDir, { recursive: true });
         }
         const coverPath = path.join(imagesDir, 'cover.jpg');
         fs.writeFileSync(coverPath, coverBuffer);
+        
+        // Update the cover image path in database
+        await h5pContentService.update(id, {
+          coverImagePath: `/api/h5p/cover/${actualSlug}/content/images/cover.jpg`
+        });
+        
       } catch (err) {
-        // Error saving cover image, continue with update
+        console.error('Error saving cover image:', err);
+        // Continue with update even if cover image fails
       }
-    }    // Update content using TypeORM service
+    }// Update content using TypeORM service
     const subjectAreaId = subject_area_id && subject_area_id !== "none" ? parseInt(subject_area_id) : undefined;
     const updatedContent = await h5pContentService.update(id, {
       title: title.trim(),
@@ -302,6 +331,7 @@ export async function GET(
       created_at: content.createdAt,
       subject_area_id: content.subjectArea?.id || null,
       subject_area_name: content.subjectArea?.name || null,
+      cover_image_path: content.coverImagePath,
       tags: content.tags?.map(tag => ({
         id: tag.id,
         name: tag.name

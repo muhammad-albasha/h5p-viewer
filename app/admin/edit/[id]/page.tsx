@@ -19,6 +19,7 @@ interface ContentData {
   subject_area_id: number | null;
   subject_area_name: string | null;
   tags: Array<{ id: number; name: string }>;
+  cover_image_path?: string;
 }
 
 interface SubjectArea {
@@ -48,9 +49,9 @@ export default function EditContent() {
   const [subjectAreaId, setSubjectAreaId] = useState<number | null>(null);
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [isSaving, setIsSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
-  const [previewMode, setPreviewMode] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);  const [previewMode, setPreviewMode] = useState(false);
   const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -174,7 +175,6 @@ export default function EditContent() {
       setIsSaving(false);
     }
   };
-
   const handleTagToggle = (tagId: number) => {
     if (selectedTags.includes(tagId)) {
       setSelectedTags(selectedTags.filter((id) => id !== tagId));
@@ -182,6 +182,27 @@ export default function EditContent() {
       setSelectedTags([...selectedTags, tagId]);
     }
   };
+
+  const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setCoverImage(file);
+    
+    if (file) {
+      // Create preview URL for the selected file
+      const previewUrl = URL.createObjectURL(file);
+      setCoverImagePreview(previewUrl);
+    } else {      setCoverImagePreview(null);
+    }
+  };
+
+  // Cleanup preview URL when component unmounts or preview changes
+  useEffect(() => {
+    return () => {
+      if (coverImagePreview && coverImagePreview.startsWith('blob:')) {
+        URL.revokeObjectURL(coverImagePreview);
+      }
+    };
+  }, [coverImagePreview]);
 
   const handleDelete = async () => {
     if (!content) return;
@@ -391,21 +412,54 @@ export default function EditContent() {
                           ))
                         )}
                       </div>
-                    </div>
-
-                    <div className="form-control w-full mb-4">
+                    </div>                    <div className="form-control w-full mb-4">
                       <label className="label" htmlFor="cover-image">
                         <span className="label-text font-medium">
                           Cover-Bild (optional)
                         </span>
                       </label>
+                      
+                      {/* Current cover image or preview */}
+                      {(coverImagePreview || content?.cover_image_path) && (
+                        <div className="mb-3">
+                          <div className="text-sm font-medium mb-2">
+                            {coverImagePreview ? 'Vorschau (neues Bild):' : 'Aktuelles Cover-Bild:'}
+                          </div>
+                          <div className="relative inline-block">
+                            <img
+                              src={coverImagePreview || content?.cover_image_path}
+                              alt="Cover"
+                              className="w-32 h-32 object-cover rounded-lg border border-base-300"
+                              onError={(e) => {
+                                // Hide image if it fails to load
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                            {coverImagePreview && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setCoverImage(null);
+                                  setCoverImagePreview(null);
+                                  // Reset file input
+                                  const fileInput = document.getElementById('cover-image') as HTMLInputElement;
+                                  if (fileInput) fileInput.value = '';
+                                }}
+                                className="absolute -top-2 -right-2 btn btn-circle btn-xs btn-error"
+                                title="Neues Bild entfernen"
+                              >
+                                ✕
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      
                       <input
                         id="cover-image"
                         type="file"
                         accept="image/*"
-                        onChange={(e) =>
-                          setCoverImage(e.target.files?.[0] || null)
-                        }
+                        onChange={handleCoverImageChange}
                         className="file-input file-input-bordered w-full"
                         title="Cover-Bild auswählen"
                       />
