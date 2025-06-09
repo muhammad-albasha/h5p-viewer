@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 
 interface H5PContent {
   id: number
@@ -21,11 +22,10 @@ export default function HeroSection({
   description, 
   coverImage 
 }: HeroSectionProps) {
-  const [coverImages, setCoverImages] = useState<string[]>([])
+  const [h5pContents, setH5pContents] = useState<H5PContent[]>([])
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [showControls, setShowControls] = useState(false)
-
   useEffect(() => {
     const fetchCoverImages = async () => {
       try {
@@ -36,33 +36,43 @@ export default function HeroSection({
           const content: H5PContent[] = await response.json()
           console.log('API Response:', content)
           
-          // Extract cover image paths
-          const validImages = content
-            .filter(item => item.coverImagePath && item.coverImagePath.trim() !== '')
-            .map(item => item.coverImagePath!)
+          // Filter content that has images and slugs
+          const validContents = content.filter(item => {
+            const hasValidImage = item.coverImagePath && item.coverImagePath.trim() !== ''
+            const hasSlug = item.slug && item.slug.trim() !== ''
+            return hasValidImage && hasSlug
+          })
           
-          console.log('Valid images from API:', validImages)
-          if (validImages.length > 0) {
-            setCoverImages(validImages)
+          if (validContents.length > 0) {
+            setH5pContents(validContents)
           } else {
-            // Try direct paths from all available content
-            const directImages = content
-              .filter(item => item.slug)
-              .map(item => `/h5p/${item.slug}/content/images/cover.jpg`)
-            
-            console.log('Direct image paths:', directImages)
-            
-            if (directImages.length > 0) {
-              setCoverImages(directImages)
-            }
+            // Try content with slugs and create image paths
+            const contentsWithSlugs = content.filter(item => item.slug && item.slug.trim() !== '')
+            const contentsWithImages = contentsWithSlugs.map(item => ({
+              ...item,
+              coverImagePath: `/h5p/${item.slug}/content/images/cover.jpg`
+            }))
+            setH5pContents(contentsWithImages)
           }
         } else {
           console.error('API failed:', response.status)
-          setCoverImages(['/h5p/test-12d71bd6/content/images/cover.jpg'])
+          // Fallback content
+          setH5pContents([{
+            id: 1,
+            name: 'Test H5P Content',
+            slug: 'test-12d71bd6',
+            coverImagePath: '/h5p/test-12d71bd6/content/images/cover.jpg'
+          }])
         }
       } catch (error) {
         console.error('Error:', error)
-        setCoverImages(['/h5p/test-12d71bd6/content/images/cover.jpg'])
+        // Fallback content
+        setH5pContents([{
+          id: 1,
+          name: 'Test H5P Content',
+          slug: 'test-12d71bd6',
+          coverImagePath: '/h5p/test-12d71bd6/content/images/cover.jpg'
+        }])
       } finally {
         setIsLoading(false)
       }
@@ -70,19 +80,18 @@ export default function HeroSection({
     
     fetchCoverImages()
   }, [])
-
   // Auto-advance slider when multiple images
   useEffect(() => {
-    if (coverImages.length > 1) {
+    if (h5pContents.length > 1) {
       const interval = setInterval(() => {
         setCurrentImageIndex((prevIndex) => 
-          prevIndex === coverImages.length - 1 ? 0 : prevIndex + 1
+          prevIndex === h5pContents.length - 1 ? 0 : prevIndex + 1
         )
       }, 4000)
 
       return () => clearInterval(interval)
     }
-  }, [coverImages.length])
+  }, [h5pContents.length])
 
   return (
     <section className="relative bg-gradient-to-br from-primary/10 via-base-100 to-secondary/10 py-16 px-4 overflow-hidden">
@@ -137,49 +146,58 @@ export default function HeroSection({
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent rounded-2xl"></div>
                 </div>
-              ) : (
-                <div className="relative bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl overflow-hidden shadow-2xl">                  {!isLoading && coverImages.length > 0 ? (
+              ) : (                <div className="relative bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl overflow-hidden shadow-2xl">
+                  {!isLoading && h5pContents.length > 0 ? (
                     <div 
                       className="relative w-full aspect-[4/3] min-h-[320px]"
                       onMouseEnter={() => setShowControls(true)}
                       onMouseLeave={() => setShowControls(false)}
                     >
                       {/* Render all images for slider */}
-                      {coverImages.map((imagePath, index) => (
+                      {h5pContents.map((content, index) => (
                         <div
                           key={index}
                           className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
                             index === currentImageIndex ? 'opacity-100' : 'opacity-0'
                           }`}
                         >
-                          <img
-                            src={imagePath}
-                            alt={`H5P Cover Image ${index + 1}`}
-                            className="w-full h-full object-cover rounded-2xl"
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement
-                              const originalSrc = target.src
-                              console.log('Image failed to load:', originalSrc)
-                              
-                              // Try fallback paths
-                              if (originalSrc.includes('/api/h5p/cover/')) {
-                                target.src = originalSrc.replace('/api/h5p/cover/', '/h5p/')
-                              } else if (!originalSrc.includes('placeholder')) {
-                                target.src = '/assets/placeholder-image.svg'
-                              } else {
-                                target.style.display = 'none'
-                                target.onerror = null
-                              }
-                            }}
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent rounded-2xl"></div>
+                          <Link
+                            href={`/h5p/${content.slug}`}
+                            className="block w-full h-full cursor-pointer"
+                            title={`Öffne ${content.name}`}
+                          >
+                            <img
+                              src={content.coverImagePath}
+                              alt={`${content.name} - H5P Interactive Content`}
+                              className="w-full h-full object-cover rounded-2xl hover:scale-105 transition-transform duration-300"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement
+                                const originalSrc = target.src
+                                console.log('Image failed to load:', originalSrc)
+                                
+                                // Try fallback paths
+                                if (originalSrc.includes('/api/h5p/cover/')) {
+                                  target.src = originalSrc.replace('/api/h5p/cover/', '/h5p/')
+                                } else if (!originalSrc.includes('placeholder')) {
+                                  target.src = '/assets/placeholder-image.svg'
+                                } else {
+                                  target.style.display = 'none'
+                                  target.onerror = null
+                                }
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent rounded-2xl"></div>
+                            <div className="absolute bottom-4 left-4 text-white">
+                              <h3 className="text-lg font-semibold truncate max-w-64">{content.name}</h3>
+                            </div>
+                          </Link>
                         </div>
                       ))}                      {/* Navigation dots for multiple images */}
-                      {coverImages.length > 1 && (
+                      {h5pContents.length > 1 && (
                         <div className={`absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20 transition-all duration-300 ${
                           showControls ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
                         }`}>
-                          {coverImages.map((_, index) => (
+                          {h5pContents.map((_, index) => (
                             <button
                               key={index}
                               onClick={() => setCurrentImageIndex(index)}
@@ -188,16 +206,18 @@ export default function HeroSection({
                                   ? 'bg-white scale-110 shadow-lg'
                                   : 'bg-white/60 hover:bg-white/80'
                               }`}
-                              aria-label={`Zeige Bild ${index + 1} von ${coverImages.length}`}
+                              aria-label={`Zeige Bild ${index + 1} von ${h5pContents.length}`}
                             />
                           ))}
                         </div>
-                      )}{/* Navigation arrows for multiple images */}
-                      {coverImages.length > 1 && (
+                      )}
+
+                      {/* Navigation arrows for multiple images */}
+                      {h5pContents.length > 1 && (
                         <>
                           <button
                             onClick={() => setCurrentImageIndex(prev => 
-                              prev === 0 ? coverImages.length - 1 : prev - 1
+                              prev === 0 ? h5pContents.length - 1 : prev - 1
                             )}
                             className={`absolute left-3 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-all duration-300 z-10 backdrop-blur-sm ${
                               showControls ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
@@ -210,7 +230,7 @@ export default function HeroSection({
                           </button>
                           <button
                             onClick={() => setCurrentImageIndex(prev => 
-                              prev === coverImages.length - 1 ? 0 : prev + 1
+                              prev === h5pContents.length - 1 ? 0 : prev + 1
                             )}
                             className={`absolute right-3 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-all duration-300 z-10 backdrop-blur-sm ${
                               showControls ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
