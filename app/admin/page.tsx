@@ -152,8 +152,13 @@ export default function AdminDashboard() {
               <p className="text-primary-content/80 mt-2">
                 Verwalten Sie Ihre H5P Inhalte
               </p>
-            </div>
-            <div className="flex gap-2">
+            </div>            <div className="flex gap-2">
+              <Link
+                href="/admin/pages"
+                className="btn btn-sm btn-outline"
+              >
+                Seiten-Einstellungen
+              </Link>
               <Link
                 href="/admin/subject-areas"
                 className="btn btn-sm btn-outline"

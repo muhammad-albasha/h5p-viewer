@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { User, Tag, SubjectArea, H5PContent, FeaturedContent } from '../entities';
+import { User, Tag, SubjectArea, H5PContent, FeaturedContent, PageSettings } from '../entities';
 
 export const AppDataSource = new DataSource({
   type: 'mysql',
@@ -11,7 +11,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME || 'h5p',
   synchronize: process.env.NODE_ENV === 'development', // Auto-sync in development only
   logging: process.env.NODE_ENV === 'development',
-  entities: [User, Tag, SubjectArea, H5PContent, FeaturedContent],
+  entities: [User, Tag, SubjectArea, H5PContent, FeaturedContent, PageSettings],
   migrations: [],
   subscribers: [],
 });

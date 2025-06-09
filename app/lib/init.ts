@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { getDataSource } from './datasource';
 import { UserService } from '../services';
+import { PageSettingsService } from '../services/PageSettingsService';
 
 export async function initializeDatabase() {
   try {
@@ -12,6 +13,10 @@ export async function initializeDatabase() {
     // Initialize default users
     const userService = new UserService();
     await userService.initializeDefaultUsers();
+    
+    // Initialize default page settings
+    const pageSettingsService = new PageSettingsService();
+    await pageSettingsService.initializeDefaultSettings();
     
     console.log('Database initialization completed');
   } catch (error) {
