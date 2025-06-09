@@ -24,6 +24,7 @@ export default function HeroSection({
   const [coverImages, setCoverImages] = useState<string[]>([])
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
+
   useEffect(() => {
     const fetchCoverImages = async () => {
       try {
@@ -40,7 +41,7 @@ export default function HeroSection({
             .map(item => item.coverImagePath!)
           
           console.log('Valid images from API:', validImages)
-            if (validImages.length > 0) {
+          if (validImages.length > 0) {
             setCoverImages(validImages)
           } else {
             // Try direct paths from all available content
@@ -52,16 +53,6 @@ export default function HeroSection({
             
             if (directImages.length > 0) {
               setCoverImages(directImages)
-            } else {
-              // Fallback: scan for all available H5P directories
-              const fallbackImages = [
-                '/h5p/test-12d71bd6/content/images/cover.jpg',
-                '/h5p/test/content/images/cover.jpg',
-                '/h5p/hhh-362d14b5/content/images/cover.jpg'
-              ]
-              
-              console.log('Fallback images:', fallbackImages)
-              setCoverImages(fallbackImages)
             }
           }
         } else {
@@ -132,68 +123,54 @@ export default function HeroSection({
                 Mehr erfahren
               </a>
             </div>
-          </div>          <div className="flex justify-center lg:justify-end">
-            <div className="relative">
-              {/* Debug Info */}
-              <div className="mb-4 p-4 bg-info/10 rounded-lg">
-                <p className="text-sm">
-                  <strong>Debug:</strong> 
-                  Loading: {isLoading ? 'Ja' : 'Nein'}, 
-                  Images: {coverImages.length}, 
-                  Current: {currentImageIndex + 1}
-                </p>
-                <div className="text-xs mt-2">
-                  {coverImages.map((img, i) => (
-                    <div key={i}>{i + 1}: {img}</div>
-                  ))}
-                </div>
-              </div>
-
+          </div>
+          
+          <div className="flex justify-center lg:justify-end">
+            <div className="relative w-full max-w-md lg:max-w-lg">
               {coverImage ? (
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                   <img 
                     src={coverImage} 
                     alt="H5P Interactive Learning"
-                    className="w-full h-auto max-w-md lg:max-w-lg rounded-2xl"
+                    className="w-full h-auto rounded-2xl"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent rounded-2xl"></div>
                 </div>
               ) : (
-                <div className="relative bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl overflow-hidden max-w-md lg:max-w-lg shadow-2xl">
+                <div className="relative bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl overflow-hidden shadow-2xl">
                   {!isLoading && coverImages.length > 0 ? (
-                    <div className="relative w-full h-64 md:h-80">
-                      <div className="relative w-full h-full overflow-hidden rounded-2xl">
-                        {/* Render all images for slider */}
-                        {coverImages.map((imagePath, index) => (
-                          <div
-                            key={index}
-                            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
-                            }`}
-                          >
-                            <img
-                              src={imagePath}
-                              alt={`H5P Cover Image ${index + 1}`}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement
-                                const originalSrc = target.src
-                                
-                                // Try fallback paths
-                                if (originalSrc.includes('/api/h5p/cover/')) {
-                                  target.src = originalSrc.replace('/api/h5p/cover/', '/h5p/')
-                                } else if (!originalSrc.includes('placeholder')) {
-                                  target.src = '/assets/placeholder-image.svg'
-                                } else {
-                                  target.style.display = 'none'
-                                  target.onerror = null
-                                }
-                              }}
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                          </div>
-                        ))}
-                      </div>
+                    <div className="relative w-full aspect-[4/3] min-h-[320px]">
+                      {/* Render all images for slider */}
+                      {coverImages.map((imagePath, index) => (
+                        <div
+                          key={index}
+                          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                            index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+                          }`}
+                        >
+                          <img
+                            src={imagePath}
+                            alt={`H5P Cover Image ${index + 1}`}
+                            className="w-full h-full object-cover rounded-2xl"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement
+                              const originalSrc = target.src
+                              console.log('Image failed to load:', originalSrc)
+                              
+                              // Try fallback paths
+                              if (originalSrc.includes('/api/h5p/cover/')) {
+                                target.src = originalSrc.replace('/api/h5p/cover/', '/h5p/')
+                              } else if (!originalSrc.includes('placeholder')) {
+                                target.src = '/assets/placeholder-image.svg'
+                              } else {
+                                target.style.display = 'none'
+                                target.onerror = null
+                              }
+                            }}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent rounded-2xl"></div>
+                        </div>
+                      ))}
 
                       {/* Navigation dots for multiple images */}
                       {coverImages.length > 1 && (
@@ -240,25 +217,9 @@ export default function HeroSection({
                           </button>
                         </>
                       )}
-                      
-                      <div className="absolute bottom-6 left-6 right-6 text-white z-10">
-                        <h4 className="text-lg font-bold drop-shadow-lg mb-1">
-                          Interaktive H5P-Inhalte
-                        </h4>
-                        <p className="text-sm drop-shadow-md opacity-90">
-                          {coverImages.length > 1 
-                            ? `${coverImages.length} Cover-Bilder entdecken` 
-                            : 'Lerninhalt verfügbar'
-                          }
-                        </p>
-                        {/* Debug info */}
-                        <p className="text-xs opacity-70 mt-1">
-                          Bild {currentImageIndex + 1} von {coverImages.length}
-                        </p>
-                      </div>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center h-64 md:h-80 p-12">
+                    <div className="flex items-center justify-center aspect-[4/3] min-h-[320px] p-12">
                       <div className="space-y-6 text-center">
                         <div className="w-24 h-24 mx-auto bg-primary/30 rounded-full flex items-center justify-center">
                           <svg className="w-12 h-12 text-primary" fill="currentColor" viewBox="0 0 24 24">
