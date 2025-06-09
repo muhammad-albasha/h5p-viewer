@@ -117,7 +117,7 @@ export default function HeroSection({
                 Jetzt entdecken
               </a>
               <a 
-                href="/setup-help" 
+                href="/about" 
                 className="btn btn-outline btn-lg px-8 py-3 text-lg font-semibold"
               >
                 Mehr erfahren

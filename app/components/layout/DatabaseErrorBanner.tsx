@@ -28,7 +28,7 @@ export default function DatabaseErrorBanner({ error }: DatabaseErrorBannerProps)
         </div>
         
         <div className="flex items-center gap-2">
-          <Link href="/setup-help" className="btn btn-sm btn-outline border-error-content/20 text-error-content">
+          <Link href="/about" className="btn btn-sm btn-outline border-error-content/20 text-error-content">
             Hilfe
           </Link>
           <button 
