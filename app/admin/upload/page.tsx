@@ -144,189 +144,259 @@ export default function UploadH5P() {
       setIsUploading(false);
     }
   };
-  
-  return (
+    return (
     <>
       <Navbar />
       <Header />
       
-      <div className="bg-gradient-to-br from-primary to-secondary text-primary-content py-12">
-        <div className="container mx-auto max-w-6xl px-4">
-          <div className="flex items-center gap-4">
-            <Link 
-              href="/admin" 
-              className="btn btn-circle btn-ghost text-primary-content"
-            >
-              ←
-            </Link>
-            <div>
-              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-                H5P-Inhalt hochladen
-              </h1>
-              <p className="text-primary-content/80 mt-2">
+      {/* Modern Header Section */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-48 -translate-y-48 backdrop-blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
+        </div>
+        
+        <div className="relative container mx-auto max-w-6xl px-4 py-16">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="text-white">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                  </svg>
+                </div>
+                <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+                  H5P-Inhalt hochladen
+                </h1>
+              </div>
+              <p className="text-blue-100 text-lg max-w-2xl">
                 Laden Sie neue H5P-Inhalte für Ihre Plattform hoch
               </p>
             </div>
+            <Link 
+              href="/admin"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Zurück zum Dashboard
+            </Link>
           </div>
         </div>
       </div>
       
-      <div className="bg-base-200 min-h-screen py-10">
-        <div className="container mx-auto max-w-2xl px-4">
-          <div className="bg-base-100 rounded-xl shadow-xl overflow-hidden">
-            <div className="p-6 border-b border-base-300">
-              <h2 className="text-xl font-bold">Upload-Formular</h2>
-              <p className="text-sm opacity-70">
+      {/* Main Content */}
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
+        <div className="container mx-auto max-w-4xl px-4">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white/20 rounded-lg">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <h2 className="text-xl font-bold">Upload-Formular</h2>
+              </div>
+              <p className="text-blue-100 mt-2 text-sm">
                 Füllen Sie alle erforderlichen Felder aus
               </p>
             </div>
             
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               {error && (
-                <div className="bg-error/10 border-l-4 border-error p-4 rounded">
-                  <p className="text-error">{error}</p>
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="text-red-700 font-medium">{error}</span>
+                  </div>
                 </div>
               )}
-                <div className="form-control w-full">
-                <label className="label">
-                  <span className="label-text font-medium">Titel des Inhalts</span>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="title">
+                  Titel des Inhalts
                 </label>
-                <input 
-                  type="text" 
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="input input-bordered w-full" 
-                  placeholder="z.B. Grammatik-Quiz: For oder Since"
-                  required
-                />
+                <div className="relative">
+                  <input 
+                    id="title"
+                    type="text" 
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm" 
+                    placeholder="z.B. Grammatik-Quiz: For oder Since"
+                    required
+                  />
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2M7 4h10M7 4l-2 16h14l-2-16" />
+                    </svg>
+                  </div>
+                </div>
               </div>
               
-              <div className="form-control w-full">
-                <label className="label">
-                  <span className="label-text font-medium">Beschreibung (optional)</span>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="description">
+                  Beschreibung (optional)
                 </label>
                 <textarea 
+                  id="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="textarea textarea-bordered w-full h-24" 
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm resize-none" 
                   placeholder="z.B. Interaktiver Questionnaire-Inhalt für ein besseres Lernerlebnis"
+                  rows={3}
                 />
-                <label className="label">
-                  <span className="label-text-alt">Diese Beschreibung wird auf der Inhaltsseite angezeigt</span>
-                </label>
+                <p className="text-xs text-gray-500 mt-1">Diese Beschreibung wird auf der Inhaltsseite angezeigt</p>
               </div>
               
-              <div className="form-control w-full">
-                <label className="label">
-                  <span className="label-text font-medium">Fachbereich</span>
-                </label>                <select 
-                  className="select select-bordered w-full" 
-                  value={selectedSubjectArea}
-                  onChange={(e) => setSelectedSubjectArea(e.target.value)}
-                  disabled={isLoadingOptions}
-                  aria-label="Fachbereich auswählen"
-                >
-                  <option value="none">Keinen Fachbereich auswählen</option>
-                  {subjectAreas.map(area => (
-                    <option key={area.id} value={area.id}>
-                      {area.name}
-                    </option>
-                  ))}
-                </select>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="subject-area">
+                  Fachbereich
+                </label>
+                <div className="relative">
+                  <select 
+                    id="subject-area"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm appearance-none" 
+                    value={selectedSubjectArea}
+                    onChange={(e) => setSelectedSubjectArea(e.target.value)}
+                    disabled={isLoadingOptions}
+                  >
+                    <option value="none">Keinen Fachbereich auswählen</option>
+                    {subjectAreas.map(area => (
+                      <option key={area.id} value={area.id}>
+                        {area.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
                 {selectedSubjectArea === "none" && (
-                  <label className="label">
-                    <span className="label-text-alt text-warning">
-                      Empfohlen: Wählen Sie einen Fachbereich
-                    </span>
-                  </label>
+                  <p className="text-xs text-amber-600 mt-1">
+                    Empfohlen: Wählen Sie einen Fachbereich
+                  </p>
                 )}
               </div>
               
-              <div className="form-control w-full">
-                <label className="label">
-                  <span className="label-text font-medium">Tags</span>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Tags
                 </label>
-                <div className="flex flex-wrap gap-2 p-4 border border-base-300 rounded-lg min-h-16">
+                <div className="p-4 border border-gray-200 rounded-xl bg-white/50 backdrop-blur-sm min-h-[4rem]">
                   {isLoadingOptions ? (
-                    <div className="loading loading-spinner loading-sm"></div>
+                    <div className="flex items-center justify-center">
+                      <div className="w-6 h-6 border-2 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
+                    </div>
                   ) : tags.length === 0 ? (
-                    <p className="text-sm opacity-70">Keine Tags verfügbar</p>
+                    <p className="text-sm text-gray-500 text-center">Keine Tags verfügbar</p>
                   ) : (
-                    tags.map(tag => (
-                      <div 
-                        key={tag.id} 
-                        className={`badge ${selectedTags.includes(tag.id) 
-                          ? 'badge-primary' 
-                          : 'badge-outline'} cursor-pointer`}
-                        onClick={() => handleTagToggle(tag.id)}
-                      >
-                        {tag.name}
-                      </div>
-                    ))
+                    <div className="flex flex-wrap gap-2">
+                      {tags.map(tag => (
+                        <button
+                          key={tag.id}
+                          type="button"
+                          className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 ${
+                            selectedTags.includes(tag.id)
+                              ? 'bg-blue-500 text-white shadow-md'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                          onClick={() => handleTagToggle(tag.id)}
+                        >
+                          {tag.name}
+                        </button>
+                      ))}
+                    </div>
                   )}
                 </div>
               </div>
               
-              <div className="form-control w-full">
-                <label className="label" htmlFor="h5p-file">
-                  <span className="label-text font-medium">H5P-Datei</span>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="h5p-file">
+                  H5P-Datei
                 </label>
-                <input 
-                  id="h5p-file"
-                  type="file"
-                  accept=".h5p"
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
-                  className="file-input file-input-bordered w-full" 
-                  title="H5P-Datei auswählen"
-                  required
-                />
-                <label className="label">
-                  <span className="label-text-alt">Nur .h5p Dateien</span>
-                </label>
+                <div className="relative">
+                  <input 
+                    id="h5p-file"
+                    type="file"
+                    accept=".h5p"
+                    onChange={(e) => setFile(e.target.files?.[0] || null)}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    required
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Nur .h5p Dateien sind erlaubt</p>
               </div>
               
-              <div className="form-control w-full">
-                <label className="label" htmlFor="cover-image">
-                  <span className="label-text font-medium">Cover-Bild (optional)</span>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="cover-image">
+                  Cover-Bild (optional)
                 </label>
-                <input
-                  id="cover-image"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setCoverImage(e.target.files?.[0] || null)}
-                  className="file-input file-input-bordered w-full"
-                  title="Cover-Bild auswählen"
-                />
-                <label className="label">
-                  <span className="label-text-alt">Optional: Bild für die Vorschau (jpg, png, ...)</span>
-                </label>
+                <div className="relative">
+                  <input
+                    id="cover-image"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setCoverImage(e.target.files?.[0] || null)}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Optional: Bild für die Vorschau (JPG, PNG, etc.)</p>
               </div>
               
               {isUploading && (
-                <div className="w-full">
-                  <progress 
-                    className="progress progress-primary w-full" 
-                    value={progress} 
-                    max="100"
-                  ></progress>
-                  <p className="text-sm text-center mt-2">
+                <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-blue-700">Upload-Fortschritt</span>
+                    <span className="text-sm font-medium text-blue-700">{progress}%</span>
+                  </div>
+                  <div className="w-full bg-blue-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-300" 
+                      style={{ width: `${progress}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-sm text-blue-600 mt-2 text-center">
                     {progress < 100 
-                      ? `Upload läuft: ${progress}%` 
-                      : "Upload abgeschlossen!"}
+                      ? 'Upload läuft...' 
+                      : 'Upload abgeschlossen!'}
                   </p>
                 </div>
               )}
               
-              <div className="flex justify-end gap-2">
-                <Link href="/admin" className="btn btn-ghost">
+              <div className="flex gap-3 pt-6">
+                <Link 
+                  href="/admin" 
+                  className="flex-1 px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 text-center"
+                >
                   Abbrechen
                 </Link>
                 <button 
                   type="submit" 
-                  className="btn btn-primary"
+                  className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                   disabled={isUploading}
                 >
-                  {isUploading ? 'Wird hochgeladen...' : 'Hochladen'}
+                  {isUploading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      Wird hochgeladen...
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                      Hochladen
+                    </>
+                  )}
                 </button>
               </div>
             </form>

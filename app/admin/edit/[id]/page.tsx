@@ -247,191 +247,234 @@ export default function EditContent() {
       }
     }
   };
-
   if (status === "loading" || (isLoading && !error)) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="loading loading-spinner loading-lg"></div>
-      </div>
+      <>
+        <Navbar />
+        <Header />
+        <div className="flex justify-center items-center h-screen">
+          <div className="flex flex-col items-center">
+            <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
+            <p className="text-gray-600 mt-4">Inhalt wird geladen...</p>
+          </div>
+        </div>
+      </>
     );
-  }
-  return (
+  }  return (
     <>
       <Navbar />
       <Header />
 
-      <div className="bg-gradient-to-br from-primary to-secondary text-primary-content py-12">
-        <div className="container mx-auto max-w-6xl px-4">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-                {content ? `Bearbeiten: ${content.title}` : "Inhalt bearbeiten"}
-              </h1>
-              <p className="text-primary-content/80 mt-2">
+      {/* Modern Header Section */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-48 -translate-y-48 backdrop-blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
+        </div>
+        
+        <div className="relative container mx-auto max-w-6xl px-4 py-16">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="text-white">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </div>
+                <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+                  {content ? `${content.title}` : "Inhalt bearbeiten"}
+                </h1>
+              </div>
+              <p className="text-blue-100 text-lg max-w-2xl">
                 H5P-Inhalt bearbeiten und aktualisieren
               </p>
             </div>
-            <Link href="/admin" className="btn btn-outline btn-accent">
+            <Link 
+              href="/admin"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
               Zurück zum Dashboard
             </Link>
           </div>
         </div>
       </div>
 
-      <div className="bg-base-200 min-h-screen py-10">
+      {/* Main Content */}
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
         <div className="container mx-auto max-w-6xl px-4">
           {error ? (
-            <div className="alert alert-error shadow-lg mb-8">
-              <div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="stroke-current flex-shrink-0 h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <div>
-                  <h3 className="font-bold">Fehler</h3>
-                  <p className="text-sm">{error}</p>
+            <div className="mb-8 p-6 bg-red-50 border border-red-200 rounded-xl">
+              <div className="flex items-start gap-4">
+                <div className="p-2 bg-red-100 rounded-lg">
+                  <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                 </div>
-              </div>
-              <div className="flex-none">
-                <Link href="/admin" className="btn btn-sm">
-                  Zurück zum Dashboard
-                </Link>
-                <button
-                  onClick={() => window.location.reload()}
-                  className="btn btn-sm ml-2"
-                >
-                  Erneut versuchen
-                </button>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-red-800 mb-2">Fehler beim Laden</h3>
+                  <p className="text-red-700 mb-4">{error}</p>
+                  <div className="flex gap-3">
+                    <Link 
+                      href="/admin" 
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                    >
+                      Zurück zum Dashboard
+                    </Link>
+                    <button
+                      onClick={() => window.location.reload()}
+                      className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
+                    >
+                      Erneut versuchen
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           ) : content ? (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Left Column - Edit Form */}
-              <div
-                className={`${
-                  previewMode ? "hidden lg:block" : ""
-                } lg:col-span-1`}
-              >
-                <div className="bg-base-100 rounded-xl shadow-xl overflow-hidden">
-                  <div className="p-6 border-b border-base-300">
-                    <h2 className="text-xl font-bold">Metadaten bearbeiten</h2>
+              <div className={`${previewMode ? "hidden lg:block" : ""} lg:col-span-1 space-y-6`}>
+                
+                {/* Edit Form Card */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+                  <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-white/20 rounded-lg">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </div>
+                      <h2 className="text-xl font-bold">Metadaten bearbeiten</h2>
+                    </div>
+                    <p className="text-blue-100 mt-2 text-sm">
+                      Inhaltsinformationen aktualisieren
+                    </p>
                   </div>
 
-                  <form
-                    className="p-6"
-                    onSubmit={handleSubmit}
-                    encType="multipart/form-data"
-                  >                    <div className="form-control mb-4">
-                      <label className="label" htmlFor="content-title">
-                        <span className="label-text">Titel</span>
+                  <form className="p-6 space-y-6" onSubmit={handleSubmit}>
+                    {saveError && (
+                      <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+                        <div className="flex items-center gap-2">
+                          <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span className="text-red-700 font-medium">{saveError}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="content-title">
+                        Titel
                       </label>
-                      <input
-                        id="content-title"
-                        type="text"
-                        className="input input-bordered"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Titel des H5P-Inhalts eingeben"
-                        title="Titel des H5P-Inhalts"
-                        required
-                      />
+                      <div className="relative">
+                        <input
+                          id="content-title"
+                          type="text"
+                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                          value={title}
+                          onChange={(e) => setTitle(e.target.value)}
+                          placeholder="Titel des H5P-Inhalts eingeben"
+                          required
+                        />
+                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2M7 4h10M7 4l-2 16h14l-2-16" />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="form-control mb-4">
-                      <label className="label" htmlFor="content-description">
-                        <span className="label-text">Beschreibung (optional)</span>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="content-description">
+                        Beschreibung (optional)
                       </label>
                       <textarea
                         id="content-description"
-                        className="textarea textarea-bordered w-full h-24"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm resize-none"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         placeholder="z.B. Interaktiver Questionnaire-Inhalt für ein besseres Lernerlebnis"
-                        title="Beschreibung des H5P-Inhalts"
+                        rows={3}
                       />
-                      <label className="label">
-                        <span className="label-text-alt">Diese Beschreibung wird auf der Inhaltsseite angezeigt</span>
-                      </label>
+                      <p className="text-xs text-gray-500 mt-1">Diese Beschreibung wird auf der Inhaltsseite angezeigt</p>
                     </div>
 
-                    <div className="form-control mb-4">
-                      <label className="label" htmlFor="subject-area">
-                        <span className="label-text">Fachbereich</span>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="subject-area">
+                        Fachbereich
                       </label>
-                      <select
-                        id="subject-area"
-                        className="select select-bordered w-full"
-                        value={subjectAreaId || ""}
-                        onChange={(e) =>
-                          setSubjectAreaId(
-                            e.target.value ? Number(e.target.value) : null
-                          )
-                        }
-                      >
-                        <option value="">-- Keiner --</option>
-                        {subjectAreas.map((area) => (
-                          <option key={area.id} value={area.id}>
-                            {area.name}
-                          </option>
-                        ))}
-                      </select>
+                      <div className="relative">
+                        <select
+                          id="subject-area"
+                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm appearance-none"
+                          value={subjectAreaId || ""}
+                          onChange={(e) => setSubjectAreaId(e.target.value ? Number(e.target.value) : null)}
+                        >
+                          <option value="">-- Keiner --</option>
+                          {subjectAreas.map((area) => (
+                            <option key={area.id} value={area.id}>
+                              {area.name}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="form-control mb-6">
-                      <label className="label">
-                        <span className="label-text">Tags</span>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Tags
                       </label>
-                      <div className="flex flex-wrap gap-2 p-3 bg-base-200 rounded-lg min-h-16">
+                      <div className="p-4 border border-gray-200 rounded-xl bg-white/50 backdrop-blur-sm min-h-[4rem]">
                         {allTags.length === 0 ? (
-                          <p className="text-sm opacity-70">
-                            Keine Tags verfügbar
-                          </p>
+                          <p className="text-sm text-gray-500 text-center">Keine Tags verfügbar</p>
                         ) : (
-                          allTags.map((tag) => (
-                            <button
-                              key={tag.id}
-                              type="button"
-                              className={`badge ${
-                                selectedTags.includes(tag.id)
-                                  ? "badge-primary"
-                                  : "badge-outline"
-                              } p-3 cursor-pointer`}
-                              onClick={() => handleTagToggle(tag.id)}
-                            >
-                              {tag.name}
-                            </button>
-                          ))
+                          <div className="flex flex-wrap gap-2">
+                            {allTags.map((tag) => (
+                              <button
+                                key={tag.id}
+                                type="button"
+                                className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 ${
+                                  selectedTags.includes(tag.id)
+                                    ? 'bg-blue-500 text-white shadow-md'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                }`}
+                                onClick={() => handleTagToggle(tag.id)}
+                              >
+                                {tag.name}
+                              </button>
+                            ))}
+                          </div>
                         )}
                       </div>
-                    </div>                    <div className="form-control w-full mb-4">
-                      <label className="label" htmlFor="cover-image">
-                        <span className="label-text font-medium">
-                          Cover-Bild (optional)
-                        </span>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="cover-image">
+                        Cover-Bild (optional)
                       </label>
                       
-                      {/* Current cover image or preview */}
                       {(coverImagePreview || content?.cover_image_path) && (
                         <div className="mb-3">
-                          <div className="text-sm font-medium mb-2">
+                          <p className="text-sm font-medium text-gray-600 mb-2">
                             {coverImagePreview ? 'Vorschau (neues Bild):' : 'Aktuelles Cover-Bild:'}
-                          </div>
+                          </p>
                           <div className="relative inline-block">
                             <img
                               src={coverImagePreview || content?.cover_image_path}
                               alt="Cover"
-                              className="w-32 h-32 object-cover rounded-lg border border-base-300"
+                              className="w-32 h-32 object-cover rounded-xl border border-gray-200 shadow-sm"
                               onError={(e) => {
-                                // Hide image if it fails to load
                                 e.currentTarget.style.display = 'none';
                               }}
                             />
@@ -441,11 +484,10 @@ export default function EditContent() {
                                 onClick={() => {
                                   setCoverImage(null);
                                   setCoverImagePreview(null);
-                                  // Reset file input
                                   const fileInput = document.getElementById('cover-image') as HTMLInputElement;
                                   if (fileInput) fileInput.value = '';
                                 }}
-                                className="absolute -top-2 -right-2 btn btn-circle btn-xs btn-error"
+                                className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-sm transition-colors"
                                 title="Neues Bild entfernen"
                               >
                                 ✕
@@ -460,28 +502,18 @@ export default function EditContent() {
                         type="file"
                         accept="image/*"
                         onChange={handleCoverImageChange}
-                        className="file-input file-input-bordered w-full"
-                        title="Cover-Bild auswählen"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                       />
-                      <label className="label">
-                        <span className="label-text-alt">
-                          Optional: Bild für die Vorschau (jpg, png, ...)
-                        </span>
-                      </label>
+                      <p className="text-xs text-gray-500 mt-1">Optional: Bild für die Vorschau (JPG, PNG, etc.)</p>
                     </div>
 
-                    {saveError && (
-                      <div className="alert alert-error mb-4">
-                        <p>{saveError}</p>
-                      </div>
-                    )}
-
-                    <div className="flex gap-2 justify-between">                      <button
+                    <div className="flex gap-3 pt-4">
+                      <button
                         type="button"
                         onClick={handleDelete}
-                        className="btn btn-error"
+                        className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 flex items-center gap-2"
                       >
-                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
                         Löschen
@@ -489,99 +521,124 @@ export default function EditContent() {
 
                       <button
                         type="submit"
-                        className={`btn btn-primary ${
-                          isSaving ? "loading" : ""
-                        }`}
+                        className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                         disabled={isSaving}
                       >
-                        {isSaving
-                          ? "Wird gespeichert..."
-                          : "Änderungen speichern"}
+                        {isSaving ? (
+                          <>
+                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            Wird gespeichert...
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Änderungen speichern
+                          </>
+                        )}
                       </button>
                     </div>
                   </form>
                 </div>
 
-                <div className="mt-8 bg-base-100 rounded-xl shadow-xl overflow-hidden">
-                  <div className="p-6 border-b border-base-300">
-                    <h2 className="text-xl font-bold">Inhaltsinformationen</h2>
+                {/* Content Info Card */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+                  <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-white/20 rounded-lg">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <h2 className="text-xl font-bold">Inhaltsinformationen</h2>
+                    </div>
+                    <p className="text-blue-100 mt-2 text-sm">
+                      Technische Details und Metadaten
+                    </p>
                   </div>
 
-                  <div className="p-6">
+                  <div className="p-6 space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <span className="text-sm font-semibold block mb-1">
-                          ID:
+                        <span className="block text-sm font-semibold text-gray-700 mb-1">ID:</span>
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-blue-100 text-blue-800">
+                          #{content.id}
                         </span>
-                        <span className="badge">{content.id}</span>
                       </div>
                       <div>
-                        <span className="text-sm font-semibold block mb-1">
-                          Typ:
-                        </span>
-                        <span className="badge badge-accent">
+                        <span className="block text-sm font-semibold text-gray-700 mb-1">Typ:</span>
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-green-100 text-green-800">
                           {content.content_type || "Unbekannt"}
                         </span>
                       </div>
                       <div>
-                        <span className="text-sm font-semibold block mb-1">
-                          Erstelldatum:
-                        </span>
-                        <span>
+                        <span className="block text-sm font-semibold text-gray-700 mb-1">Erstelldatum:</span>
+                        <span className="text-sm text-gray-900">
                           {new Date(content.created_at).toLocaleDateString()}
                         </span>
                       </div>
                       <div>
-                        <span className="text-sm font-semibold block mb-1">
-                          Slug:
-                        </span>
-                        <span className="text-sm font-mono bg-base-200 px-2 py-1 rounded">
+                        <span className="block text-sm font-semibold text-gray-700 mb-1">Slug:</span>
+                        <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded text-gray-800">
                           {content.slug}
                         </span>
                       </div>
                     </div>
 
-                    <div className="divider"></div>
+                    <div className="border-t border-gray-200 pt-4 space-y-3">
+                      <Link
+                        href={`/h5p/content?id=${content.id}`}
+                        target="_blank"
+                        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 hover:scale-105 flex items-center justify-center gap-2"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        Vorschau (neues Fenster)
+                      </Link>
 
-                    <Link
-                      href={`/h5p/content?id=${content.id}`}
-                      target="_blank"
-                      className="btn btn-outline w-full"
-                    >
-                      Vorschau (neues Fenster)
-                    </Link>
-
-                    <button
-                      className="btn btn-outline w-full mt-2 lg:hidden"
-                      onClick={() => setPreviewMode(!previewMode)}
-                    >
-                      {previewMode
-                        ? "Bearbeitungsformular anzeigen"
-                        : "Inhaltsvorschau anzeigen"}
-                    </button>
+                      <button
+                        className="w-full lg:hidden bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 hover:scale-105"
+                        onClick={() => setPreviewMode(!previewMode)}
+                      >
+                        {previewMode ? "Bearbeitungsformular anzeigen" : "Inhaltsvorschau anzeigen"}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Right Column - Preview */}
-              <div
-                className={`${
-                  !previewMode && !isLoading ? "hidden lg:block" : ""
-                } lg:col-span-2`}
-              >
-                <div className="bg-base-100 rounded-xl shadow-xl overflow-hidden">
-                  <div className="p-6 border-b border-base-300 flex justify-between items-center">
-                    <h2 className="text-xl font-bold">Vorschau</h2>
-                    <button
-                      className="btn btn-outline btn-sm lg:hidden"
-                      onClick={() => setPreviewMode(!previewMode)}
-                    >
-                      Zurück zum Bearbeiten
-                    </button>
-                  </div>                  <div className="p-6">
+              <div className={`${!previewMode ? "hidden lg:block" : ""} lg:col-span-2`}>
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+                  <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-white/20 rounded-lg">
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                        </div>
+                        <h2 className="text-xl font-bold">Live-Vorschau</h2>
+                      </div>
+                      <button
+                        className="lg:hidden px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors"
+                        onClick={() => setPreviewMode(!previewMode)}
+                      >
+                        Zurück zum Bearbeiten
+                      </button>
+                    </div>
+                    <p className="text-blue-100 mt-2 text-sm">
+                      Interaktive Vorschau des H5P-Inhalts
+                    </p>
+                  </div>
+
+                  <div className="p-6">
                     {content && content.file_path && (
-                      <div className="rounded-lg overflow-hidden border border-base-300">
-                        {/* H5P component expects path to the directory containing h5p.json */}
+                      <div className="rounded-xl overflow-hidden border border-gray-200 bg-white shadow-sm">
                         <PlayH5p h5pJsonPath={content.file_path} />
                       </div>
                     )}
