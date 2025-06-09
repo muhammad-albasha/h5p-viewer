@@ -154,6 +154,12 @@ export default function AdminDashboard() {
               </p>
             </div>            <div className="flex gap-2">
               <Link
+                href="/admin/2fa"
+                className="btn btn-sm btn-outline"
+              >
+                2FA-Einstellungen
+              </Link>
+              <Link
                 href="/admin/pages"
                 className="btn btn-sm btn-outline"
               >

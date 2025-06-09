@@ -12,19 +12,16 @@ export class UserService {
       this.userRepository = dataSource.getRepository(User);
     }
     return this.userRepository;
-  }
-  async findAll(): Promise<User[]> {
+  }  async findAll(): Promise<User[]> {
     const repo = await this.getRepository();
     return repo.find({
-      select: ['id', 'username', 'email', 'role', 'createdAt', 'updatedAt']
+      select: ['id', 'username', 'email', 'role', 'twoFactorEnabled', 'twoFactorSecret', 'createdAt', 'updatedAt']
     });
-  }
-
-  async findById(id: number): Promise<User | null> {
+  }  async findById(id: number): Promise<User | null> {
     const repo = await this.getRepository();
     return repo.findOne({
       where: { id },
-      select: ['id', 'username', 'email', 'role', 'createdAt', 'updatedAt']
+      select: ['id', 'username', 'email', 'password', 'role', 'twoFactorEnabled', 'twoFactorSecret', 'createdAt', 'updatedAt']
     });
   }
 
@@ -32,10 +29,12 @@ export class UserService {
     const repo = await this.getRepository();
     return repo.findOne({ where: { username } });
   }
-
   async findByEmail(email: string): Promise<User | null> {
     const repo = await this.getRepository();
-    return repo.findOne({ where: { email } });
+    return repo.findOne({ 
+      where: { email },
+      select: ['id', 'username', 'email', 'password', 'role', 'twoFactorEnabled', 'twoFactorSecret', 'createdAt', 'updatedAt']
+    });
   }
 
   async create(userData: { username: string; email: string; password: string; role?: UserRole }): Promise<User> {
@@ -54,7 +53,7 @@ export class UserService {
     return repo.save(user);
   }
 
-  async update(id: number, updateData: { username?: string; email?: string; password?: string; role?: UserRole }): Promise<User | null> {
+  async update(id: number, updateData: { username?: string; email?: string; password?: string; role?: UserRole; twoFactorEnabled?: boolean; twoFactorSecret?: string | null }): Promise<User | null> {
     const repo = await this.getRepository();
     
     const updatePayload: any = { ...updateData };

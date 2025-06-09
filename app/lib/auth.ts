@@ -19,13 +19,14 @@ export const authOptions: NextAuthOptions = {
           
           // Authenticate user with password verification
           const user = await userService.authenticate(credentials.email, credentials.password);
-          
-          if (user) {
+            if (user) {
             return {
               id: user.id.toString(),
               name: user.username,
               email: user.email,
               role: user.role,
+              twoFactorEnabled: user.twoFactorEnabled,
+              requiresTwoFactor: user.twoFactorEnabled, // Mark that 2FA is needed
             };
           }
           
@@ -37,13 +38,14 @@ export const authOptions: NextAuthOptions = {
         }
       },
     }),
-  ],
-  callbacks: {    async jwt({ token, user }) {
+  ],  callbacks: {    async jwt({ token, user }) {
       // Add role to token if it exists on the user
       if (user) {
         token.role = user.role;
         token.id = user.id;
         token.email = user.email;
+        token.twoFactorEnabled = user.twoFactorEnabled;
+        token.requiresTwoFactor = user.requiresTwoFactor;
       }
       return token;
     },async session({ session, token }) {
@@ -52,6 +54,8 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role as string;
         session.user.id = token.id as string;
         session.user.email = token.email as string;
+        session.user.twoFactorEnabled = token.twoFactorEnabled as boolean;
+        session.user.requiresTwoFactor = token.requiresTwoFactor as boolean;
       }
       return session;
     },
@@ -73,6 +77,8 @@ declare module "next-auth" {
     role?: string;
     id?: string;
     email?: string;
+    twoFactorEnabled?: boolean;
+    requiresTwoFactor?: boolean;
   }
   
   interface Session {
@@ -81,6 +87,8 @@ declare module "next-auth" {
       name?: string;
       email?: string;
       role?: string;
+      twoFactorEnabled?: boolean;
+      requiresTwoFactor?: boolean;
     };
   }
 }
@@ -90,5 +98,7 @@ declare module "next-auth/jwt" {
     role?: string;
     id?: string;
     email?: string;
+    twoFactorEnabled?: boolean;
+    requiresTwoFactor?: boolean;
   }
 }

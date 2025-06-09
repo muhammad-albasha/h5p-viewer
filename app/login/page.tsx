@@ -30,15 +30,34 @@ function LoginForm() {
     try {
       setIsLoading(true);
       setError("");
-      
-      const result = await signIn("credentials", {
+        const result = await signIn("credentials", {
         redirect: false,
         email,
         password,
-      });      if (result?.error) {
+      });
+
+      console.log("Login result:", result);
+
+      if (result?.error) {
         setError("Ungültige E-Mail-Adresse oder Passwort");
+      } else if (result?.ok) {
+        // Get the updated session to check 2FA requirements
+        const sessionResponse = await fetch('/api/auth/session');
+        const session = await sessionResponse.json();
+        
+        console.log("Session after login:", session);
+        
+        if (session?.user?.requiresTwoFactor) {
+          // Redirect to 2FA verification
+          console.log("Redirecting to 2FA verification");
+          router.push(`/auth/2fa/verify?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+        } else {
+          // Normal login, redirect to callback URL
+          console.log("Normal login, redirecting to:", callbackUrl);
+          router.push(callbackUrl);
+        }
       } else {
-        router.push(callbackUrl);
+        setError("Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.");
       }
     } catch (error) {
       // Login failed - show error message

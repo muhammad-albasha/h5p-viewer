@@ -15,9 +15,14 @@ export class User {
 
   @Column({ type: 'varchar', length: 255, unique: true })
   email!: string;
-
   @Column({ type: 'varchar', length: 255 })
   password!: string;
+
+  @Column({ type: 'boolean', default: false, name: 'two_factor_enabled' })
+  twoFactorEnabled!: boolean;
+
+  @Column({ type: 'varchar', length: 255, nullable: true, name: 'two_factor_secret' })
+  twoFactorSecret?: string;
 
   @Column({
     type: 'enum',
