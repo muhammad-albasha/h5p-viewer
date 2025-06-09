@@ -113,102 +113,165 @@ const Fachbereich = () => {
         : [...prev, tag]
     );
   };
-
   return (
     <>
       <Navbar />
       <Header />      
       {viewMode === 'list' && (
-        <div className="bg-gradient-to-br from-primary to-secondary text-primary-content py-12">
-          <div className="container mx-auto max-w-6xl px-4">
-            <div className="flex items-center gap-2 mb-4">
-              <Link href="/fachbereich" className="btn btn-sm btn-outline btn-circle">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
-                </svg>
-              </Link>
-              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-                {subjectAreaName || "Fachbereich"}
-              </h1>
+        <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800">
+          {/* Background decorative elements */}
+          <div className="absolute inset-0">
+            <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-48 -translate-y-48 backdrop-blur-3xl"></div>
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
+            <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
+          </div>
+          
+          <div className="relative container mx-auto max-w-6xl px-4 py-16">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <div className="text-white">
+                <div className="flex items-center gap-3 mb-4">
+                  <Link 
+                    href="/fachbereich"
+                    className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-all duration-200 hover:scale-105 backdrop-blur-sm border border-white/20"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                  </Link>
+                  <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                  </div>
+                  <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+                    {subjectAreaName || "Fachbereich"}
+                  </h1>
+                </div>
+                <p className="text-blue-100 text-lg max-w-2xl">
+                  H5P-Lerninhalte für diesen Fachbereich entdecken
+                </p>
+                <div className="flex items-center gap-6 mt-6">
+                  <div className="flex items-center gap-2 text-blue-100">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    <span className="text-sm font-medium">{content.length} Inhalte</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-blue-100">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                    <span className="text-sm font-medium">{availableTags.length} Tags</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link 
+                  href="/h5p"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                  Alle Inhalte
+                </Link>
+                <Link 
+                  href="/fachbereich"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                  Alle Fachbereiche
+                </Link>
+              </div>
             </div>
-            <p className="text-primary-content/80 mt-2">
-              H5P-Inhalte für diesen Fachbereich
-            </p>
           </div>
         </div>
       )}
-        <div className="bg-base-200 min-h-screen py-10">
-        <div className={`${viewMode === 'view' ? 'w-full px-4' : 'container mx-auto max-w-6xl px-4'}`}>
+
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
+        <div className={`${viewMode === 'view' ? 'w-full px-4' : 'container mx-auto max-w-6xl px-4'} space-y-8`}>
           {isLoading ? (
-            <div className="flex justify-center p-8">
-              <div className="loading loading-spinner loading-lg"></div>
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+              <div className="flex flex-col items-center justify-center p-12">
+                <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
+                <p className="text-gray-600 mt-4 font-medium">Inhalte werden geladen...</p>
+                <p className="text-gray-500 text-sm mt-1">Bitte warten Sie einen Moment</p>
+              </div>
             </div>
           ) : error ? (
-            <div className="alert alert-error">
-              <p>{error}</p>
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+              <div className="flex flex-col items-center justify-center p-12">
+                <div className="p-4 bg-red-100 rounded-full mb-4">
+                  <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <p className="text-red-600 font-medium text-lg">Fehler beim Laden</p>
+                <p className="text-gray-600 text-sm mt-1">{error}</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="mt-4 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+                >
+                  Seite neu laden
+                </button>
+              </div>
             </div>
           ) : viewMode === 'list' && content.length === 0 ? (
-            <div className="alert alert-info">
-              <p>Keine Inhalte für diesen Fachbereich gefunden</p>
-            </div>          ) : viewMode === 'view' && selectedContent ? (
-            <>
-              {/* Enhanced Hero Section for Viewer Mode */}
-              <div className="bg-gradient-to-br from-primary via-secondary to-accent text-white relative overflow-hidden -mt-10 -mx-4 mb-8">
-                {/* Background Decorations */}
-                <div className="absolute inset-0">
-                  <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1),transparent)] opacity-50"></div>
-                  <div className="absolute -top-40 -right-40 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-                  <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-white/5 rounded-full blur-2xl"></div>
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+              <div className="flex flex-col items-center justify-center p-12">
+                <div className="p-4 bg-blue-100 rounded-full mb-4">
+                  <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
                 </div>
-
-                <div className="relative z-10 container mx-auto max-w-7xl px-4 py-16">
-                  {/* Navigation Breadcrumb */}
-                  <nav className="flex items-center space-x-2 text-sm mb-8 opacity-90">
-                    <Link href="/" className="hover:text-accent transition-colors">
-                      <svg
-                        className="w-4 h-4 mr-1 inline"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-                      </svg>
-                      Startseite
-                    </Link>
-                    <span className="opacity-60">•</span>
-                    <Link href="/fachbereich" className="hover:text-accent transition-colors">
-                      Fachbereiche
-                    </Link>
-                    <span className="opacity-60">•</span>
-                    <button onClick={handleBackToList} className="hover:text-accent transition-colors">
-                      {subjectAreaName}
-                    </button>
-                    <span className="opacity-60">•</span>
-                    <span className="text-accent font-medium">
-                      {selectedContent.name}
-                    </span>
+                <p className="text-gray-600 font-medium text-lg">Keine Inhalte gefunden</p>
+                <p className="text-gray-500 text-sm mt-1">Für diesen Fachbereich sind noch keine H5P-Inhalte verfügbar.</p>
+                <Link 
+                  href="/fachbereich"
+                  className="mt-4 px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200 hover:scale-105"
+                >
+                  Zu allen Fachbereichen
+                </Link>
+              </div>
+            </div>
+          ) : viewMode === 'view' && selectedContent ? (
+            <>
+              {/* Enhanced Header for View Mode */}
+              <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 rounded-2xl -mx-4 -mt-12 mb-8">
+                <div className="absolute inset-0">
+                  <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-48 -translate-y-48 backdrop-blur-3xl"></div>
+                  <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
+                </div>
+                
+                <div className="relative container mx-auto max-w-6xl px-4 py-16">
+                  {/* Breadcrumb Navigation */}
+                  <nav className="flex items-center space-x-2 text-sm mb-8 text-blue-100">
+                    <Link href="/" className="hover:text-white transition-colors">Startseite</Link>
+                    <span>•</span>
+                    <Link href="/fachbereich" className="hover:text-white transition-colors">Fachbereiche</Link>
+                    <span>•</span>
+                    <button onClick={handleBackToList} className="hover:text-white transition-colors">{subjectAreaName}</button>
+                    <span>•</span>
+                    <span className="text-white font-medium">{selectedContent.name}</span>
                   </nav>
 
                   <div className="grid lg:grid-cols-12 gap-8 items-center">
-                    {/* Content Info */}
-                    <div className="lg:col-span-8 space-y-6">
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-3">
-                          <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-accent rounded-full animate-pulse"></div>
-                            <span className="badge badge-accent badge-lg font-semibold px-4 py-2">
-                              {selectedContent.type}
-                            </span>
-                          </div>
-                        </div>
-
-                        <h1 className="text-4xl lg:text-6xl font-black tracking-tight leading-tight">
-                          {selectedContent.name}
-                        </h1>
-                        
-                        <p className="text-xl lg:text-2xl opacity-90 leading-relaxed max-w-2xl">
-                          {`Interaktiver ${selectedContent.type}-Inhalt für ein besseres Lernerlebnis`}
-                        </p>
+                    <div className="lg:col-span-8 space-y-6 text-white">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="px-4 py-2 bg-white/20 text-white rounded-lg text-sm font-medium backdrop-blur-sm">
+                          {selectedContent.type}
+                        </span>
                       </div>
+
+                      <h1 className="text-4xl lg:text-6xl font-bold tracking-tight leading-tight">
+                        {selectedContent.name}
+                      </h1>
+                      
+                      <p className="text-blue-100 text-xl leading-relaxed max-w-2xl">
+                        Interaktiver {selectedContent.type}-Inhalt für optimales Lernen
+                      </p>
 
                       {/* Tags */}
                       {selectedContent.tags && selectedContent.tags.length > 0 && (
@@ -225,91 +288,55 @@ const Fachbereich = () => {
                       )}
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="lg:col-span-4 flex flex-col gap-4">
-                      {/* Main Action Buttons Group */}
-                      <div className="flex flex-col gap-3">
-                        <button
-                          onClick={handleBackToList}
-                          className="btn btn-outline btn-white border-2 hover:bg-white hover:text-primary transition-all duration-300 group"
-                        >
-                          <svg
-                            className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                            />
+                    <div className="lg:col-span-4 flex flex-col gap-3">
+                      <button
+                        onClick={handleBackToList}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Zurück zur Übersicht
+                      </button>
+                      
+                      <div className="grid grid-cols-2 gap-2">
+                        <button className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg backdrop-blur-sm transition-all duration-200 text-sm">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                           </svg>
-                          Zurück zur Übersicht
+                          Favorit
                         </button>
-
-                        <div className="flex gap-2">
-                          <button className="btn btn-outline btn-white/80 border-white/50 hover:bg-white/20 hover:border-white transition-all duration-200 flex-1">
-                            <svg
-                              className="w-4 h-4 mr-1"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                              />
-                            </svg>
-                            Favoriten
-                          </button>
-                          <button className="btn btn-outline btn-white/80 border-white/50 hover:bg-white/20 hover:border-white transition-all duration-200 flex-1">
-                            <svg
-                              className="w-4 h-4 mr-1"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
-                              />
-                            </svg>
-                            Teilen
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="stats bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white">
-                        <div className="stat">
-                          <div className="stat-title text-white/70">Content-Typ</div>
-                          <div className="stat-value text-lg">
-                            {selectedContent.type}
-                          </div>
-                        </div>
+                        <button className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg backdrop-blur-sm transition-all duration-200 text-sm">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                          </svg>
+                          Teilen
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>              {/* Main Content */}
-              <div className="w-full">
-                {/* H5P Content Player */}
-                <div className="bg-base-100 shadow-2xl border border-base-300/50 overflow-hidden rounded-xl">
-                  <div className="bg-gradient-to-r from-primary/5 to-secondary/5 p-6 border-b border-base-300">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-8 bg-gradient-to-b from-primary to-secondary rounded-full"></div>
-                      <h3 className="text-2xl font-bold">
-                        Interaktiver Lerninhalt
-                      </h3>
+              </div>
+
+              {/* H5P Content Player */}
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-white/20 rounded-lg">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold">Interaktiver Lerninhalt</h2>
+                      <p className="text-blue-100 text-sm mt-1">Starten Sie Ihre Lernerfahrung</p>
                     </div>
                   </div>
-                  
-                  <div className="p-1">
-                    <div className="bg-base-200/50 rounded-xl p-2 border-base-300">
-                      <PlayH5p h5pJsonPath={selectedContent.path} />
-                    </div>
+                </div>
+                
+                <div className="p-6">
+                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                    <PlayH5p h5pJsonPath={selectedContent.path} />
                   </div>
                 </div>
               </div>
@@ -326,35 +353,42 @@ const Fachbereich = () => {
 
               {/* Results Summary */}
               {(searchQuery || selectedTags.length > 0) && (
-                <div className="mb-6 p-4 bg-base-100 rounded-lg shadow-sm border border-base-300">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20 p-6">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-base-content/70">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Suchergebnisse</h3>
+                      <p className="text-gray-600">
                         {filteredContent.length} von {content.length} Inhalten gefunden
                       </p>
-                      {searchQuery && (
-                        <p className="text-sm text-primary font-medium">
-                          Suche nach: "{searchQuery}"
-                        </p>
-                      )}
-                      {selectedTags.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-2">
-                          <span className="text-sm text-base-content/70">Tags: </span>
-                          {selectedTags.map(tag => (
-                            <span key={tag} className="badge badge-primary badge-sm">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        {searchQuery && (
+                          <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-lg text-sm">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            Suche: "{searchQuery}"
+                          </span>
+                        )}
+                        {selectedTags.map(tag => (
+                          <span key={tag} className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-lg text-sm">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                            </svg>
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                     <button
                       onClick={() => {
                         setSearchQuery("");
                         setSelectedTags([]);
                       }}
-                      className="btn btn-outline btn-sm"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-all duration-200 hover:scale-105 text-sm font-medium"
                     >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
                       Filter zurücksetzen
                     </button>
                   </div>
@@ -363,112 +397,119 @@ const Fachbereich = () => {
 
               {/* No results message */}
               {filteredContent.length === 0 && content.length > 0 ? (
-                <div className="alert alert-warning">
-                  <p>Keine Inhalte entsprechen den aktuellen Filterkriterien.</p>
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+                  <div className="flex flex-col items-center justify-center p-12">
+                    <div className="p-4 bg-yellow-100 rounded-full mb-4">
+                      <svg className="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-600 font-medium text-lg">Keine passenden Inhalte</p>
+                    <p className="text-gray-500 text-sm mt-1">Keine Inhalte entsprechen den aktuellen Filterkriterien.</p>
+                    <button
+                      onClick={() => {
+                        setSearchQuery("");
+                        setSelectedTags([]);
+                      }}
+                      className="mt-4 px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-all duration-200 hover:scale-105"
+                    >
+                      Filter zurücksetzen
+                    </button>
+                  </div>
                 </div>
               ) : (
                 /* Content Grid */
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredContent.map(item => {
-                // Determine image URL - prioritize coverImagePath from database
-                let imageUrl = item.coverImagePath;
-                
-                // If no coverImagePath, construct from slug or path
-                if (!imageUrl) {
-                  if (item.slug) {
-                    imageUrl = `/api/h5p/cover/${item.slug}/content/images/cover.jpg`;
-                  } else {
-                    // Fallback: construct from path
-                    let pathSlug = item.path;
-                    if (pathSlug.startsWith('/h5p/')) {
-                      pathSlug = pathSlug.replace('/h5p/', '');
+                    // ...existing code...
+                    let imageUrl = item.coverImagePath;
+                    
+                    if (!imageUrl) {
+                      if (item.slug) {
+                        imageUrl = `/api/h5p/cover/${item.slug}/content/images/cover.jpg`;
+                      } else {
+                        let pathSlug = item.path;
+                        if (pathSlug.startsWith('/h5p/')) {
+                          pathSlug = pathSlug.replace('/h5p/', '');
+                        }
+                        pathSlug = pathSlug.replace(/^\/?h5p\/?/, '').replace(/\/+$/, '');
+                        imageUrl = `/api/h5p/cover/${pathSlug}/content/images/cover.jpg`;
+                      }
                     }
-                    pathSlug = pathSlug.replace(/^\/?h5p\/?/, '').replace(/\/+$/, '');
-                    imageUrl = `/api/h5p/cover/${pathSlug}/content/images/cover.jpg`;
-                  }
-                }
 
-                return (
-                  <div
-                    key={item.id}
-                    className="card bg-gradient-to-br from-base-100 to-base-200 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 group border border-base-300/50 overflow-hidden cursor-pointer"
-                    onClick={() => handleContentSelect(item)}
-                  >
-                    {/* Card Image */}
-                    <figure className="relative h-48 bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden">
-                      <img
-                        src={imageUrl}
-                        alt={item.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          (e.currentTarget as HTMLImageElement).src = '/assets/placeholder-image.svg';
-                        }}
-                      />
-                      {/* Content type overlay */}
-                      <div className="absolute top-3 right-3">
-                        <div className="badge badge-primary badge-lg font-semibold px-3 py-2 shadow-lg bg-primary/90 backdrop-blur-sm">
-                          {item.type}
+                    return (
+                      <div
+                        key={item.id}
+                        className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl overflow-hidden border border-white/20 transition-all duration-300 hover:scale-105 group cursor-pointer"
+                        onClick={() => handleContentSelect(item)}
+                      >
+                        {/* Card Image */}
+                        <div className="relative h-48 bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden">
+                          <img
+                            src={imageUrl}
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.currentTarget as HTMLImageElement).src = '/assets/placeholder-image.svg';
+                            }}
+                          />
+                          <div className="absolute top-3 right-3">
+                            <span className="px-3 py-1 bg-blue-500 text-white rounded-lg text-xs font-medium backdrop-blur-sm">
+                              {item.type}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="p-6 space-y-4">
+                          {/* Subject Area Badge */}
+                          {item.subject_area && (
+                            <div className="flex justify-start">
+                              <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-lg text-xs font-medium">
+                                {item.subject_area.name}
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Title */}
+                          <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors leading-tight">
+                            {item.name}
+                          </h3>
+
+                          {/* Description */}
+                          <p className="text-gray-600 text-sm leading-relaxed">
+                            Interaktiver {item.type}-Inhalt für optimales Lernen
+                          </p>
+
+                          {/* Tags */}
+                          <div className="flex flex-wrap gap-2">
+                            {item.tags?.slice(0, 3).map((tag, idx) => (
+                              <span
+                                key={idx}
+                                className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                            {item.tags && item.tags.length > 3 && (
+                              <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">
+                                +{item.tags.length - 3} weitere
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Action Button */}
+                          <div className="pt-4 border-t border-gray-100">
+                            <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2">
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                              </svg>
+                              Jetzt starten
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </figure>
-
-                    <div className="card-body p-6 space-y-4">
-                      {/* Subject Area Badge */}
-                      <div className="flex justify-start items-start">
-                        {item.subject_area && (
-                          <div className="badge badge-outline badge-sm border-2 font-medium">
-                            {item.subject_area.name}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Title */}
-                      <h3 className="card-title text-xl font-bold leading-tight group-hover:text-primary transition-colors duration-200">
-                        {item.name}
-                      </h3>
-
-                      {/* Description Space */}
-                      <p className="text-base-content/70 text-sm leading-relaxed min-h-[3rem] flex items-center">
-                        Interaktiver {item.type}-Inhalt für ein besseres Lernerlebnis
-                      </p>
-
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-2">
-                        {item.tags?.slice(0, 3).map((tag, idx) => (
-                          <span
-                            key={idx}
-                            className="badge bg-gradient-to-r from-secondary/80 to-secondary text-secondary-content border-0 shadow-sm font-medium px-3 py-1 text-xs hover:from-primary/80 hover:to-primary hover:text-primary-content transition-all duration-200 hover:shadow-md hover:scale-105"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                        {item.tags && item.tags.length > 3 && (
-                          <span className="badge bg-gradient-to-r from-base-300 to-base-200 text-base-content border-0 shadow-sm font-medium px-3 py-1 text-xs">
-                            +{item.tags.length - 3} weitere
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Action Button */}
-                      <div className="card-actions justify-center pt-4 border-t border-base-300/30">
-                        <button className="btn btn-primary btn-wide hover:btn-primary-focus group-hover:scale-105 transition-all duration-200 shadow-md font-semibold">
-                          <svg
-                            className="w-4 h-4 mr-2"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          Jetzt starten
-                        </button>
-                      </div>
-                    </div>
-                  </div>                );
-              })}
+                    );
+                  })}
                 </div>
               )}
             </>
