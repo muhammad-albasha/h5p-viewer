@@ -14,7 +14,7 @@ export default function Footer() {
           <div className="flex flex-col space-y-2">
             <span className="footer-title text-lg font-semibold mb-2">Links</span>
             <a href="/about" className="link link-hover text-sm">Über uns</a>
-            <a className="link link-hover text-sm">Kontakt</a>
+            <a href="/contact" className="link link-hover text-sm">Kontakt</a>
           </div>
           <div className="flex flex-col space-y-2">
             <span className="footer-title text-lg font-semibold mb-2">Ressourcen</span>
@@ -23,9 +23,9 @@ export default function Footer() {
           </div>
           <div className="flex flex-col space-y-2">
             <span className="footer-title text-lg font-semibold mb-2">Rechtliches</span>
-            <a className="link link-hover text-sm">Impressum</a>
-            <a className="link link-hover text-sm">Datenschutz</a>
-            <a className="link link-hover text-sm">Urheberrecht</a>
+            <a href="/imprint" className="link link-hover text-sm">Impressum</a>
+            <a href="/privacy" className="link link-hover text-sm">Datenschutz</a>
+            <a href="/copyright" className="link link-hover text-sm">Urheberrecht</a>
           </div>
         </div>
         

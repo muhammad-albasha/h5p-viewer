@@ -97,8 +97,7 @@ const Navbar = () => {
           >
             {darkMode ? <FiSun /> : <FiMoon />}
             <span className="hidden md:inline ml-1">Kontrast</span>
-          </button>
-          <Link href="#" className="btn btn-sm btn-ghost normal-case">
+          </button>          <Link href="/easy-language" className="btn btn-sm btn-ghost normal-case">
             <TbLanguage className="mr-1" />
             <span className="hidden md:inline">Leichte Sprache</span>
           </Link>
