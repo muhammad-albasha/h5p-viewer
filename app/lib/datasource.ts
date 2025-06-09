@@ -1,6 +1,11 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { User, Tag, SubjectArea, H5PContent, FeaturedContent, PageSettings } from '../entities';
+import { User } from '../entities/User';
+import { Tag } from '../entities/Tag';
+import { SubjectArea } from '../entities/SubjectArea';
+import { H5PContent } from '../entities/H5PContent';
+import { FeaturedContent } from '../entities/FeaturedContent';
+import { PageSettings } from '../entities/PageSettings';
 
 export const AppDataSource = new DataSource({
   type: 'mysql',

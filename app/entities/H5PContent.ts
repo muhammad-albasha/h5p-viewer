@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, ManyToMany, JoinTable, JoinColumn, OneToMany } from 'typeorm';
-import { User } from './User';
 import { SubjectArea } from './SubjectArea';
 import { Tag } from './Tag';
 
@@ -31,10 +30,9 @@ export class H5PContent {
 
   @Column({ type: 'int', nullable: true, name: 'subject_area_id' })
   subjectAreaId?: number;
-
-  @ManyToOne(() => User, user => user.createdContent, { nullable: true })
+  @ManyToOne("User", "createdContent", { nullable: true })
   @JoinColumn({ name: 'created_by' })
-  createdBy?: User;
+  createdBy?: any;
 
   @Column({ type: 'int', nullable: true, name: 'created_by' })
   createdById?: number;

@@ -13,6 +13,9 @@ export class User {
   @Column({ type: 'varchar', length: 255, unique: true })
   username!: string;
 
+  @Column({ type: 'varchar', length: 255, unique: true })
+  email!: string;
+
   @Column({ type: 'varchar', length: 255 })
   password!: string;
 
@@ -25,9 +28,8 @@ export class User {
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
-
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt!: Date;
-  @OneToMany("H5PContent", "createdBy")
+    @OneToMany("H5PContent", "createdBy")
   createdContent!: any[];
 }

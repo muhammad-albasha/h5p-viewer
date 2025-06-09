@@ -13,11 +13,10 @@ export class UserService {
     }
     return this.userRepository;
   }
-
   async findAll(): Promise<User[]> {
     const repo = await this.getRepository();
     return repo.find({
-      select: ['id', 'username', 'role', 'createdAt', 'updatedAt']
+      select: ['id', 'username', 'email', 'role', 'createdAt', 'updatedAt']
     });
   }
 
@@ -25,7 +24,7 @@ export class UserService {
     const repo = await this.getRepository();
     return repo.findOne({
       where: { id },
-      select: ['id', 'username', 'role', 'createdAt', 'updatedAt']
+      select: ['id', 'username', 'email', 'role', 'createdAt', 'updatedAt']
     });
   }
 
@@ -34,15 +33,20 @@ export class UserService {
     return repo.findOne({ where: { username } });
   }
 
-  async create(userData: { username: string; password: string; role?: UserRole }): Promise<User> {
+  async findByEmail(email: string): Promise<User | null> {
+    const repo = await this.getRepository();
+    return repo.findOne({ where: { email } });
+  }
+
+  async create(userData: { username: string; email: string; password: string; role?: UserRole }): Promise<User> {
     const repo = await this.getRepository();
     
     // Hash password
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
-    
-    const user = repo.create({
+      const user = repo.create({
       username: userData.username,
+      email: userData.email,
       password: hashedPassword,
       role: userData.role || UserRole.USER
     });
@@ -50,7 +54,7 @@ export class UserService {
     return repo.save(user);
   }
 
-  async update(id: number, updateData: { username?: string; password?: string; role?: UserRole }): Promise<User | null> {
+  async update(id: number, updateData: { username?: string; email?: string; password?: string; role?: UserRole }): Promise<User | null> {
     const repo = await this.getRepository();
     
     const updatePayload: any = { ...updateData };
@@ -74,9 +78,8 @@ export class UserService {
   async validatePassword(user: User, password: string): Promise<boolean> {
     return bcrypt.compare(password, user.password);
   }
-
-  async authenticate(username: string, password: string): Promise<User | null> {
-    const user = await this.findByUsername(username);
+  async authenticate(email: string, password: string): Promise<User | null> {
+    const user = await this.findByEmail(email);
     
     if (!user) {
       return null;
@@ -90,7 +93,6 @@ export class UserService {
     
     return null;
   }
-
   async initializeDefaultUsers(): Promise<void> {
     const repo = await this.getRepository();
     
@@ -100,6 +102,7 @@ export class UserService {
     if (!adminUser) {
       await this.create({
         username: 'admin',
+        email: 'admin@example.com',
         password: 'admin123', // Change this in production!
         role: UserRole.ADMIN
       });
@@ -112,6 +115,7 @@ export class UserService {
     if (!regularUser) {
       await this.create({
         username: 'user',
+        email: 'user@example.com',
         password: 'user123', // Change this in production!
         role: UserRole.USER
       });
