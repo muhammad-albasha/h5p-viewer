@@ -522,13 +522,11 @@ export default function EditContent() {
                     >
                       Zurück zum Bearbeiten
                     </button>
-                  </div>
-
-                  <div className="p-6">
-                    {content && content.slug && (
+                  </div>                  <div className="p-6">
+                    {content && content.file_path && (
                       <div className="rounded-lg overflow-hidden border border-base-300">
                         {/* H5P component expects path to the directory containing h5p.json */}
-                        <PlayH5p h5pJsonPath={`/h5p/${content.slug}`} />
+                        <PlayH5p h5pJsonPath={content.file_path} />
                       </div>
                     )}
                   </div>
