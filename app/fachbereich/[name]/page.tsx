@@ -117,43 +117,28 @@ const Fachbereich = () => {
   return (
     <>
       <Navbar />
-      <Header />
-      
-      <div className="bg-gradient-to-br from-primary to-secondary text-primary-content py-12">
-        <div className="container mx-auto max-w-6xl px-4">
-          <div className="flex items-center gap-2 mb-4">            {viewMode === 'view' ? (
-              <button 
-                onClick={handleBackToList} 
-                className="btn btn-sm btn-outline btn-circle"
-                aria-label="Zurück zur Übersicht"
-                title="Zurück zur Übersicht"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
-                </svg>
-              </button>
-            ) : (
+      <Header />      
+      {viewMode === 'list' && (
+        <div className="bg-gradient-to-br from-primary to-secondary text-primary-content py-12">
+          <div className="container mx-auto max-w-6xl px-4">
+            <div className="flex items-center gap-2 mb-4">
               <Link href="/fachbereich" className="btn btn-sm btn-outline btn-circle">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
                 </svg>
               </Link>
-            )}
-            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-              {viewMode === 'view' ? selectedContent?.name : subjectAreaName || "Fachbereich"}
-            </h1>
+              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+                {subjectAreaName || "Fachbereich"}
+              </h1>
+            </div>
+            <p className="text-primary-content/80 mt-2">
+              H5P-Inhalte für diesen Fachbereich
+            </p>
           </div>
-          <p className="text-primary-content/80 mt-2">
-            {viewMode === 'view' 
-              ? 'Interaktiver H5P-Inhalt' 
-              : 'H5P-Inhalte für diesen Fachbereich'
-            }
-          </p>
         </div>
-      </div>
-      
-      <div className="bg-base-200 min-h-screen py-10">
-        <div className="container mx-auto max-w-6xl px-4">
+      )}
+        <div className="bg-base-200 min-h-screen py-10">
+        <div className={`${viewMode === 'view' ? 'w-full px-4' : 'container mx-auto max-w-6xl px-4'}`}>
           {isLoading ? (
             <div className="flex justify-center p-8">
               <div className="loading loading-spinner loading-lg"></div>
@@ -165,39 +150,170 @@ const Fachbereich = () => {
           ) : viewMode === 'list' && content.length === 0 ? (
             <div className="alert alert-info">
               <p>Keine Inhalte für diesen Fachbereich gefunden</p>
-            </div>
-          ) : viewMode === 'view' && selectedContent ? (
-            <div className="bg-base-100 rounded-xl shadow-xl overflow-hidden">
-              <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-6">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                  <div>
-                    <span className="px-4 py-1.5 rounded-full bg-secondary/20 text-secondary-content font-medium inline-block mb-3">
-                      {selectedContent.type}
+            </div>          ) : viewMode === 'view' && selectedContent ? (
+            <>
+              {/* Enhanced Hero Section for Viewer Mode */}
+              <div className="bg-gradient-to-br from-primary via-secondary to-accent text-white relative overflow-hidden -mt-10 -mx-4 mb-8">
+                {/* Background Decorations */}
+                <div className="absolute inset-0">
+                  <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1),transparent)] opacity-50"></div>
+                  <div className="absolute -top-40 -right-40 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+                  <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-white/5 rounded-full blur-2xl"></div>
+                </div>
+
+                <div className="relative z-10 container mx-auto max-w-7xl px-4 py-16">
+                  {/* Navigation Breadcrumb */}
+                  <nav className="flex items-center space-x-2 text-sm mb-8 opacity-90">
+                    <Link href="/" className="hover:text-accent transition-colors">
+                      <svg
+                        className="w-4 h-4 mr-1 inline"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                      </svg>
+                      Startseite
+                    </Link>
+                    <span className="opacity-60">•</span>
+                    <Link href="/fachbereich" className="hover:text-accent transition-colors">
+                      Fachbereiche
+                    </Link>
+                    <span className="opacity-60">•</span>
+                    <button onClick={handleBackToList} className="hover:text-accent transition-colors">
+                      {subjectAreaName}
+                    </button>
+                    <span className="opacity-60">•</span>
+                    <span className="text-accent font-medium">
+                      {selectedContent.name}
                     </span>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {selectedContent.tags?.map((tag, idx) => (
-                        <span 
-                          key={idx} 
-                          className="px-3 py-1 rounded-full bg-primary/10 text-primary-content text-sm font-medium"
+                  </nav>
+
+                  <div className="grid lg:grid-cols-12 gap-8 items-center">
+                    {/* Content Info */}
+                    <div className="lg:col-span-8 space-y-6">
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 bg-accent rounded-full animate-pulse"></div>
+                            <span className="badge badge-accent badge-lg font-semibold px-4 py-2">
+                              {selectedContent.type}
+                            </span>
+                          </div>
+                        </div>
+
+                        <h1 className="text-4xl lg:text-6xl font-black tracking-tight leading-tight">
+                          {selectedContent.name}
+                        </h1>
+                        
+                        <p className="text-xl lg:text-2xl opacity-90 leading-relaxed max-w-2xl">
+                          {`Interaktiver ${selectedContent.type}-Inhalt für ein besseres Lernerlebnis`}
+                        </p>
+                      </div>
+
+                      {/* Tags */}
+                      {selectedContent.tags && selectedContent.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {selectedContent.tags.map((tag, idx) => (
+                            <span
+                              key={idx}
+                              className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium hover:bg-white/30 transition-all duration-200 border border-white/30"
+                            >
+                              #{tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="lg:col-span-4 flex flex-col gap-4">
+                      {/* Main Action Buttons Group */}
+                      <div className="flex flex-col gap-3">
+                        <button
+                          onClick={handleBackToList}
+                          className="btn btn-outline btn-white border-2 hover:bg-white hover:text-primary transition-all duration-300 group"
                         >
-                          #{tag}
-                        </span>
-                      ))}
+                          <svg
+                            className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                            />
+                          </svg>
+                          Zurück zur Übersicht
+                        </button>
+
+                        <div className="flex gap-2">
+                          <button className="btn btn-outline btn-white/80 border-white/50 hover:bg-white/20 hover:border-white transition-all duration-200 flex-1">
+                            <svg
+                              className="w-4 h-4 mr-1"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                              />
+                            </svg>
+                            Favoriten
+                          </button>
+                          <button className="btn btn-outline btn-white/80 border-white/50 hover:bg-white/20 hover:border-white transition-all duration-200 flex-1">
+                            <svg
+                              className="w-4 h-4 mr-1"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
+                              />
+                            </svg>
+                            Teilen
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="stats bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white">
+                        <div className="stat">
+                          <div className="stat-title text-white/70">Content-Typ</div>
+                          <div className="stat-value text-lg">
+                            {selectedContent.type}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>              {/* Main Content */}
+              <div className="w-full">
+                {/* H5P Content Player */}
+                <div className="bg-base-100 shadow-2xl border border-base-300/50 overflow-hidden rounded-xl">
+                  <div className="bg-gradient-to-r from-primary/5 to-secondary/5 p-6 border-b border-base-300">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-8 bg-gradient-to-b from-primary to-secondary rounded-full"></div>
+                      <h3 className="text-2xl font-bold">
+                        Interaktiver Lerninhalt
+                      </h3>
+                    </div>
+                  </div>
+                  
+                  <div className="p-1">
+                    <div className="bg-base-200/50 rounded-xl p-2 border-base-300">
+                      <PlayH5p h5pJsonPath={selectedContent.path} />
                     </div>
                   </div>
                 </div>
               </div>
-              
-              <div className="px-6 py-4 border-y border-base-300 bg-base-100 flex items-center">
-                <div className="w-1.5 h-8 bg-gradient-to-b from-primary to-secondary rounded-full mr-3"></div>
-                <h2 className="text-xl font-bold">Interaktiver Lerninhalt</h2>
-              </div>
-              
-              <div className="p-6">
-                <div className="rounded-xl overflow-hidden shadow-lg border border-base-300">
-                  <PlayH5p h5pJsonPath={selectedContent.path} />
-                </div>
-              </div>            </div>          ) : viewMode === 'list' && (
+            </>) : viewMode === 'list' && (
             <>
               {/* Content Filter */}
               <ContentFilter

@@ -1,5 +1,18 @@
 /* ===== MODERNES H5P COMPONENT STYLING ===== */
 
+/* Force full width for H5P content */
+.h5pStyleWrapper {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.h5pStyleWrapper :global(.h5p-content),
+.h5pStyleWrapper :global(.h5p-container),
+.h5pStyleWrapper :global(.h5p-iframe-wrapper) {
+  width: 100% !important;
+  max-width: none !important;
+}
+
 .h5pWrapper {
   position: relative;
   width: 100%;
@@ -18,6 +31,7 @@
   position: relative;
   z-index: 1;
   min-height: 400px;
+  width: 100%;
   background-color: rgb(var(--bg-elevated));
   border: 1px solid rgb(var(--border-primary));
   border-radius: var(--radius-xl);
