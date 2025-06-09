@@ -18,6 +18,7 @@ interface SubjectAreaContent {
   type: string;
   tags: string[];
   slug?: string;
+  coverImagePath?: string;
 }
 
 const Fachbereich = () => {
@@ -160,20 +161,23 @@ const Fachbereich = () => {
                 </div>
               </div>
             </div>          ) : viewMode === 'list' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {content.map(item => {
-                // Determine image URL from path or slug
-                let imageUrl;
-                if (item.slug) {
-                  imageUrl = `/api/h5p/cover/${item.slug}/content/images/cover.jpg`;
-                } else {
-                  // Fallback: construct from path
-                  let pathSlug = item.path;
-                  if (pathSlug.startsWith('/h5p/')) {
-                    pathSlug = pathSlug.replace('/h5p/', '');
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">              {content.map(item => {
+                // Determine image URL - prioritize coverImagePath from database
+                let imageUrl = item.coverImagePath;
+                
+                // If no coverImagePath, construct from slug or path
+                if (!imageUrl) {
+                  if (item.slug) {
+                    imageUrl = `/api/h5p/cover/${item.slug}/content/images/cover.jpg`;
+                  } else {
+                    // Fallback: construct from path
+                    let pathSlug = item.path;
+                    if (pathSlug.startsWith('/h5p/')) {
+                      pathSlug = pathSlug.replace('/h5p/', '');
+                    }
+                    pathSlug = pathSlug.replace(/^\/?h5p\/?/, '').replace(/\/+$/, '');
+                    imageUrl = `/api/h5p/cover/${pathSlug}/content/images/cover.jpg`;
                   }
-                  pathSlug = pathSlug.replace(/^\/?h5p\/?/, '').replace(/\/+$/, '');
-                  imageUrl = `/api/h5p/cover/${pathSlug}/content/images/cover.jpg`;
                 }
 
                 return (
