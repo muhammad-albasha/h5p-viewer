@@ -103,13 +103,17 @@ export default function FeaturedContent() {
     // Listen for focus events to refresh when user comes back to tab
     const handleFocus = () => {
       fetchFeaturedContents(false);
-    }; // Listen for visibility change to pause/resume polling
+    };
+
+    // Listen for visibility change to pause/resume polling
     const handleVisibilityChange = () => {
       if (!document.hidden) {
         // User came back to tab, check for updates
         fetchFeaturedContents(false);
       }
-    }; // Listen for custom event when featured content changes in admin
+    };
+
+    // Listen for custom event when featured content changes in admin
     const handleFeaturedContentChanged = () => {
       fetchFeaturedContents(true); // Force fetch since we know it changed
     };
@@ -127,7 +131,9 @@ export default function FeaturedContent() {
       "featuredContentChanged",
       handleFeaturedContentChanged
     );
-    window.addEventListener("storage", handleStorageChange); // Cleanup on unmount
+    window.addEventListener("storage", handleStorageChange);
+
+    // Cleanup on unmount
     return () => {
       window.removeEventListener("focus", handleFocus);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
@@ -141,45 +147,47 @@ export default function FeaturedContent() {
 
   if (loading) {
     return (
-      <section className="py-16 px-4 bg-base-100">
+      <section className="py-16 px-4 bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-base-content mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Beliebte Lerninhalte
             </h2>
-            <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Entdecke unsere meistgenutzten interaktiven H5P-Elemente
             </p>
-          </div>{" "}          {/* Loading skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          </div>
+
+          {/* Loading skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="card bg-gradient-to-br from-base-100 to-base-200 shadow-lg animate-pulse border border-base-300/50 overflow-hidden"
+                className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20 animate-pulse"
               >
                 {/* Skeleton Image */}
-                <div className="h-48 bg-base-300 relative">
+                <div className="h-48 bg-gradient-to-br from-blue-100 to-purple-100 relative">
                   <div className="absolute top-3 right-3">
-                    <div className="h-7 bg-base-300/70 rounded-full w-20"></div>
+                    <div className="h-6 bg-blue-200 rounded-lg w-16"></div>
                   </div>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-16 h-16 bg-base-300/70 rounded-full"></div>
+                    <div className="w-16 h-16 bg-blue-200 rounded-full"></div>
                   </div>
                 </div>
                 
-                <div className="card-body p-6 space-y-4">
+                <div className="p-6 space-y-4">
                   <div className="flex justify-start">
-                    <div className="h-5 bg-base-300 rounded-full w-16"></div>
+                    <div className="h-5 bg-purple-200 rounded-lg w-20"></div>
                   </div>
-                  <div className="h-6 bg-base-300 rounded w-3/4"></div>
-                  <div className="h-12 bg-base-300 rounded w-full"></div>
+                  <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-12 bg-gray-200 rounded w-full"></div>
                   <div className="flex gap-2">
-                    <div className="h-5 bg-base-300 rounded-full w-16"></div>
-                    <div className="h-5 bg-base-300 rounded-full w-20"></div>
-                    <div className="h-5 bg-base-300 rounded-full w-14"></div>
+                    <div className="h-5 bg-gray-200 rounded-lg w-16"></div>
+                    <div className="h-5 bg-gray-200 rounded-lg w-20"></div>
+                    <div className="h-5 bg-gray-200 rounded-lg w-14"></div>
                   </div>
-                  <div className="pt-4 border-t border-base-300/30">
-                    <div className="h-10 bg-base-300 rounded-full w-full"></div>
+                  <div className="pt-4 border-t border-gray-100">
+                    <div className="h-10 bg-gradient-to-r from-blue-200 to-purple-200 rounded-xl w-full"></div>
                   </div>
                 </div>
               </div>
@@ -189,15 +197,16 @@ export default function FeaturedContent() {
       </section>
     );
   }
+
   return (
-    <section className="py-16 px-4 bg-base-100">
+    <section className="py-16 px-4 bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
       <div className="container mx-auto max-w-6xl">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-base-content mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Beliebte Lerninhalte
           </h2>
-          <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Entdecke unsere meistgenutzten interaktiven H5P-Elemente und starte
             dein Lernabenteuer
           </p>
@@ -205,37 +214,48 @@ export default function FeaturedContent() {
 
         {/* Check if no featured content */}
         {featuredContents.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="mb-8">
-              <svg
-                className="w-24 h-24 mx-auto text-base-content/30"
-                fill="currentColor"
-                viewBox="0 0 24 24"
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+            <div className="text-center py-16 px-8">
+              <div className="mb-8">
+                <div className="p-4 bg-blue-100 rounded-full inline-block">
+                  <svg
+                    className="w-12 h-12 text-blue-500"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Keine Featured-Inhalte verfügbar
+              </h3>
+              <p className="text-lg text-gray-600 mb-8 max-w-lg mx-auto">
+                Es wurden noch keine H5P-Elemente als Featured markiert. Besuche
+                alle verfügbaren Inhalte oder kontaktiere den Administrator.
+              </p>
+              <Link
+                href="/h5p"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
               >
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Alle Inhalte entdecken
+              </Link>
             </div>
-            <h3 className="text-2xl font-bold text-base-content mb-4">
-              Keine Featured-Inhalte verfügbar
-            </h3>
-            <p className="text-lg text-base-content/70 mb-8 max-w-lg mx-auto">
-              Es wurden noch keine H5P-Elemente als Featured markiert. Besuche
-              alle verfügbaren Inhalte oder kontaktiere den Administrator.
-            </p>
-            <a href="/h5p" className="btn btn-primary btn-lg px-8">
-              Alle Inhalte entdecken
-            </a>
           </div>
         ) : (
           <>
-            {" "}
             {/* Featured Content Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">              {featuredContents.map((content) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+              {featuredContents.map((content) => (
                 <div
                   key={content.id}
-                  className="card bg-gradient-to-br from-base-100 to-base-200 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 group border border-base-300/50 overflow-hidden"
-                >                  {/* Card Image */}
-                  <figure className="relative h-48 bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden">
+                  className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl overflow-hidden border border-white/20 transition-all duration-300 hover:scale-105 group cursor-pointer"
+                >
+                  {/* Card Image */}
+                  <div className="relative h-48 bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden">
                     <img
                       src={content.coverImagePath || `/api/h5p/cover/${content.slug}/content/images/cover.jpg`}
                       alt={content.name}
@@ -247,61 +267,57 @@ export default function FeaturedContent() {
                     />
                     {/* Content type overlay */}
                     <div className="absolute top-3 right-3">
-                      <div className="badge badge-primary badge-lg font-semibold px-3 py-2 shadow-lg bg-primary/90 backdrop-blur-sm">
+                      <span className="px-3 py-1 bg-blue-500 text-white rounded-lg text-xs font-medium backdrop-blur-sm">
                         {content.type}
-                      </div>
+                      </span>
                     </div>
-                  </figure>
+                  </div>
 
-                  <div className="card-body p-6 space-y-4">
+                  <div className="p-6 space-y-4">
                     {/* Subject Area Badge */}
-                    <div className="flex justify-start items-start">
-                      {content.subject_area && (
-                        <div className="badge badge-outline badge-sm border-2 font-medium">
+                    {content.subject_area && (
+                      <div className="flex justify-start">
+                        <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-lg text-xs font-medium">
                           {content.subject_area.name}
-                        </div>
-                      )}
-                    </div>
+                        </span>
+                      </div>
+                    )}
 
                     {/* Title */}
-                    <h3 className="card-title text-xl font-bold leading-tight group-hover:text-primary transition-colors duration-200">
+                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors leading-tight">
                       {content.name}
-                    </h3>                    {/* Description Space */}
-                    <p className="text-base-content/70 text-sm leading-relaxed min-h-[3rem] flex items-center">
-                      {content.description || `Interaktiver ${content.type}-Inhalt für ein besseres Lernerlebnis`}
-                    </p>{/* Tags */}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {content.description || `Interaktiver ${content.type}-Inhalt für optimales Lernen`}
+                    </p>
+
+                    {/* Tags */}
                     <div className="flex flex-wrap gap-2">
                       {content.tags.slice(0, 3).map((tag, index) => (
                         <span
                           key={index}
-                          className="badge bg-gradient-to-r from-secondary/80 to-secondary text-secondary-content border-0 shadow-sm font-medium px-3 py-1 text-xs hover:from-primary/80 hover:to-primary hover:text-primary-content transition-all duration-200 hover:shadow-md hover:scale-105"
+                          className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors"
                         >
                           {tag}
                         </span>
                       ))}
                       {content.tags.length > 3 && (
-                        <span className="badge bg-gradient-to-r from-base-300 to-base-200 text-base-content border-0 shadow-sm font-medium px-3 py-1 text-xs">
+                        <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">
                           +{content.tags.length - 3} weitere
                         </span>
                       )}
                     </div>
 
                     {/* Action Button */}
-                    <div className="card-actions justify-center pt-4 border-t border-base-300/30">
+                    <div className="pt-4 border-t border-gray-100">
                       <Link
                         href={content.path}
-                        className="btn btn-primary btn-wide hover:btn-primary-focus group-hover:scale-105 transition-all duration-200 shadow-md font-semibold"
+                        className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2"
                       >
-                        <svg
-                          className="w-4 h-4 mr-2"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                            clipRule="evenodd"
-                          />
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         Jetzt starten
                       </Link>
@@ -310,9 +326,16 @@ export default function FeaturedContent() {
                 </div>
               ))}
             </div>
+
             {/* View All Button */}
             <div className="text-center">
-              <Link href="/h5p" className="btn btn-outline btn-lg px-8 py-3">
+              <Link 
+                href="/h5p" 
+                className="inline-flex items-center gap-2 px-8 py-3 bg-white/80 backdrop-blur-sm hover:bg-white/90 text-gray-700 hover:text-blue-600 font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-300 transition-all duration-200 hover:scale-105 hover:shadow-lg"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
                 Alle Inhalte anzeigen
               </Link>
             </div>

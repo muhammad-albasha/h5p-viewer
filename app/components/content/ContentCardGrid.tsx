@@ -24,26 +24,36 @@ interface ContentCardGridProps {
 const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
   if (loading) {
     return (
-      <div className="flex justify-center my-12">
-        <span className="loading loading-spinner loading-lg"></span>
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+        <div className="flex flex-col items-center justify-center p-12">
+          <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
+          <p className="text-gray-600 mt-4 font-medium">Inhalte werden geladen...</p>
+          <p className="text-gray-500 text-sm mt-1">Bitte warten Sie einen Moment</p>
+        </div>
       </div>
     );
   }
 
   if (contents.length === 0) {
     return (
-      <div className="alert alert-info">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current flex-shrink-0 w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <span>Keine Inhalte gefunden. Bitte ändere deine Filtereinstellungen.</span>
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+        <div className="flex flex-col items-center justify-center p-12">
+          <div className="p-4 bg-blue-100 rounded-full mb-4">
+            <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <p className="text-gray-600 font-medium text-lg">Keine Inhalte gefunden</p>
+          <p className="text-gray-500 text-sm mt-1">Bitte ändern Sie die Filter oder versuchen Sie eine andere Suche.</p>
         </div>
       </div>
     );
-  }  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {contents.map((content, index) => {// Determine image URL - prioritize coverImagePath from database
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {contents.map((content, index) => {
+        // Determine image URL - prioritize coverImagePath from database
         let imageUrl = content.coverImagePath;
         
         // If no coverImagePath, construct from slug or path
@@ -61,12 +71,13 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
           }
         }
         
-        return (          <div
+        return (
+          <div
             key={content.id || index}
-            className="card bg-gradient-to-br from-base-100 to-base-200 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 group border border-base-300/50 overflow-hidden"
+            className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl overflow-hidden border border-white/20 transition-all duration-300 hover:scale-105 group cursor-pointer"
           >
             {/* Card Image */}
-            <figure className="relative h-48 bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden">
+            <div className="relative h-48 bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden">
               <img
                 src={imageUrl}
                 alt={content.name}
@@ -75,63 +86,58 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
                   (e.currentTarget as HTMLImageElement).src = '/assets/placeholder-image.svg';
                 }}
               />
-              {/* Content type overlay */}
               <div className="absolute top-3 right-3">
-                <div className="badge badge-primary badge-lg font-semibold px-3 py-2 shadow-lg bg-primary/90 backdrop-blur-sm">
+                <span className="px-3 py-1 bg-blue-500 text-white rounded-lg text-xs font-medium backdrop-blur-sm">
                   {content.type}
-                </div>
+                </span>
               </div>
-            </figure>
+            </div>
 
-            <div className="card-body p-6 space-y-4">
+            <div className="p-6 space-y-4">
               {/* Subject Area Badge */}
-              <div className="flex justify-start items-start">
-                {content.subject_area && (
-                  <div className="badge badge-outline badge-sm border-2 font-medium">
+              {content.subject_area && (
+                <div className="flex justify-start">
+                  <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-lg text-xs font-medium">
                     {content.subject_area.name}
-                  </div>
-                )}
-              </div>
+                  </span>
+                </div>
+              )}
 
               {/* Title */}
-              <h3 className="card-title text-xl font-bold leading-tight group-hover:text-primary transition-colors duration-200">
+              <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors leading-tight">
                 {content.name}
-              </h3>              {/* Description Space */}
-              <p className="text-base-content/70 text-sm leading-relaxed min-h-[3rem] flex items-center">
-                {content.description || `Interaktiver ${content.type}-Inhalt für ein besseres Lernerlebnis`}
-              </p>{/* Tags */}
+              </h3>
+
+              {/* Description */}
+              <p className="text-gray-600 text-sm leading-relaxed">
+                {content.description || `Interaktiver ${content.type}-Inhalt für optimales Lernen`}
+              </p>
+
+              {/* Tags */}
               <div className="flex flex-wrap gap-2">
                 {content.tags?.slice(0, 3).map((tag, idx) => (
                   <span
                     key={idx}
-                    className="badge bg-gradient-to-r from-secondary/80 to-secondary text-secondary-content border-0 shadow-sm font-medium px-3 py-1 text-xs hover:from-primary/80 hover:to-primary hover:text-primary-content transition-all duration-200 hover:shadow-md hover:scale-105"
+                    className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors"
                   >
                     {tag}
                   </span>
                 ))}
                 {content.tags && content.tags.length > 3 && (
-                  <span className="badge bg-gradient-to-r from-base-300 to-base-200 text-base-content border-0 shadow-sm font-medium px-3 py-1 text-xs">
+                  <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">
                     +{content.tags.length - 3} weitere
                   </span>
                 )}
               </div>
 
               {/* Action Button */}
-              <div className="card-actions justify-center pt-4 border-t border-base-300/30">
+              <div className="pt-4 border-t border-gray-100">
                 <Link
                   href={`/h5p/content?id=${content.id || index + 1}`}
-                  className="btn btn-primary btn-wide hover:btn-primary-focus group-hover:scale-105 transition-all duration-200 shadow-md font-semibold"
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2"
                 >
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                      clipRule="evenodd"
-                    />
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                   Jetzt starten
                 </Link>
