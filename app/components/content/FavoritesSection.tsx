@@ -181,11 +181,6 @@ const FavoritesSection: React.FC = () => {
                           "/assets/placeholder-image.svg";
                       }}
                     />
-                    <div className="absolute top-2 right-2">
-                      <span className="px-2 py-1 bg-purple-500 text-white rounded text-xs font-medium backdrop-blur-sm">
-                        {content.type}
-                      </span>
-                    </div>
                     <div className="absolute top-2 left-2">
                       <FavoriteButton
                         content={content}

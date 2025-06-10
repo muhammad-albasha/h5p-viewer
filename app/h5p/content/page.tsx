@@ -179,7 +179,7 @@ function H5PContentViewer() {
         </div>
       </div>      {/* Main Content */}
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
-        <div className="container mx-auto max-w-6xl px-4 space-y-8">          {loading ? (
+        <div className="w-full px-4 space-y-8">{loading ? (
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
               <div className="flex flex-col items-center justify-center p-12">
                 <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
@@ -187,7 +187,7 @@ function H5PContentViewer() {
                 <p className="text-gray-500 text-sm mt-1">Bitte warten Sie einen Moment</p>
               </div>
             </div>          ) : error ? (
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+            <div className="w-full bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
               <div className="flex flex-col items-center justify-center p-12">
                 <div className="p-4 bg-red-100 rounded-full mb-4">
                   <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -218,10 +218,9 @@ function H5PContentViewer() {
                 </div>
               </div>
             </div>
-          ) : contentDetails ? (
-            <div className="space-y-8">
+          ) : contentDetails ? (            <div className="w-full space-y-8">
               {/* H5P Content Player */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
+              <div className="w-full bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20"><div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-white/20 rounded-lg">
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -233,9 +232,8 @@ function H5PContentViewer() {
                       <p className="text-blue-100 text-sm mt-1">Starten Sie Ihre Lernerfahrung</p>
                     </div>
                   </div>
-                </div>                
-                <div className="p-6">
-                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                </div>                  <div className="p-2">
+                  <div className="bg-gray-50 rounded-xl p-2 border border-gray-200 w-full">
                     <PlayH5p h5pJsonPath={contentDetails.path} />
                   </div>
                 </div>

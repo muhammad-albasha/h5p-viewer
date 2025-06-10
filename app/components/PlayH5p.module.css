@@ -1,37 +1,80 @@
 /* ===== MODERNES H5P COMPONENT STYLING ===== */
 
+/* Modern Loading Animations */
+.spinnerMiddle {
+  animation-duration: 1.5s;
+  animation-direction: reverse;
+}
+
+.spinnerInner {
+  animation-duration: 2s;
+}
+
+.bounceDelay1 {
+  animation-delay: 0.1s;
+}
+
+.bounceDelay2 {
+  animation-delay: 0.2s;
+}
+
 /* Force full width for H5P content */
 .h5pStyleWrapper {
   width: 100% !important;
   max-width: none !important;
+  margin: 0 !important;
 }
 
 .h5pStyleWrapper :global(.h5p-content),
 .h5pStyleWrapper :global(.h5p-container),
-.h5pStyleWrapper :global(.h5p-iframe-wrapper) {
+.h5pStyleWrapper :global(.h5p-iframe-wrapper),
+.h5pStyleWrapper :global(.h5p-actions),
+.h5pStyleWrapper :global(.h5p-frame) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+
+/* Additional global H5P width overrides */
+.h5pStyleWrapper :global(.h5p-content-area),
+.h5pStyleWrapper :global(.h5p-inner),
+.h5pStyleWrapper :global(.h5p-content-outer),
+.h5pStyleWrapper :global(.h5p-fullscreen),
+.h5pStyleWrapper :global(.h5p-embed-iframe) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Ensure iframe and canvas elements use full width */
+.h5pStyleWrapper :global(iframe),
+.h5pStyleWrapper :global(canvas),
+.h5pStyleWrapper :global(.h5p-standalone-container) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+
+/* Override any responsive constraints */
+.h5pStyleWrapper :global(.h5p-responsive) {
   width: 100% !important;
   max-width: none !important;
 }
 
-.h5pWrapper {
-  position: relative;
-  width: 100%;
-  background-color: rgb(var(--bg-primary));
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
-  transition: all var(--transition-normal);
-}
-
-.h5pWrapper:hover {
-  box-shadow: var(--shadow-xl);
+/* Remove any fixed widths */
+.h5pStyleWrapper :global([style*="width"]) {
+  width: 100% !important;
+  max-width: none !important;
 }
 
 .h5pContainer {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
   position: relative;
   z-index: 1;
   min-height: 400px;
-  width: 100%;
   background-color: rgb(var(--bg-elevated));
   border: 1px solid rgb(var(--border-primary));
   border-radius: var(--radius-xl);
