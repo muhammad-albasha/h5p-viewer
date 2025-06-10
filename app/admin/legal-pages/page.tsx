@@ -12,19 +12,22 @@ interface LegalContent {
   imprint: string;
   privacy: string;
   copyright: string;
+  easyLanguage: string;
+  about: string;
 }
 
-type LegalPageType = 'imprint' | 'privacy' | 'copyright';
+type LegalPageType = 'imprint' | 'privacy' | 'copyright' | 'easyLanguage' | 'about';
 
 export default function LegalPagesAdmin() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<LegalPageType>('imprint');
-  const [content, setContent] = useState<LegalContent>({
+  const [activeTab, setActiveTab] = useState<LegalPageType>('imprint');  const [content, setContent] = useState<LegalContent>({
     imprint: '',
     privacy: '',
-    copyright: ''
-  });  const [isLoading, setIsLoading] = useState(true);
+    copyright: '',
+    easyLanguage: '',
+    about: ''
+  });const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -49,10 +52,9 @@ export default function LegalPagesAdmin() {
         const data = await response.json();
         setContent(data);
       } catch (error) {
-        console.error('Error fetching legal pages:', error);
-        setMessage({
+        console.error('Error fetching legal pages:', error);        setMessage({
           type: 'error',
-          text: 'Fehler beim Laden der rechtlichen Seiten'
+          text: 'Fehler beim Laden der Seiten'
         });
       } finally {
         setIsLoading(false);
@@ -84,30 +86,28 @@ export default function LegalPagesAdmin() {
 
       if (!response.ok) {
         throw new Error('Failed to save content');
-      }
-
-      setMessage({
+      }      setMessage({
         type: 'success',
-        text: 'Rechtliche Seiten erfolgreich gespeichert!'
+        text: 'Seiten erfolgreich gespeichert!'
       });
 
       // Clear message after 3 seconds
       setTimeout(() => setMessage(null), 3000);
     } catch (error) {
-      console.error('Error saving legal pages:', error);
-      setMessage({
+      console.error('Error saving legal pages:', error);      setMessage({
         type: 'error',
-        text: 'Fehler beim Speichern der rechtlichen Seiten'
+        text: 'Fehler beim Speichern der Seiten'
       });
     } finally {
       setIsSaving(false);
     }
   };
-
   const tabs = [
     { id: 'imprint' as LegalPageType, label: 'Impressum', description: 'Rechtliche Informationen über die Website', icon: '📋' },
     { id: 'privacy' as LegalPageType, label: 'Datenschutz', description: 'Datenschutzerklärung und Cookie-Richtlinien', icon: '🔒' },
-    { id: 'copyright' as LegalPageType, label: 'Urheberrecht', description: 'Urheberrechtsbestimmungen und Lizenzen', icon: '©️' }
+    { id: 'copyright' as LegalPageType, label: 'Urheberrecht', description: 'Urheberrechtsbestimmungen und Lizenzen', icon: '©️' },
+    { id: 'easyLanguage' as LegalPageType, label: 'Leichte Sprache', description: 'Inhalte in leichter, verständlicher Sprache', icon: '📖' },
+    { id: 'about' as LegalPageType, label: 'Über uns', description: 'Informationen über das Team und die Mission', icon: '👥' }
   ];
 
   // Clear message after 5 seconds
@@ -123,7 +123,7 @@ export default function LegalPagesAdmin() {
       <div className="flex justify-center items-center h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="text-center">
           <div className="loading loading-spinner loading-lg text-blue-600"></div>
-          <p className="mt-4 text-gray-600">Rechtliche Seiten werden geladen...</p>
+          <p className="mt-4 text-gray-600">Seiten werden geladen...</p>
         </div>
       </div>
     );
@@ -152,12 +152,11 @@ export default function LegalPagesAdmin() {
                     <path fillRule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clipRule="evenodd" />
                     <path fillRule="evenodd" d="M4 5a2 2 0 012-2v1a2 2 0 002 2h8a2 2 0 002-2V3a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zM6 7a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
                   </svg>
-                </div>
-                <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-white">
-                  Rechtliche Seiten verwalten
+                </div>                <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-white">
+                  Seiten verwalten
                 </h1>
               </div>              <p className="text-white/80 text-lg">
-                Bearbeiten Sie Impressum, Datenschutzerklärung und Urheberrechtsbestimmungen mit dem modernen Rich-Text-Editor
+                Bearbeiten Sie Impressum, Datenschutz, Urheberrecht, Leichte Sprache und Über uns mit dem modernen Rich-Text-Editor
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
