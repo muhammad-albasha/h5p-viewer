@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import React from 'react';
+import FavoriteButton from '@/app/components/common/FavoriteButton';
 
 interface H5PContent {
-  id?: number;
+  id: number;
   name: string;
   path: string;
   type: string;
@@ -85,11 +86,13 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).src = '/assets/placeholder-image.svg';
                 }}
-              />
-              <div className="absolute top-3 right-3">
+              />              <div className="absolute top-3 right-3">
                 <span className="px-3 py-1 bg-blue-500 text-white rounded-lg text-xs font-medium backdrop-blur-sm">
                   {content.type}
                 </span>
+              </div>
+              <div className="absolute top-3 left-3">
+                <FavoriteButton content={content} variant="card" />
               </div>
             </div>
 

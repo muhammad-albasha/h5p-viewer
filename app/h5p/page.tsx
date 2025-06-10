@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Navbar from '@/app/components/layout/Navbar';
 import Header from '@/app/components/layout/Header';
 import ContentFilter from '@/app/components/content/ContentFilter';
 import ContentCardGrid from '@/app/components/content/ContentCardGrid';
+import { useFavorites } from '@/app/hooks/useFavorites';
 import Link from 'next/link';
 
 interface SubjectArea {
@@ -27,10 +28,13 @@ interface H5PContent {
 
 export default function AllH5PContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { favorites } = useFavorites();
   const [content, setContent] = useState<H5PContent[]>([]);
   const [filteredContent, setFilteredContent] = useState<H5PContent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   
   // Filter states
   const [searchQuery, setSearchQuery] = useState('');
@@ -38,6 +42,12 @@ export default function AllH5PContent() {
   const [availableTags, setAvailableTags] = useState<string[]>([]);
   const [subjectAreas, setSubjectAreas] = useState<SubjectArea[]>([]);
   const [selectedSubjectArea, setSelectedSubjectArea] = useState('');
+
+  // Check if favorites parameter is in URL
+  useEffect(() => {
+    const favoritesParam = searchParams.get('favorites');
+    setShowOnlyFavorites(favoritesParam === 'true');
+  }, [searchParams]);
   
   // Fetch content and subject areas
   useEffect(() => {
@@ -77,12 +87,17 @@ export default function AllH5PContent() {
     
     fetchData();
   }, []);
-  
-  // Filter content whenever filters change
+    // Filter content whenever filters change
   useEffect(() => {
     if (!content) return;
     
     let result = [...content];
+    
+    // Filter by favorites first if enabled
+    if (showOnlyFavorites) {
+      const favoriteIds = favorites.map(fav => fav.id);
+      result = result.filter(item => favoriteIds.includes(item.id));
+    }
     
     // Filter by search query
     if (searchQuery) {
@@ -109,7 +124,7 @@ export default function AllH5PContent() {
     }
     
     setFilteredContent(result);
-  }, [content, searchQuery, selectedTags, selectedSubjectArea]);
+  }, [content, searchQuery, selectedTags, selectedSubjectArea, showOnlyFavorites, favorites]);
   
   const toggleTag = (tag: string) => {
     setSelectedTags(prev => 
@@ -134,36 +149,62 @@ export default function AllH5PContent() {
         
         <div className="relative container mx-auto max-w-6xl px-4 py-16">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div className="text-white">
-              <div className="flex items-center gap-3 mb-4">
+            <div className="text-white">              <div className="flex items-center gap-3 mb-4">
                 <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                  </svg>
+                  {showOnlyFavorites ? (
+                    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                  )}
                 </div>
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-                  H5P-Inhalte
+                  {showOnlyFavorites ? "Meine Favoriten" : "H5P-Inhalte"}
                 </h1>
               </div>
               <p className="text-blue-100 text-lg max-w-2xl">
-                Entdecken Sie alle verfügbaren interaktiven Lerninhalte
-              </p>
-              <div className="flex items-center gap-6 mt-6">
+                {showOnlyFavorites 
+                  ? "Ihre gespeicherten interaktiven Lerninhalte"
+                  : "Entdecken Sie alle verfügbaren interaktiven Lerninhalte"
+                }
+              </p>              <div className="flex items-center gap-6 mt-6">
                 <div className="flex items-center gap-2 text-blue-100">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
-                  <span className="text-sm font-medium">{content.length} Inhalte verfügbar</span>
+                  <span className="text-sm font-medium">
+                    {showOnlyFavorites 
+                      ? `${favorites.length} Favoriten` 
+                      : `${content.length} Inhalte verfügbar`
+                    }
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 text-blue-100">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                  </svg>
-                  <span className="text-sm font-medium">{availableTags.length} Tags</span>
-                </div>
+                {!showOnlyFavorites && (
+                  <div className="flex items-center gap-2 text-blue-100">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                    <span className="text-sm font-medium">{availableTags.length} Tags</span>
+                  </div>
+                )}
               </div>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3">
+            </div>            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
+                className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20 ${
+                  showOnlyFavorites 
+                    ? 'bg-red-500/80 hover:bg-red-600/80 text-white' 
+                    : 'bg-white/20 hover:bg-white/30 text-white'
+                }`}
+              >
+                <svg className="w-5 h-5" fill={showOnlyFavorites ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                {showOnlyFavorites ? "Alle Inhalte" : "Nur Favoriten"}
+              </button>
               <Link 
                 href="/fachbereich"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20"
@@ -284,20 +325,31 @@ export default function AllH5PContent() {
                   Seite neu laden
                 </button>
               </div>
-            </div>
-          ) : filteredContent.length === 0 ? (
+            </div>          ) : filteredContent.length === 0 ? (
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
               <div className="flex flex-col items-center justify-center p-12">
                 <div className="p-4 bg-blue-100 rounded-full mb-4">
-                  <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
+                  {showOnlyFavorites ? (
+                    <svg className="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  )}
                 </div>
-                <p className="text-gray-600 font-medium text-lg">Keine Inhalte gefunden</p>
+                <p className="text-gray-600 font-medium text-lg">
+                  {showOnlyFavorites ? "Keine Favoriten gefunden" : "Keine Inhalte gefunden"}
+                </p>
                 <p className="text-gray-500 text-sm mt-1">
-                  {(searchQuery || selectedTags.length > 0 || selectedSubjectArea) 
-                    ? "Bitte ändern Sie die Filter oder versuchen Sie eine andere Suche."
-                    : "Es sind aktuell keine H5P-Inhalte verfügbar."
+                  {showOnlyFavorites 
+                    ? favorites.length === 0 
+                      ? "Sie haben noch keine Favoriten gespeichert. Klicken Sie auf das Herz-Symbol bei jedem Inhalt."
+                      : "Keine Favoriten entsprechen den aktuellen Filterkriterien."
+                    : (searchQuery || selectedTags.length > 0 || selectedSubjectArea) 
+                      ? "Bitte ändern Sie die Filter oder versuchen Sie eine andere Suche."
+                      : "Es sind aktuell keine H5P-Inhalte verfügbar."
                   }
                 </p>
                 {(searchQuery || selectedTags.length > 0 || selectedSubjectArea) && (

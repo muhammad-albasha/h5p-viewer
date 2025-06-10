@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import PlayH5p from '@/app/components/PlayH5p'
 import ContentFilter from '@/app/components/content/ContentFilter'
+import FavoriteButton from '@/app/components/common/FavoriteButton'
 
 interface SubjectAreaContent {
   id: number;
@@ -298,14 +299,12 @@ const Fachbereich = () => {
                         </svg>
                         Zurück zur Übersicht
                       </button>
-                      
-                      <div className="grid grid-cols-2 gap-2">
-                        <button className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg backdrop-blur-sm transition-all duration-200 text-sm">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                          </svg>
-                          Favorit
-                        </button>
+                        <div className="grid grid-cols-2 gap-2">
+                        <FavoriteButton 
+                          content={selectedContent} 
+                          variant="header" 
+                          showText={true}
+                        />
                         <button className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg backdrop-blur-sm transition-all duration-200 text-sm">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
@@ -452,11 +451,13 @@ const Fachbereich = () => {
                             onError={(e) => {
                               (e.currentTarget as HTMLImageElement).src = '/assets/placeholder-image.svg';
                             }}
-                          />
-                          <div className="absolute top-3 right-3">
+                          />                          <div className="absolute top-3 right-3">
                             <span className="px-3 py-1 bg-blue-500 text-white rounded-lg text-xs font-medium backdrop-blur-sm">
                               {item.type}
                             </span>
+                          </div>
+                          <div className="absolute top-3 left-3">
+                            <FavoriteButton content={item} variant="card" />
                           </div>
                         </div>
 

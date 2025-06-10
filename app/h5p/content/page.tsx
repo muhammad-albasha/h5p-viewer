@@ -7,14 +7,22 @@ import PlayH5p from "@/app/components/PlayH5p";
 import { FiArrowLeft } from "react-icons/fi";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
+import FavoriteButton from "@/app/components/common/FavoriteButton";
 
 interface H5PContentDetails {
-  id?: string;
+  id: number;
   name: string;
   path: string;
   type: string;
   tags: string[];
   description?: string;
+  subject_area?: {
+    id: number;
+    name: string;
+    slug: string;
+  } | null;
+  slug?: string;
+  coverImagePath?: string;
 }
 
 // Separate component that uses useSearchParams
@@ -43,13 +51,11 @@ function H5PContentViewer() {
           throw new Error("Failed to fetch H5P content");
         }
 
-        const contents = await response.json();
-
-        // We look for content with the corresponding ID
+        const contents = await response.json();        // We look for content with the corresponding ID
         const contentIndex = parseInt(id) - 1; // ID starts at 1, array at 0
         const content =
           contents[contentIndex] ||
-          contents.find((item: H5PContentDetails) => item.id === id);
+          contents.find((item: H5PContentDetails) => item.id.toString() === id);
 
         if (content) {
           setContentDetails(content);
@@ -65,74 +71,58 @@ function H5PContentViewer() {
     };
 
     fetchContentDetails();
-  }, [id]);
-  return (
+  }, [id]);  return (
     <>
-      {/* Hero Section */}
-      <div className="bg-gradient-to-br from-primary via-secondary to-accent text-white relative overflow-hidden">
-        {/* Background Decorations */}
+      {/* Modern Header Section */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800">
+        {/* Background decorative elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1),transparent)] opacity-50"></div>
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-white/5 rounded-full blur-2xl"></div>
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-48 -translate-y-48 backdrop-blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
         </div>
-
-        <div className="relative z-10 container mx-auto max-w-7xl px-4 py-16">
-          {/* Navigation Breadcrumb */}
-          <nav className="flex items-center space-x-2 text-sm mb-8 opacity-90">
-            <Link href="/" className="hover:text-accent transition-colors">
-              <svg
-                className="w-4 h-4 mr-1 inline"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-              </svg>
-              Startseite
-            </Link>
-            <span className="opacity-60">•</span>
-            <Link href="/h5p" className="hover:text-accent transition-colors">
-              H5P Inhalte
-            </Link>
-            <span className="opacity-60">•</span>
-            <span className="text-accent font-medium">
+        
+        <div className="relative container mx-auto max-w-6xl px-4 py-16">
+          {/* Breadcrumb Navigation */}
+          <nav className="flex items-center space-x-2 text-sm mb-8 text-blue-100">
+            <Link href="/" className="hover:text-white transition-colors">Startseite</Link>
+            <span>•</span>
+            <Link href="/h5p" className="hover:text-white transition-colors">H5P Inhalte</Link>
+            <span>•</span>
+            <span className="text-white font-medium">
               {loading ? "Laden..." : contentDetails?.name || "Content"}
             </span>
           </nav>
 
           <div className="grid lg:grid-cols-12 gap-8 items-center">
-            {/* Content Info */}
-            <div className="lg:col-span-8 space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  {!loading && contentDetails && (
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-accent rounded-full animate-pulse"></div>
-                      <span className="badge badge-accent badge-lg font-semibold px-4 py-2">
-                        {contentDetails.type}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <h1 className="text-4xl lg:text-6xl font-black tracking-tight leading-tight">
-                  {loading ? (
-                    <div className="space-y-3">
-                      <div className="h-12 bg-white/20 rounded-lg animate-pulse w-96"></div>
-                      <div className="h-12 bg-white/20 rounded-lg animate-pulse w-64"></div>
-                    </div>
-                  ) : (
-                    contentDetails?.name || "H5P Inhalt"
-                  )}
-                </h1>                <p className="text-xl lg:text-2xl opacity-90 leading-relaxed max-w-2xl">
-                  {!loading && contentDetails && contentDetails.description 
-                    ? contentDetails.description
-                    : !loading && contentDetails 
-                    ? `Interaktiver ${contentDetails.type}-Inhalt für ein besseres Lernerlebnis`
-                    : "Interaktives Lernmaterial für ein besseres Lernerlebnis"
-                  }
-                </p>
+            <div className="lg:col-span-8 space-y-6 text-white">
+              <div className="flex items-center gap-3 mb-4">
+                {!loading && contentDetails && (
+                  <span className="px-4 py-2 bg-white/20 text-white rounded-lg text-sm font-medium backdrop-blur-sm">
+                    {contentDetails.type}
+                  </span>
+                )}
               </div>
+
+              <h1 className="text-4xl lg:text-6xl font-bold tracking-tight leading-tight">
+                {loading ? (
+                  <div className="space-y-3">
+                    <div className="h-12 bg-white/20 rounded-lg animate-pulse w-96"></div>
+                    <div className="h-12 bg-white/20 rounded-lg animate-pulse w-64"></div>
+                  </div>
+                ) : (
+                  contentDetails?.name || "H5P Inhalt"
+                )}
+              </h1>
+              
+              <p className="text-blue-100 text-xl leading-relaxed max-w-2xl">
+                {!loading && contentDetails && contentDetails.description 
+                  ? contentDetails.description
+                  : !loading && contentDetails 
+                  ? `Interaktiver ${contentDetails.type}-Inhalt für optimales Lernen`
+                  : "Interaktives Lernmaterial für optimales Lernen"
+                }
+              </p>
 
               {/* Tags */}
               {!loading &&
@@ -149,239 +139,144 @@ function H5PContentViewer() {
                     ))}
                   </div>
                 )}
-            </div>{" "}
-            {/* Action Buttons */}
-            <div className="lg:col-span-4 flex flex-col gap-4">
-              {/* Main Action Buttons Group */}
-              <div className="flex flex-col gap-3">
-                <Link
-                  href="/h5p"
-                  className="btn btn-outline btn-white border-2 hover:bg-white hover:text-primary transition-all duration-300 group"
-                >
-                  <svg
-                    className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                    />
+            </div>
+
+            <div className="lg:col-span-4 flex flex-col gap-3">
+              <Link
+                href="/h5p"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Zurück zur Übersicht
+              </Link>
+              
+              <div className="grid grid-cols-2 gap-2">
+                {!loading && contentDetails && (
+                  <FavoriteButton 
+                    content={contentDetails} 
+                    variant="header" 
+                    showText={true}
+                  />
+                )}
+                <button className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg backdrop-blur-sm transition-all duration-200 text-sm">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                   </svg>
-                  Zurück zur Übersicht
-                </Link>
-
-                <div className="flex gap-2">
-                  <button className="btn btn-outline btn-white/80 border-white/50 hover:bg-white/20 hover:border-white transition-all duration-200 flex-1">
-                    <svg
-                      className="w-4 h-4 mr-1"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                      />
-                    </svg>
-                    Favoriten
-                  </button>
-                  <button className="btn btn-outline btn-white/80 border-white/50 hover:bg-white/20 hover:border-white transition-all duration-200 flex-1">
-                    <svg
-                      className="w-4 h-4 mr-1"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
-                      />
-                    </svg>
-                    Teilen
-                  </button>
-                </div>
+                  Teilen
+                </button>
               </div>
-
-              {!loading && contentDetails && (
-                <div className="stats bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white">
-                  <div className="stat">
-                    <div className="stat-title text-white/70">Content-Typ</div>
-                    <div className="stat-value text-lg">
-                      {contentDetails.type}
-                    </div>
-                  </div>
+              
+              {!loading && contentDetails && contentDetails.subject_area && (
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                  <div className="text-blue-100 text-sm font-medium mb-1">Fachbereich</div>
+                  <div className="text-white font-semibold">{contentDetails.subject_area.name}</div>
                 </div>
               )}
             </div>
           </div>
         </div>
       </div>      {/* Main Content */}
-      <main className="bg-base-100 relative">
-        <div className="w-full px-4 py-12">
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-24 space-y-8">
-              {" "}
-              {/* Enhanced Loading Animation */}
-              <div className="relative">
-                <div className="w-24 h-24 border-4 border-primary/30 rounded-full"></div>
-                <div className="absolute top-0 left-0 w-24 h-24 border-4 border-t-primary rounded-full animate-spin"></div>
-                <div className="absolute top-2 left-2 w-20 h-20 border-4 border-t-secondary rounded-full animate-[spin_1.5s_linear_infinite_reverse]"></div>
-                <div className="absolute top-4 left-4 w-16 h-16 border-4 border-t-accent rounded-full animate-[spin_2s_linear_infinite]"></div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
+        <div className="container mx-auto max-w-6xl px-4 space-y-8">          {loading ? (
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+              <div className="flex flex-col items-center justify-center p-12">
+                <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
+                <p className="text-gray-600 mt-4 font-medium">Inhalte werden geladen...</p>
+                <p className="text-gray-500 text-sm mt-1">Bitte warten Sie einen Moment</p>
               </div>
-              <div className="text-center space-y-2">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  Inhalte werden geladen
-                </h2>
-                <p className="text-base-content/70">Einen Moment bitte...</p>
-              </div>
-            </div>
-          ) : error ? (
-            <div className="max-w-2xl mx-auto">
-              <div className="card bg-base-100 shadow-2xl border border-error/20">
-                <div className="card-body p-8">
-                  <div className="flex items-start gap-4">
-                    <div className="bg-error/10 p-4 rounded-full">
-                      <svg
-                        className="w-8 h-8 text-error"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                        />
-                      </svg>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-2xl font-bold mb-3 text-error">
-                        Es ist ein Fehler aufgetreten
-                      </h3>
-                      <p className="text-base-content/80 mb-6 leading-relaxed">
-                        {error}
-                      </p>
-                      <div className="flex gap-3">
-                        <Link href="/h5p" className="btn btn-primary">
-                          <svg
-                            className="w-4 h-4 mr-2"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                            />
-                          </svg>
-                          Zurück zur Übersicht
-                        </Link>
-                        <button
-                          onClick={() => window.location.reload()}
-                          className="btn btn-outline"
-                        >
-                          <svg
-                            className="w-4 h-4 mr-2"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                            />
-                          </svg>
-                          Erneut versuchen
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+            </div>          ) : error ? (
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+              <div className="flex flex-col items-center justify-center p-12">
+                <div className="p-4 bg-red-100 rounded-full mb-4">
+                  <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <p className="text-red-600 font-medium text-lg">Fehler beim Laden</p>
+                <p className="text-gray-600 text-sm mt-1">{error}</p>
+                <div className="flex gap-3 mt-6">
+                  <Link 
+                    href="/h5p" 
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-all duration-200 hover:scale-105 font-medium"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Zurück zur Übersicht
+                  </Link>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-all duration-200 hover:scale-105 font-medium"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Erneut versuchen
+                  </button>
                 </div>
               </div>
             </div>
           ) : contentDetails ? (
             <div className="space-y-8">
               {/* H5P Content Player */}
-              <div className="card bg-base-100 shadow-2xl border border-base-300/50 overflow-hidden">
-                <div className="bg-gradient-to-r from-primary/5 to-secondary/5 p-6 border-b border-base-300">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
                   <div className="flex items-center gap-3">
-                    <div className="w-2 h-8 bg-gradient-to-b from-primary to-secondary rounded-full"></div>
-                    <h3 className="text-2xl font-bold">
-                      Interaktiver Lerninhalt
-                    </h3>
+                    <div className="p-2 bg-white/20 rounded-lg">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold">Interaktiver Lerninhalt</h2>
+                      <p className="text-blue-100 text-sm mt-1">Starten Sie Ihre Lernerfahrung</p>
+                    </div>
                   </div>
-                </div>                <div className="p-1">
-                  <div className="bg-base-200/50 rounded-xl p-2 border-base-300">
+                </div>                
+                <div className="p-6">
+                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
                     <PlayH5p h5pJsonPath={contentDetails.path} />
                   </div>
                 </div>
               </div>
             </div>
-          ) : (
-            <div className="max-w-2xl mx-auto text-center py-24">
-              <div className="card bg-base-100 shadow-2xl">
-                <div className="card-body p-12">
-                  <div className="w-24 h-24 mx-auto mb-6 bg-warning/20 rounded-full flex items-center justify-center">
-                    <svg
-                      className="w-12 h-12 text-warning"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                      />
+          ) : (            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+              <div className="flex flex-col items-center justify-center p-12">
+                <div className="p-4 bg-yellow-100 rounded-full mb-4">
+                  <svg className="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <p className="text-gray-600 font-medium text-lg">Keine Inhalte gefunden</p>
+                <p className="text-gray-500 text-sm mt-1 mb-6">
+                  Leider konnten wir keinen passenden H5P-Inhalt finden.
+                  Möglicherweise wurde der Inhalt verschoben oder ist nicht mehr verfügbar.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Link 
+                    href="/h5p" 
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-all duration-200 hover:scale-105 font-medium"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
-                  </div>
-                  <h3 className="text-3xl font-bold mb-4">
-                    Keine Inhalte gefunden
-                  </h3>
-                  <p className="text-base-content/70 mb-8 text-lg leading-relaxed">
-                    Leider konnten wir keinen passenden H5P-Inhalt finden.
-                    Möglicherweise wurde der Inhalt verschoben oder ist nicht
-                    mehr verfügbar.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                    <Link href="/h5p" className="btn btn-primary btn-lg">
-                      <svg
-                        className="w-5 h-5 mr-2"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                        />
-                      </svg>
-                      Alle Inhalte anzeigen
-                    </Link>
-                    <Link href="/" className="btn btn-outline btn-lg">
-                      <svg
-                        className="w-5 h-5 mr-2"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-                      </svg>
-                      Zur Startseite
-                    </Link>
-                  </div>
+                    Alle Inhalte anzeigen
+                  </Link>
+                  <Link 
+                    href="/" 
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-all duration-200 hover:scale-105 font-medium"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Zur Startseite
+                  </Link>
                 </div>
               </div>
             </div>
-          )}
-        </div>
-      </main>
+          )}        </div>
+      </div>
     </>
   );
 }
@@ -389,43 +284,35 @@ function H5PContentViewer() {
 // Loading component for Suspense fallback
 function LoadingFallback() {
   return (
-    <div className="bg-gradient-to-br from-secondary to-accent text-accent-content py-12 relative overflow-hidden">
-      <div className="absolute inset-0 pattern-dots pattern-opacity-10 pattern-white pattern-size-2"></div>
-      <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-primary/30 rounded-full blur-3xl"></div>
-      <div className="absolute -top-10 -left-10 w-48 h-48 bg-secondary/20 rounded-full blur-3xl"></div>
+    <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-48 -translate-y-48 backdrop-blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
+      </div>
 
-      <div className="container mx-auto max-w-6xl px-4 relative z-10">
-        <div className="flex flex-col md:flex-row md:items-center gap-6 justify-between">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">
-              H5P Inhalt
-            </h1>
-            <p className="text-accent-content/80 text-lg">
-              Interaktives Lernmaterial
-            </p>
-          </div>
-          <Link
-            href="/"
-            className="btn btn-accent btn-outline hover:btn-primary transition-all duration-300 px-6"
-          >
-            <FiArrowLeft size={16} className="mr-2" />
-            Zurück zur Übersicht
-          </Link>
+      <div className="relative container mx-auto max-w-6xl px-4 py-16">
+        <div className="text-white">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+            H5P Inhalt
+          </h1>
+          <p className="text-blue-100 text-lg">
+            Interaktives Lernmaterial wird geladen...
+          </p>
         </div>
       </div>
 
-      <main className="bg-base-200 container mx-auto max-w-6xl py-12 px-4 -mt-8">
-        <div className="flex flex-col items-center justify-center my-24 space-y-6">
-          <div className="relative w-24 h-24">
-            <div className="absolute top-0 left-0 w-full h-full rounded-full border-4 border-t-primary border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
-            <div className="absolute top-2 left-2 w-20 h-20 rounded-full border-4 border-t-secondary border-r-transparent border-b-transparent border-l-transparent animate-spin-slow"></div>
-            <div className="absolute top-4 left-4 w-16 h-16 rounded-full border-4 border-t-accent border-r-transparent border-b-transparent border-l-transparent animate-spin-slower"></div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
+        <div className="container mx-auto max-w-6xl px-4">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+            <div className="flex flex-col items-center justify-center p-12">
+              <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
+              <p className="text-gray-600 mt-4 font-medium">Inhalte werden geladen...</p>
+              <p className="text-gray-500 text-sm mt-1">Bitte warten Sie einen Moment</p>
+            </div>
           </div>
-          <p className="text-xl font-medium bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            Inhalte werden geladen...
-          </p>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

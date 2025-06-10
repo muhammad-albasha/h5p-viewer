@@ -4,6 +4,7 @@ import Navbar from "../components/layout/Navbar";
 import Header from "../components/layout/Header";
 import HeroSection from "../components/layout/HeroSection";
 import FeaturedContent from "../components/content/FeaturedContent";
+import FavoritesSection from "../components/content/FavoritesSection";
 
 interface HeroSettings {
   title: string;
@@ -23,14 +24,18 @@ export default function HomePageContent({ heroSettings }: HomePageContentProps) 
       
       {/* 2. Header with Logo and Settings */}
       <Header />
-      
-      {/* 3. Hero Section with Dynamic Content */}
+        {/* 3. Hero Section with Dynamic Content */}
       <HeroSection
         title={heroSettings.title}
         subtitle={heroSettings.subtitle}
         description={heroSettings.description}
         // coverImage="/images/hero-cover.jpg" // Optional: Add cover image path
-      />      {/* 4. Featured H5P Content Section */}
+      />
+
+      {/* 4. Favorites Section */}
+      <FavoritesSection />
+
+      {/* 5. Featured H5P Content Section */}
       <FeaturedContent />
     </>
   );
