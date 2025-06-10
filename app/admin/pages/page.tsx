@@ -13,14 +13,25 @@ interface HeroSettings {
   description: string;
 }
 
+interface LegalPageSettings {
+  imprint: string;
+  privacy: string;
+  copyright: string;
+}
+
 export default function PageSettingsPage() {
   const { data: session, status } = useSession();
-  const router = useRouter();
-  const [heroSettings, setHeroSettings] = useState<HeroSettings>({
+  const router = useRouter();  const [heroSettings, setHeroSettings] = useState<HeroSettings>({
     title: '',
     subtitle: '',
     description: ''
   });
+  const [legalSettings, setLegalSettings] = useState<LegalPageSettings>({
+    imprint: '',
+    privacy: '',
+    copyright: ''
+  });
+  const [activeTab, setActiveTab] = useState<'hero' | 'legal'>('hero');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -39,13 +50,13 @@ export default function PageSettingsPage() {
     if (status === "authenticated") {
       fetchHeroSettings();
     }
-  }, [status]);
-  const fetchHeroSettings = async () => {
+  }, [status]);  const fetchHeroSettings = async () => {
     try {
       const response = await fetch('/api/admin/pages');
       if (response.ok) {
         const data = await response.json();
-        setHeroSettings(data);
+        setHeroSettings(data.hero || { title: '', subtitle: '', description: '' });
+        setLegalSettings(data.legal || { imprint: '', privacy: '', copyright: '' });
       } else {
         setMessage({ type: 'error', text: 'Fehler beim Laden der Seiteneinstellungen' });
       }

@@ -15,6 +15,7 @@ export default function Footer() {
             <span className="footer-title text-lg font-semibold mb-2">Links</span>
             <a href="/about" className="link link-hover text-sm">Über uns</a>
             <a href="/contact" className="link link-hover text-sm">Kontakt</a>
+            <a href="/easy-language" className="link link-hover text-sm">Leichte Sprache</a>
           </div>
           <div className="flex flex-col space-y-2">
             <span className="footer-title text-lg font-semibold mb-2">Ressourcen</span>
