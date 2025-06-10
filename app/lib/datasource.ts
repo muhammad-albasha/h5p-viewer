@@ -6,6 +6,7 @@ import { SubjectArea } from '../entities/SubjectArea';
 import { H5PContent } from '../entities/H5PContent';
 import { FeaturedContent } from '../entities/FeaturedContent';
 import { PageSettings } from '../entities/PageSettings';
+import { Contact } from '../entities/Contact';
 
 export const AppDataSource = new DataSource({
   type: 'mysql',
@@ -16,7 +17,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME || 'h5p',
   synchronize: process.env.NODE_ENV === 'development', // Auto-sync in development only
   logging: process.env.NODE_ENV === 'development',
-  entities: [User, Tag, SubjectArea, H5PContent, FeaturedContent, PageSettings],
+  entities: [User, Tag, SubjectArea, H5PContent, FeaturedContent, PageSettings, Contact],
   migrations: [],
   subscribers: [],
 });
