@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ===== MODERNES CSS DESIGN SYSTEM - HELL & DUNKEL THEME ===== */
-
 /* CSS Custom Properties für Hell & Dunkel Themes */
 :root {
   /* === HELL THEME (LIGHT MODE) === */

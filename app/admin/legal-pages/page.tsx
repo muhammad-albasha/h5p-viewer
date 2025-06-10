@@ -1,28 +1,30 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
+import RichTextEditor from "@/app/components/RichTextEditor";
 
-interface LegalPageSettings {
+interface LegalContent {
   imprint: string;
   privacy: string;
   copyright: string;
 }
 
-export default function LegalPagesPage() {
+type LegalPageType = 'imprint' | 'privacy' | 'copyright';
+
+export default function LegalPagesAdmin() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [legalSettings, setLegalSettings] = useState<LegalPageSettings>({
+  const [activeTab, setActiveTab] = useState<LegalPageType>('imprint');
+  const [content, setContent] = useState<LegalContent>({
     imprint: '',
     privacy: '',
     copyright: ''
-  });
-  const [activeTab, setActiveTab] = useState<'imprint' | 'privacy' | 'copyright'>('imprint');
-  const [isLoading, setIsLoading] = useState(true);
+  });  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -33,61 +35,80 @@ export default function LegalPagesPage() {
     }
   }, [status, router]);
 
+  // Load legal pages content
   useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/admin/legal-pages');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch content');
+        }
+
+        const data = await response.json();
+        setContent(data);
+      } catch (error) {
+        console.error('Error fetching legal pages:', error);
+        setMessage({
+          type: 'error',
+          text: 'Fehler beim Laden der rechtlichen Seiten'
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     if (status === "authenticated") {
-      fetchLegalSettings();
+      fetchContent();
     }
   }, [status]);
 
-  const fetchLegalSettings = async () => {
-    try {
-      const response = await fetch('/api/admin/legal-pages');
-      if (response.ok) {
-        const data = await response.json();
-        setLegalSettings(data);
-      } else {
-        setMessage({ type: 'error', text: 'Fehler beim Laden der Seiteneinstellungen' });
-      }
-    } catch (error) {
-      console.error('Error fetching legal settings:', error);
-      setMessage({ type: 'error', text: 'Fehler beim Laden der Seiteneinstellungen' });
-    } finally {
-      setIsLoading(false);
-    }
+  const handleContentChange = (value: string) => {
+    setContent(prev => ({
+      ...prev,
+      [activeTab]: value
+    }));
   };
 
-  const saveLegalSettings = async () => {
-    setIsSaving(true);
-    setMessage(null);
-    
+  const handleSave = async () => {
     try {
+      setIsSaving(true);
       const response = await fetch('/api/admin/legal-pages', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(legalSettings),
+        body: JSON.stringify(content),
       });
 
-      if (response.ok) {
-        setMessage({ type: 'success', text: 'Rechtliche Seiten erfolgreich gespeichert!' });
-      } else {
-        setMessage({ type: 'error', text: 'Fehler beim Speichern der Einstellungen' });
+      if (!response.ok) {
+        throw new Error('Failed to save content');
       }
+
+      setMessage({
+        type: 'success',
+        text: 'Rechtliche Seiten erfolgreich gespeichert!'
+      });
+
+      // Clear message after 3 seconds
+      setTimeout(() => setMessage(null), 3000);
     } catch (error) {
-      console.error('Error saving legal settings:', error);
-      setMessage({ type: 'error', text: 'Fehler beim Speichern der Einstellungen' });
+      console.error('Error saving legal pages:', error);
+      setMessage({
+        type: 'error',
+        text: 'Fehler beim Speichern der rechtlichen Seiten'
+      });
     } finally {
       setIsSaving(false);
     }
   };
 
-  const handleInputChange = (field: keyof LegalPageSettings, value: string) => {
-    setLegalSettings(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+  const tabs = [
+    { id: 'imprint' as LegalPageType, label: 'Impressum', description: 'Rechtliche Informationen über die Website', icon: '📋' },
+    { id: 'privacy' as LegalPageType, label: 'Datenschutz', description: 'Datenschutzerklärung und Cookie-Richtlinien', icon: '🔒' },
+    { id: 'copyright' as LegalPageType, label: 'Urheberrecht', description: 'Urheberrechtsbestimmungen und Lizenzen', icon: '©️' }
+  ];
 
   // Clear message after 5 seconds
   useEffect(() => {
@@ -97,42 +118,24 @@ export default function LegalPagesPage() {
     }
   }, [message]);
 
-  if (status === "loading") {
+  if (status === "loading" || isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
+      <div className="flex justify-center items-center h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="text-center">
+          <div className="loading loading-spinner loading-lg text-blue-600"></div>
+          <p className="mt-4 text-gray-600">Rechtliche Seiten werden geladen...</p>
+        </div>
       </div>
     );
   }
 
-  if (isLoading) {
-    return (
-      <>
-        <Navbar />
-        <Header />
-        <div className="flex justify-center items-center h-screen">
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
-            <p className="text-gray-600 mt-4">Rechtliche Seiten werden geladen...</p>
-          </div>
-        </div>
-      </>
-    );
-  }
-
-  const tabs = [
-    { key: 'imprint' as const, label: 'Impressum', icon: '📋' },
-    { key: 'privacy' as const, label: 'Datenschutz', icon: '🔒' },
-    { key: 'copyright' as const, label: 'Urheberrecht', icon: '©️' }
-  ];
-
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <Navbar />
       <Header />
       
-      {/* Modern Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 py-16">
         {/* Background decorative elements */}
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-48 -translate-y-48 backdrop-blur-3xl"></div>
@@ -140,21 +143,21 @@ export default function LegalPagesPage() {
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
         </div>
         
-        <div className="relative container mx-auto max-w-6xl px-4 py-16">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div className="text-white">
+        <div className="relative container mx-auto max-w-7xl px-4">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clipRule="evenodd" />
+                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2v1a2 2 0 002 2h8a2 2 0 002-2V3a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zM6 7a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-                  Rechtliche Seiten
+                <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-white">
+                  Rechtliche Seiten verwalten
                 </h1>
-              </div>
-              <p className="text-blue-100 text-lg max-w-2xl">
-                Verwalten Sie die Inhalte für Impressum, Datenschutz und Urheberrecht
+              </div>              <p className="text-white/80 text-lg">
+                Bearbeiten Sie Impressum, Datenschutzerklärung und Urheberrechtsbestimmungen mit dem modernen Rich-Text-Editor
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -180,26 +183,31 @@ export default function LegalPagesPage() {
           </div>
         </div>
       </div>
-      
+
       {/* Main Content */}
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
-        <div className="container mx-auto max-w-6xl px-4">
-          {/* Message */}
+      <div className="py-8">
+        <div className="container mx-auto max-w-7xl px-4">
+          {/* Success/Error Messages */}
           {message && (
-            <div className={`mb-8 p-4 rounded-xl border ${
+            <div className={`mb-6 p-4 rounded-lg border-l-4 ${
               message.type === 'success' 
-                ? 'bg-green-50 border-green-200 text-green-700' 
-                : 'bg-red-50 border-red-200 text-red-700'
+                ? 'bg-green-50 border-green-400 text-green-800' 
+                : 'bg-red-50 border-red-400 text-red-800'
             }`}>
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  {message.type === 'success' ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                  ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  )}
-                </svg>
-                <span className="font-medium">{message.text}</span>
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <svg className={`h-5 w-5 ${message.type === 'success' ? 'text-green-400' : 'text-red-400'}`} 
+                       viewBox="0 0 20 20" fill="currentColor">
+                    {message.type === 'success' ? (
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    ) : (
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    )}
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium">{message.text}</p>
+                </div>
               </div>
             </div>
           )}
@@ -209,10 +217,10 @@ export default function LegalPagesPage() {
             <div className="flex border-b border-gray-200">
               {tabs.map((tab) => (
                 <button
-                  key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
                   className={`flex-1 px-6 py-4 text-sm font-medium transition-all duration-200 ${
-                    activeTab === tab.key
+                    activeTab === tab.id
                       ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-500'
                       : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                   }`}
@@ -235,41 +243,36 @@ export default function LegalPagesPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                 </div>
-                <h2 className="text-xl font-bold">
-                  {tabs.find(tab => tab.key === activeTab)?.label} bearbeiten
-                </h2>
+                <div>
+                  <h2 className="text-xl font-bold">
+                    {tabs.find(tab => tab.id === activeTab)?.label} bearbeiten
+                  </h2>
+                  <p className="text-blue-100 text-sm">
+                    {tabs.find(tab => tab.id === activeTab)?.description}
+                  </p>
+                </div>
               </div>
-              <p className="text-blue-100 mt-2 text-sm">
-                Bearbeiten Sie den Inhalt für die {tabs.find(tab => tab.key === activeTab)?.label}-Seite
-              </p>
             </div>
             
             <div className="p-6">
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    {tabs.find(tab => tab.key === activeTab)?.label}-Inhalt
+              <div className="space-y-6">                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    Inhalt mit Rich-Text-Editor bearbeiten
                   </label>
-                  <textarea
-                    className="w-full h-96 px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm resize-none font-mono text-sm"
-                    value={legalSettings[activeTab]}
-                    onChange={(e) => handleInputChange(activeTab, e.target.value)}
-                    placeholder={`Geben Sie hier den Inhalt für die ${tabs.find(tab => tab.key === activeTab)?.label}-Seite ein...
-
-Sie können HTML-Tags verwenden:
-- <h1>, <h2>, <h3> für Überschriften
-- <p> für Absätze
-- <ul> und <li> für Listen
-- <strong> für fetten Text
-- <em> für kursiven Text
-- <a href="..."> für Links
-- <br> für Zeilenumbrüche`}
-                  />
+                  {/* Rich Text Editor */}
+                  <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                    <RichTextEditor
+                      value={content[activeTab]}
+                      onChange={handleContentChange}
+                      className="min-h-[400px]"
+                      placeholder={`Geben Sie hier den Inhalt für die ${tabs.find(tab => tab.id === activeTab)?.label}-Seite ein...`}
+                    />
+                  </div>
                 </div>
 
                 <div className="flex gap-3 pt-4">
                   <button
-                    onClick={saveLegalSettings}
+                    onClick={handleSave}
                     disabled={isSaving}
                     className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                   >
@@ -288,14 +291,13 @@ Sie können HTML-Tags verwenden:
                     )}
                   </button>
                   <button
-                    onClick={fetchLegalSettings}
-                    disabled={isSaving}
-                    className="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center gap-2"
+                    onClick={() => router.push('/admin')}
+                    className="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 flex items-center gap-2"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
-                    Zurücksetzen
+                    Zurück zum Dashboard
                   </button>
                 </div>
               </div>
@@ -312,23 +314,28 @@ Sie können HTML-Tags verwenden:
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
                 </div>
-                <h2 className="text-xl font-bold">Vorschau</h2>
+                <div>
+                  <h2 className="text-xl font-bold">Vorschau</h2>
+                  <p className="text-green-100 text-sm">
+                    So wird Ihre {tabs.find(tab => tab.id === activeTab)?.label}-Seite aussehen
+                  </p>
+                </div>
               </div>
-              <p className="text-green-100 mt-2 text-sm">
-                So wird Ihre {tabs.find(tab => tab.key === activeTab)?.label}-Seite aussehen
-              </p>
             </div>
             
             <div className="p-6">
               <div className="prose max-w-none">
-                {legalSettings[activeTab] ? (
+                {content[activeTab] ? (
                   <div 
-                    className="bg-gray-50 rounded-xl p-6 border border-gray-200"
-                    dangerouslySetInnerHTML={{ __html: legalSettings[activeTab] }}
+                    className="bg-gray-50 rounded-xl p-6 border border-gray-200 prose prose-lg max-w-none"
+                    dangerouslySetInnerHTML={{ __html: content[activeTab] }}
                   />
                 ) : (
-                  <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 text-gray-500 italic">
-                    Kein Inhalt vorhanden. Fügen Sie oben Inhalt hinzu, um eine Vorschau zu sehen.
+                  <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 text-gray-500 italic text-center">
+                    <svg className="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <p>Kein Inhalt vorhanden. Fügen Sie oben Inhalt hinzu, um eine Vorschau zu sehen.</p>
                   </div>
                 )}
               </div>
@@ -336,6 +343,6 @@ Sie können HTML-Tags verwenden:
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
