@@ -388,7 +388,8 @@ export default function TagsPage() {
                               <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-blue-100 text-blue-800">
                                 #{tag.id}
                               </span>
-                            </td>                            <td className="py-4 px-6">
+                            </td>
+                            <td className="py-4 px-6">
                               {editingTagId === tag.id ? (
                                 <input
                                   type="text"
