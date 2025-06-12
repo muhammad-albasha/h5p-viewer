@@ -111,7 +111,7 @@ const Header = () => {
             href="/fachbereich"
             className="text-base-content hover:text-primary transition-colors duration-200 px-2 py-1 rounded-md hover:bg-primary/10"
           >
-            Fachbereiche
+            Bereiche
           </Link>
           <div className="relative" ref={dropdownRef}>
             {" "}
@@ -208,7 +208,7 @@ const Header = () => {
                 className="text-base-content hover:text-primary px-3 py-2 rounded-md hover:bg-primary/10"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Fachbereiche
+                Bereiche
               </Link>
               <div className="border-t border-base-300 my-2"></div>
               {status === "authenticated" && session?.user ? (

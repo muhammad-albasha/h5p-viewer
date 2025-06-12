@@ -92,7 +92,7 @@ const ContentFilter = ({
               onChange={(e) => setSelectedSubjectArea(e.target.value)}
               aria-label="Fachbereich auswählen"
             >
-              <option value="">Alle Fachbereiche</option>
+              <option value="">Alle Bereiche</option>
               {subjectAreas.map((area) => (
                 <option key={area.id} value={area.slug}>
                   {area.name}

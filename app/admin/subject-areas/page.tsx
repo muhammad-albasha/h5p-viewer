@@ -50,7 +50,7 @@ export default function SubjectAreasPage() {
         const data = await response.json();
         setSubjectAreas(data);
       } catch (err) {
-        setError("Fehler beim Laden der Fachbereiche");
+        setError("Fehler beim Laden der Bereiche");
         console.error(err);
       } finally {
         setIsLoading(false);
@@ -208,11 +208,11 @@ export default function SubjectAreasPage() {
                   </svg>
                 </div>
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-                  Fachbereiche verwalten
+                  Bereiche verwalten
                 </h1>
               </div>
               <p className="text-blue-100 text-lg max-w-2xl">
-                Erstellen und bearbeiten Sie Fachbereiche für H5P-Inhalte
+                Erstellen und bearbeiten Sie Bereiche für H5P-Inhalte
               </p>
             </div>
             <Link 
@@ -318,7 +318,7 @@ export default function SubjectAreasPage() {
                         </svg>
                       </div>
                       <div>
-                        <h2 className="text-xl font-bold">Fachbereiche</h2>
+                        <h2 className="text-xl font-bold">Bereiche</h2>
                         <p className="text-blue-100 text-sm">
                           {subjectAreas.length} Fachbereich{subjectAreas.length !== 1 ? 'e' : ''} verfügbar
                         </p>
@@ -330,7 +330,7 @@ export default function SubjectAreasPage() {
                 {isLoading ? (
                   <div className="flex flex-col items-center justify-center p-12">
                     <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
-                    <p className="text-gray-600 mt-4">Fachbereiche werden geladen...</p>
+                    <p className="text-gray-600 mt-4">Bereiche werden geladen...</p>
                   </div>
                 ) : error ? (
                   <div className="flex flex-col items-center justify-center p-12">
@@ -348,7 +348,7 @@ export default function SubjectAreasPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                       </svg>
                     </div>
-                    <p className="text-gray-600 font-medium">Keine Fachbereiche gefunden</p>
+                    <p className="text-gray-600 font-medium">Keine Bereiche gefunden</p>
                     <p className="text-gray-500 text-sm mt-1">Erstellen Sie Ihren ersten Fachbereich</p>
                   </div>
                 ) : (

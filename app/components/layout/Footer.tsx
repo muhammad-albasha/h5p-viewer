@@ -20,7 +20,7 @@ export default function Footer() {
           <div className="flex flex-col space-y-2">
             <span className="footer-title text-lg font-semibold mb-2">Ressourcen</span>
             <a href="/h5p" className="link link-hover text-sm">Alle Inhalte</a>
-            <a href="/fachbereich" className="link link-hover text-sm">Fachbereiche</a>
+            <a href="/fachbereich" className="link link-hover text-sm">Bereiche</a>
           </div>
           <div className="flex flex-col space-y-2">
             <span className="footer-title text-lg font-semibold mb-2">Rechtliches</span>

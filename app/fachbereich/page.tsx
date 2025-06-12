@@ -26,7 +26,7 @@ const FachbereichOverview = () => {
         // Fetch subject areas
         const response = await fetch("/api/admin/subject-areas");
         if (!response.ok) {
-          throw new Error("Fachbereiche konnten nicht geladen werden");
+          throw new Error("Bereiche konnten nicht geladen werden");
         }
         const areas = await response.json();
         
@@ -80,18 +80,18 @@ const FachbereichOverview = () => {
                   </svg>
                 </div>
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-                  Fachbereiche
+                  Bereiche
                 </h1>
               </div>
               <p className="text-blue-100 text-lg max-w-2xl">
-                Entdecken Sie H5P-Lerninhalte organisiert nach Fachbereichen für optimales Lernen
+                Entdecken Sie H5P-Lerninhalte organisiert nach Bereichen für optimales Lernen
               </p>
               <div className="flex items-center gap-6 mt-6">
                 <div className="flex items-center gap-2 text-blue-100">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
-                  <span className="text-sm font-medium">{subjectAreas.length} Fachbereiche</span>
+                  <span className="text-sm font-medium">{subjectAreas.length} Bereiche</span>
                 </div>
                 <div className="flex items-center gap-2 text-blue-100">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,7 +132,7 @@ const FachbereichOverview = () => {
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
               <div className="flex flex-col items-center justify-center p-12">
                 <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
-                <p className="text-gray-600 mt-4 font-medium">Fachbereiche werden geladen...</p>
+                <p className="text-gray-600 mt-4 font-medium">Bereiche werden geladen...</p>
                 <p className="text-gray-500 text-sm mt-1">Bitte warten Sie einen Moment</p>
               </div>
             </div>
@@ -162,13 +162,13 @@ const FachbereichOverview = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
                 </div>
-                <p className="text-gray-600 font-medium text-lg">Keine Fachbereiche gefunden</p>
-                <p className="text-gray-500 text-sm mt-1">Es wurden noch keine Fachbereiche angelegt.</p>
+                <p className="text-gray-600 font-medium text-lg">Keine Bereiche gefunden</p>
+                <p className="text-gray-500 text-sm mt-1">Es wurden noch keine Bereiche angelegt.</p>
                 <Link 
                   href="/admin/subject-areas"
                   className="mt-4 px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200 hover:scale-105"
                 >
-                  Fachbereiche verwalten
+                  Bereiche verwalten
                 </Link>
               </div>
             </div>
@@ -177,7 +177,7 @@ const FachbereichOverview = () => {
               {/* Section Header */}
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20 p-6">
                 <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Verfügbare Fachbereiche</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Verfügbare Bereiche</h2>
                   <p className="text-gray-600">
                     Wählen Sie einen Fachbereich, um die verfügbaren H5P-Lerninhalte zu entdecken
                   </p>
