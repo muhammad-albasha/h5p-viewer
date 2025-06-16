@@ -258,7 +258,7 @@ const Bereich = () => {
                     <span className="text-white font-medium">{selectedContent.name}</span>
                   </nav>
 
-                  <div className="grid lg:grid-cols-12 gap-8 items-center">
+                  <div className="grid lg:grid-cols-12 gap-2 items-center">
                     <div className="lg:col-span-8 space-y-6 text-white">
                       <div className="flex items-center gap-3 mb-4">
                         <span className="px-4 py-2 bg-white/20 text-white rounded-lg text-sm font-medium backdrop-blur-sm">

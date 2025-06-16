@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className="bg-base-300 text-base-content p-10 border-t border-base-200">
       <div className="container-fluid mx-auto ">
-        {/* Footer Columns Grid */}        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Footer Columns Grid */}        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
           <div className="flex flex-col space-y-2">
             <span className="footer-title text-lg font-semibold mb-2">H5P-Viewer</span>
             <p className="max-w-xs text-sm opacity-80">

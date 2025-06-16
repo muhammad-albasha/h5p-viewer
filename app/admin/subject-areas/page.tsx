@@ -231,7 +231,7 @@ export default function SubjectAreasPage() {
       {/* Main Content */}
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
         <div className="container-fluid mx-auto  px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
             {/* Form for new subject area */}
             <div className="lg:col-span-1">
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">

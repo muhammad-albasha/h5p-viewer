@@ -119,7 +119,7 @@ export default async function ContactPage() {
           </div>
 
           {/* Contact Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-16">
             {contacts.map((contact) => (
               <div key={contact.id} className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                 {/* Photo Section */}

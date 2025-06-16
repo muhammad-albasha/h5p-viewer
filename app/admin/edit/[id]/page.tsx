@@ -336,7 +336,7 @@ export default function EditContent() {
               </div>
             </div>
           ) : content ? (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
               {/* Left Column - Edit Form */}
               <div className={`${previewMode ? "hidden lg:block" : ""} lg:col-span-1 space-y-6`}>
                 

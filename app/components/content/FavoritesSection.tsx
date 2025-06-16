@@ -126,7 +126,7 @@ const FavoritesSection: React.FC = () => {
               Meine Favoriten
             </h2>
           </div>
-          <div className="flex items-center justify-center gap-8 mb-6">
+          <div className="flex items-center justify-center gap-2 mb-6">
             <p className="text-lg text-gray-600">
               {favorites.length}{" "}
               {favorites.length === 1 ? "Favorit" : "Favoriten"} gespeichert
