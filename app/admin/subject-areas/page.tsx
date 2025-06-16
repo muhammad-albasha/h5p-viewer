@@ -66,7 +66,7 @@ export default function SubjectAreasPage() {
     e.preventDefault();
     
     if (!newSubjectName.trim()) {
-      setFormError("Bitte geben Sie einen Namen für den Fachbereich ein");
+      setFormError("Bitte geben Sie einen Namen für den Bereich ein");
       return;
     }
     
@@ -85,7 +85,7 @@ export default function SubjectAreasPage() {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.error || "Fehler beim Erstellen des Fachbereichs");
+        throw new Error(data.error || "Fehler beim Erstellen des Bereichs");
       }
       
       // Add the new subject area to the list
@@ -116,7 +116,7 @@ export default function SubjectAreasPage() {
     if (!editingAreaId) return;
     
     if (!editingAreaName.trim()) {
-      setFormError("Bitte geben Sie einen Namen für den Fachbereich ein");
+      setFormError("Bitte geben Sie einen Namen für den Bereich ein");
       return;
     }
     
@@ -135,7 +135,7 @@ export default function SubjectAreasPage() {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.error || "Fehler beim Aktualisieren des Fachbereichs");
+        throw new Error(data.error || "Fehler beim Aktualisieren des Bereichs");
       }
       
       // Update the subject area in the list
@@ -157,7 +157,7 @@ export default function SubjectAreasPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm("Möchten Sie diesen Fachbereich wirklich löschen?")) {
+    if (confirm("Möchten Sie diesen Bereich wirklich löschen?")) {
       try {
         const response = await fetch(`/api/admin/subject-areas/${id}`, {
           method: "DELETE",
@@ -165,7 +165,7 @@ export default function SubjectAreasPage() {
         
         if (!response.ok) {
           const data = await response.json();
-          throw new Error(data.error || "Fehler beim Löschen des Fachbereichs");
+          throw new Error(data.error || "Fehler beim Löschen des Bereichs");
         }
         
         // Remove the deleted subject area from the list
@@ -198,7 +198,7 @@ export default function SubjectAreasPage() {
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
         </div>
         
-        <div className="relative container mx-auto max-w-6xl px-4 py-16">
+        <div className="relative container-fluid mx-auto  px-4 py-16">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="text-white">
               <div className="flex items-center gap-3 mb-4">
@@ -230,7 +230,7 @@ export default function SubjectAreasPage() {
       
       {/* Main Content */}
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
-        <div className="container mx-auto max-w-6xl px-4">
+        <div className="container-fluid mx-auto  px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Form for new subject area */}
             <div className="lg:col-span-1">
@@ -242,17 +242,17 @@ export default function SubjectAreasPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                       </svg>
                     </div>
-                    <h2 className="text-xl font-bold">Neuer Fachbereich</h2>
+                    <h2 className="text-xl font-bold">Neuer Bereich</h2>
                   </div>
                   <p className="text-blue-100 mt-2 text-sm">
-                    Erstellen Sie einen neuen Fachbereich
+                    Erstellen Sie einen neuen Bereich
                   </p>
                 </div>
                 
                 <form className="p-6" onSubmit={handleSubmit}>
                   <div className="mb-6">
                     <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="subject-name">
-                      Name des Fachbereichs
+                      Name des Bereichs
                     </label>
                     <div className="relative">
                       <input
@@ -298,7 +298,7 @@ export default function SubjectAreasPage() {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
-                        Fachbereich erstellen
+                        Bereich erstellen
                       </>
                     )}
                   </button>
@@ -320,7 +320,7 @@ export default function SubjectAreasPage() {
                       <div>
                         <h2 className="text-xl font-bold">Bereiche</h2>
                         <p className="text-blue-100 text-sm">
-                          {subjectAreas.length} Fachbereich{subjectAreas.length !== 1 ? 'e' : ''} verfügbar
+                          {subjectAreas.length} Bereich{subjectAreas.length !== 1 ? 'e' : ''} verfügbar
                         </p>
                       </div>
                     </div>
@@ -349,7 +349,7 @@ export default function SubjectAreasPage() {
                       </svg>
                     </div>
                     <p className="text-gray-600 font-medium">Keine Bereiche gefunden</p>
-                    <p className="text-gray-500 text-sm mt-1">Erstellen Sie Ihren ersten Fachbereich</p>
+                    <p className="text-gray-500 text-sm mt-1">Erstellen Sie Ihren ersten Bereich</p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
@@ -405,7 +405,7 @@ export default function SubjectAreasPage() {
                                   className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/80"
                                   value={editingAreaName}
                                   onChange={e => setEditingAreaName(e.target.value)}
-                                  placeholder="Fachbereich Name eingeben"
+                                  placeholder="Bereich Name eingeben"
                                   autoFocus
                                 />
                               ) : (
@@ -449,7 +449,7 @@ export default function SubjectAreasPage() {
                                 ) : (
                                   <>
                                     <Link 
-                                      href={`/fachbereich/${area.slug}`} 
+                                      href={`/bereiche/${area.slug}`} 
                                       target="_blank"
                                       className="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded-lg transition-all duration-200 hover:scale-105"
                                     >

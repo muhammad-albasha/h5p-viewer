@@ -12,7 +12,7 @@ interface SubjectArea {
   contentCount?: number;
 }
 
-const FachbereichOverview = () => {
+const BereichOverview = () => {
   const [subjectAreas, setSubjectAreas] = useState<SubjectArea[]>([]);
   const [contentCounts, setContentCounts] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -70,7 +70,7 @@ const FachbereichOverview = () => {
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
         </div>
         
-        <div className="relative container mx-auto max-w-6xl px-4 py-16">
+        <div className="relative container-fluid mx-auto  px-4 py-16">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="text-white">
               <div className="flex items-center gap-3 mb-4">
@@ -127,7 +127,7 @@ const FachbereichOverview = () => {
 
       {/* Main Content */}
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
-        <div className="container mx-auto max-w-6xl px-4">
+        <div className="container-fluid mx-auto  px-4">
           {isLoading ? (
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
               <div className="flex flex-col items-center justify-center p-12">
@@ -179,7 +179,7 @@ const FachbereichOverview = () => {
                 <div className="text-center">
                   <h2 className="text-2xl font-bold text-gray-900 mb-2">Verfügbare Bereiche</h2>
                   <p className="text-gray-600">
-                    Wählen Sie einen Fachbereich, um die verfügbaren H5P-Lerninhalte zu entdecken
+                    Wählen Sie einen Bereich, um die verfügbaren H5P-Lerninhalte zu entdecken
                   </p>
                 </div>
               </div>
@@ -203,7 +203,7 @@ const FachbereichOverview = () => {
                   return (
                     <Link
                       key={area.id}
-                      href={`/fachbereich/${area.slug}`}
+                      href={`/bereiche/${area.slug}`}
                       className="group block"
                     >
                       <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl overflow-hidden border border-white/20 transition-all duration-300 hover:scale-105 group">
@@ -225,7 +225,7 @@ const FachbereichOverview = () => {
 
                           {/* Description */}
                           <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                            Entdecken Sie alle verfügbaren H5P-Lerninhalte in diesem Fachbereich
+                            Entdecken Sie alle verfügbaren H5P-Lerninhalte in diesem Bereich
                           </p>
 
                           {/* Statistics */}
@@ -261,4 +261,4 @@ const FachbereichOverview = () => {
   );
 };
 
-export default FachbereichOverview;
+export default BereichOverview;

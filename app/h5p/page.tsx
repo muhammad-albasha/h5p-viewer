@@ -147,7 +147,7 @@ export default function AllH5PContent() {
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
         </div>
         
-        <div className="relative container mx-auto max-w-6xl px-4 py-16">
+        <div className="relative container-fluid mx-auto  px-4 py-16">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="text-white">              <div className="flex items-center gap-3 mb-4">
                 <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
@@ -206,7 +206,7 @@ export default function AllH5PContent() {
                 {showOnlyFavorites ? "Alle Inhalte" : "Nur Favoriten"}
               </button>
               <Link 
-                href="/fachbereich"
+                href="/bereiche"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -230,7 +230,7 @@ export default function AllH5PContent() {
       
       {/* Main Content */}
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
-        <div className="container mx-auto max-w-6xl px-4 space-y-8">
+        <div className="container-fluid mx-auto  px-4 space-y-8">
           
           {/* Content Filter */}
           <ContentFilter 

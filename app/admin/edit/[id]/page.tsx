@@ -274,7 +274,7 @@ export default function EditContent() {
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
         </div>
         
-        <div className="relative container mx-auto max-w-6xl px-4 py-16">
+        <div className="relative container-fluid mx-auto  px-4 py-16">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="text-white">
               <div className="flex items-center gap-3 mb-4">
@@ -306,7 +306,7 @@ export default function EditContent() {
 
       {/* Main Content */}
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
-        <div className="container mx-auto max-w-6xl px-4">
+        <div className="container-fluid mx-auto  px-4">
           {error ? (
             <div className="mb-8 p-6 bg-red-50 border border-red-200 rounded-xl">
               <div className="flex items-start gap-4">
@@ -407,7 +407,7 @@ export default function EditContent() {
 
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="subject-area">
-                        Fachbereich
+                        Bereich
                       </label>
                       <div className="relative">
                         <select

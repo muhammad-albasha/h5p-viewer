@@ -149,7 +149,7 @@ export default function FeaturedContent() {
   if (loading) {
     return (
       <section className="py-16 px-4 bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
-        <div className="container mx-auto max-w-6xl">
+        <div className="container-fluid mx-auto ">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Beliebte Lerninhalte
@@ -201,7 +201,7 @@ export default function FeaturedContent() {
 
   return (
     <section className="py-16 px-4 bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
-      <div className="container mx-auto max-w-6xl">
+      <div className="container-fluid mx-auto ">
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">

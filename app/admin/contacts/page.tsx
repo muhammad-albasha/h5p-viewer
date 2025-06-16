@@ -176,7 +176,7 @@ export default function ContactsAdmin() {
       {/* Header */}
       <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative z-10 container mx-auto max-w-7xl px-4 py-12">
+        <div className="relative z-10 container-fluid mx-auto  px-4 py-12">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl lg:text-4xl font-bold tracking-tight">
@@ -201,7 +201,7 @@ export default function ContactsAdmin() {
 
       {/* Main Content */}
       <div className="bg-gray-50 min-h-screen py-8">
-        <div className="container mx-auto max-w-7xl px-4">
+        <div className="container-fluid mx-auto  px-4">
           {/* Error Message */}
           {error && (
             <div className="mb-6 bg-red-50 border-l-4 border-red-400 p-4 rounded-lg shadow-sm">

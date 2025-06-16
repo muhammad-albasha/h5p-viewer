@@ -149,7 +149,7 @@ export default function AdminDashboard() {
         <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 translate-y-12 -translate-x-12 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
         
-        <div className="relative z-10 container mx-auto max-w-7xl px-4 py-12">
+        <div className="relative z-10 container-fluid mx-auto  px-4 py-12">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-4">
@@ -252,7 +252,7 @@ export default function AdminDashboard() {
 
       {/* Main Content */}
       <div className="bg-gray-50 min-h-screen py-8">
-        <div className="container mx-auto max-w-7xl px-4">
+        <div className="container-fluid mx-auto  px-4">
           {/* Success Message */}
           {successMessage && (
             <div className="mb-6 bg-green-50 border-l-4 border-green-400 p-4 rounded-lg shadow-sm">
@@ -337,7 +337,7 @@ export default function AdminDashboard() {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titel</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Typ</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fachbereich</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bereich</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tags</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Erstellt am</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Featured</th>

@@ -27,7 +27,7 @@ export default {
     'status-warning',
     'status-error',
     'status-info',
-    'h5p-container',
+    'h5p-container-fluid',
     'animate-fade-in-down',
     'animate-fade-in-up',
     'animate-fade-in',
@@ -266,7 +266,7 @@ export default {
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
         },
-        '.container-center': {
+        '.container-fluid-center': {
           maxWidth: '1200px',
           marginLeft: 'auto',
           marginRight: 'auto',

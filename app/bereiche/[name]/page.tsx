@@ -23,7 +23,7 @@ interface SubjectAreaContent {
   coverImagePath?: string;
 }
 
-const Fachbereich = () => {
+const Bereich = () => {
   const params = useParams();
   const router = useRouter();
   const subjectAreaSlug = params.name as string;
@@ -127,12 +127,12 @@ const Fachbereich = () => {
             <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
           </div>
           
-          <div className="relative container mx-auto max-w-6xl px-4 py-16">
+          <div className="relative container-fluid mx-auto  px-4 py-16">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div className="text-white">
                 <div className="flex items-center gap-3 mb-4">
                   <Link 
-                    href="/fachbereich"
+                    href="/bereiche"
                     className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-all duration-200 hover:scale-105 backdrop-blur-sm border border-white/20"
                   >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -145,11 +145,11 @@ const Fachbereich = () => {
                     </svg>
                   </div>
                   <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-                    {subjectAreaName || "Fachbereich"}
+                    {subjectAreaName || "Bereich"}
                   </h1>
                 </div>
                 <p className="text-blue-100 text-lg max-w-2xl">
-                  H5P-Lerninhalte für diesen Fachbereich entdecken
+                  H5P-Lerninhalte für diesen Bereich entdecken
                 </p>
                 <div className="flex items-center gap-6 mt-6">
                   <div className="flex items-center gap-2 text-blue-100">
@@ -177,7 +177,7 @@ const Fachbereich = () => {
                   Alle Inhalte
                 </Link>
                 <Link 
-                  href="/fachbereich"
+                  href="/bereiche"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -192,7 +192,7 @@ const Fachbereich = () => {
       )}
 
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
-        <div className={`${viewMode === 'view' ? 'w-full px-4' : 'container mx-auto max-w-6xl px-4'} space-y-8`}>
+        <div className={`${viewMode === 'view' ? 'w-full px-4' : 'container-fluid mx-auto  px-4'} space-y-8`}>
           {isLoading ? (
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
               <div className="flex flex-col items-center justify-center p-12">
@@ -228,9 +228,9 @@ const Fachbereich = () => {
                   </svg>
                 </div>
                 <p className="text-gray-600 font-medium text-lg">Keine Inhalte gefunden</p>
-                <p className="text-gray-500 text-sm mt-1">Für diesen Fachbereich sind noch keine H5P-Inhalte verfügbar.</p>
+                <p className="text-gray-500 text-sm mt-1">Für diesen Bereich sind noch keine H5P-Inhalte verfügbar.</p>
                 <Link 
-                  href="/fachbereich"
+                  href="/bereiche"
                   className="mt-4 px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200 hover:scale-105"
                 >
                   Zu allen Bereichen
@@ -246,12 +246,12 @@ const Fachbereich = () => {
                   <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
                 </div>
                 
-                <div className="relative container mx-auto max-w-6xl px-4 py-16">
+                <div className="relative container-fluid mx-auto  px-4 py-16">
                   {/* Breadcrumb Navigation */}
                   <nav className="flex items-center space-x-2 text-sm mb-8 text-blue-100">
                     <Link href="/" className="hover:text-white transition-colors">Startseite</Link>
                     <span>•</span>
-                    <Link href="/fachbereich" className="hover:text-white transition-colors">Bereiche</Link>
+                    <Link href="/bereiche" className="hover:text-white transition-colors">Bereiche</Link>
                     <span>•</span>
                     <button onClick={handleBackToList} className="hover:text-white transition-colors">{subjectAreaName}</button>
                     <span>•</span>
@@ -521,4 +521,4 @@ const Fachbereich = () => {
   )
 }
 
-export default Fachbereich
+export default Bereich

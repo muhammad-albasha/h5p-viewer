@@ -113,7 +113,7 @@ export default function TwoFactorSetupPage() {
 
   return (
     <div className="min-h-screen bg-base-200 py-12">
-      <div className="container mx-auto max-w-2xl px-4">
+      <div className="container-fluid mx-auto max-w-2xl px-4">
         <div className="bg-base-100 rounded-xl shadow-xl overflow-hidden">
           <div className="p-6 border-b border-base-300">
             <h1 className="text-2xl font-bold">Zwei-Faktor-Authentifizierung einrichten</h1>

@@ -73,7 +73,7 @@ function LoginForm() {
       <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full opacity-10 blur-3xl"></div>
       <div className="absolute bottom-0 left-0 translate-y-12 -translate-x-12 w-96 h-96 bg-gradient-to-tr from-emerald-400 to-cyan-500 rounded-full opacity-10 blur-3xl"></div>
       
-      <div className="relative z-10 container mx-auto max-w-lg py-12 px-4 min-h-screen flex items-center">
+      <div className="relative z-10 container-fluid mx-auto max-w-lg py-12 px-4 min-h-screen flex items-center">
         <div className="w-full">
           {/* Logo/Brand Section */}
           <div className="text-center mb-8">
@@ -195,7 +195,7 @@ function LoginFormFallback() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
       <div className="absolute inset-0 bg-grid-slate-200 opacity-30"></div>
-      <div className="relative z-10 container mx-auto max-w-lg py-12 px-4 min-h-screen flex items-center">
+      <div className="relative z-10 container-fluid mx-auto max-w-lg py-12 px-4 min-h-screen flex items-center">
         <div className="w-full">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-4 shadow-lg">

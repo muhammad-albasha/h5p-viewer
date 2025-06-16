@@ -15,7 +15,7 @@ const Banner = ({ title, subtitle }: BannerProps) => {
         <div className="banner-decoration-circle banner-circle-4"></div>
         <div className="banner-decoration-circle banner-circle-5"></div>
       </div>
-      <div className="container mx-auto text-center relative z-10">
+      <div className="container-fluid mx-auto text-center relative z-10">
         <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
         {subtitle && <p className="mt-2 opacity-80">{subtitle}</p>}
       </div>

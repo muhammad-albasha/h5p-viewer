@@ -441,8 +441,8 @@ body {
   border: 1px solid rgba(var(--color-info), 0.2);
 }
 
-/* H5P Container */
-.h5p-container {
+/* H5P container-fluid */
+.h5p-container-fluid {
   border-radius: var(--radius-xl);
   overflow: hidden;
   background-color: rgb(var(--bg-elevated));

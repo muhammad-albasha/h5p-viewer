@@ -181,7 +181,7 @@ export default function LegalPagesAdmin() {
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
         </div>
 
-        <div className="relative container mx-auto max-w-7xl px-4">
+        <div className="relative container-fluid mx-auto  px-4">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
               <div className="flex items-center gap-3 mb-4">
@@ -240,7 +240,7 @@ export default function LegalPagesAdmin() {
 
       {/* Main Content */}
       <div className="py-8">
-        <div className="container mx-auto max-w-7xl px-4">
+        <div className="container-fluid mx-auto  px-4">
           {/* Success/Error Messages */}
           {message && (
             <div

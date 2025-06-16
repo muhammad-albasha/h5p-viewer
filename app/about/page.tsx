@@ -38,7 +38,7 @@ export default function AboutPage() {
         <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 translate-y-12 -translate-x-12 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
         
-        <div className="relative z-10 container mx-auto max-w-7xl px-4 py-16">
+        <div className="relative z-10 container-fluid mx-auto  px-4 py-16">
           <div className="text-center">
             <h1 className="text-4xl lg:text-5xl font-bold tracking-tight mb-4">
               Über uns
@@ -52,7 +52,7 @@ export default function AboutPage() {
       
       {/* Content Section */}
       <div className="bg-gray-50 min-h-screen py-16">
-        <div className="container mx-auto max-w-4xl px-4">
+        <div className="container-fluid mx-auto  px-4">
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div className="p-8">
               {isLoading ? (

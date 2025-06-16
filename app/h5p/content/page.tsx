@@ -82,7 +82,7 @@ function H5PContentViewer() {
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
         </div>
         
-        <div className="relative container mx-auto max-w-6xl px-4 py-16">
+        <div className="relative container-fluid mx-auto  px-4 py-16">
           {/* Breadcrumb Navigation */}
           <nav className="flex items-center space-x-2 text-sm mb-8 text-blue-100">
             <Link href="/" className="hover:text-white transition-colors">Startseite</Link>
@@ -170,7 +170,7 @@ function H5PContentViewer() {
               
               {!loading && contentDetails && contentDetails.subject_area && (
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                  <div className="text-blue-100 text-sm font-medium mb-1">Fachbereich</div>
+                  <div className="text-blue-100 text-sm font-medium mb-1">Bereich</div>
                   <div className="text-white font-semibold">{contentDetails.subject_area.name}</div>
                 </div>
               )}
@@ -289,7 +289,7 @@ function LoadingFallback() {
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
       </div>
 
-      <div className="relative container mx-auto max-w-6xl px-4 py-16">
+      <div className="relative container-fluid mx-auto  px-4 py-16">
         <div className="text-white">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
             H5P Inhalt
@@ -301,7 +301,7 @@ function LoadingFallback() {
       </div>
 
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
-        <div className="container mx-auto max-w-6xl px-4">
+        <div className="container-fluid mx-auto  px-4">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
             <div className="flex flex-col items-center justify-center p-12">
               <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>

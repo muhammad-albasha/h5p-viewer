@@ -52,7 +52,7 @@ const Header = () => {
 
   return (
     <header className="bg-base-300 py-4 px-4 shadow-sm">
-      <div className="container mx-auto flex justify-between items-center">
+      <div className="container-fluid mx-auto flex justify-between items-center">
         {" "}        <div className="flex items-center">
           {" "}
           <Link href="/" className="flex items-center">
@@ -61,7 +61,7 @@ const Header = () => {
               alt="H5P Logo"
               width="128"
               height="100"
-              className="h-20 w-32 brightness-0 dark:brightness-100"
+              className="h-20 w-60 brightness-0 dark:brightness-100"
             />
             {/*  <span className="ml-3 text-xl font-semibold">H5P Viewer</span> */}
           </Link>
@@ -108,7 +108,7 @@ const Header = () => {
             Alle Inhalte
           </Link>
           <Link
-            href="/fachbereich"
+            href="/bereiche"
             className="text-base-content hover:text-primary transition-colors duration-200 px-2 py-1 rounded-md hover:bg-primary/10"
           >
             Bereiche
@@ -204,7 +204,7 @@ const Header = () => {
                 Alle Inhalte
               </Link>
               <Link
-                href="/fachbereich"
+                href="/bereiche"
                 className="text-base-content hover:text-primary px-3 py-2 rounded-md hover:bg-primary/10"
                 onClick={() => setIsMobileMenuOpen(false)}
               >

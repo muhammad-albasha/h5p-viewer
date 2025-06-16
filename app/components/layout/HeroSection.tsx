@@ -103,7 +103,7 @@ export default function HeroSection({
         </div>
       </div>
 
-      <div className="container mx-auto max-w-6xl relative z-10">
+      <div className="container-fluid mx-auto  relative z-10 max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <div className="space-y-4">

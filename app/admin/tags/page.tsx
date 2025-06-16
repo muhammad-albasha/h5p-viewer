@@ -197,7 +197,7 @@ export default function TagsPage() {
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
         </div>
         
-        <div className="relative container mx-auto max-w-6xl px-4 py-16">
+        <div className="relative container-fluid mx-auto  px-4 py-16">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="text-white">
               <div className="flex items-center gap-3 mb-4">
@@ -229,7 +229,7 @@ export default function TagsPage() {
       
       {/* Main Content */}
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
-        <div className="container mx-auto max-w-6xl px-4">
+        <div className="container-fluid mx-auto  px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Form for new tag */}
             <div className="lg:col-span-1">

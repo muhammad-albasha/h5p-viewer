@@ -76,7 +76,7 @@ function TwoFactorForm() {
 
   return (
     <main className="bg-base-200 min-h-screen">
-      <div className="container mx-auto max-w-md py-12 px-4">
+      <div className="container-fluid mx-auto max-w-md py-12 px-4">
         <div className="bg-base-100 rounded-xl shadow-xl overflow-hidden">
           <div className="p-6 border-b border-base-300">
             <h2 className="text-xl font-bold">Zwei-Faktor-Authentifizierung</h2>
@@ -143,7 +143,7 @@ function TwoFactorForm() {
 function TwoFactorFormFallback() {
   return (
     <main className="bg-base-200 min-h-screen">
-      <div className="container mx-auto max-w-md py-12 px-4">
+      <div className="container-fluid mx-auto max-w-md py-12 px-4">
         <div className="bg-base-100 rounded-xl shadow-xl overflow-hidden">
           <div className="p-6 border-b border-base-300">
             <h2 className="text-xl font-bold">Zwei-Faktor-Authentifizierung</h2>
@@ -166,7 +166,7 @@ export default function TwoFactorPage() {
       
       <div className="bg-gradient-to-br from-primary to-secondary text-primary-content py-12 relative overflow-hidden">
         <div className="absolute inset-0 pattern-dots pattern-opacity-10 pattern-white pattern-size-2"></div>
-        <div className="container mx-auto max-w-6xl px-4 relative z-10">
+        <div className="container-fluid mx-auto  px-4 relative z-10">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">Sicherheitsverifizierung</h1>
           <p className="text-primary-content/80 mt-2">Bestätigen Sie Ihre Identität mit 2FA</p>
         </div>
