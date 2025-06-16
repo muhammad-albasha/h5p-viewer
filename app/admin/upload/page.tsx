@@ -360,8 +360,7 @@ export default function UploadH5P() {
                   </div>
                   <div className="w-full bg-blue-200 rounded-full h-2">
                     <div 
-                      className="bg-blue-500 h-2 rounded-full transition-all duration-300" 
-                      style={{ width: `${progress}%` }}
+                      className={`bg-blue-500 h-2 rounded-full transition-all duration-300 w-[${progress}%]`}
                     ></div>
                   </div>
                   <p className="text-sm text-blue-600 mt-2 text-center">
