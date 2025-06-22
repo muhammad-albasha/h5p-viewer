@@ -3,10 +3,11 @@ import { H5PContentService } from '@/app/services/H5PContentService';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const contentId = parseInt(params.id);
+    const resolvedParams = await params;
+    const contentId = parseInt(resolvedParams.id);
 
     if (isNaN(contentId)) {
       return NextResponse.json(

@@ -268,12 +268,10 @@ export async function PUT(
         { error: "Failed to update content" },
         { status: 500 }
       );
-    }
-
-    return NextResponse.json({ 
+    }    return NextResponse.json({ 
       id, 
       title: updatedContent.title, 
-      subject_area_id: updatedContent.subjectArea?.id || null, 
+      subject_area_id: updatedContent.subjectAreaId || null, 
       tags: updatedContent.tags?.map(tag => tag.id) || [], 
       updated_at: updatedContent.updatedAt 
     });
@@ -330,7 +328,7 @@ export async function GET(
       file_path: content.filePath,
       content_type: content.contentType,
       created_at: content.createdAt,
-      subject_area_id: content.subjectArea?.id || null,
+      subject_area_id: content.subjectAreaId || null,
       subject_area_name: content.subjectArea?.name || null,
       cover_image_path: content.coverImagePath,
       password: content.password,

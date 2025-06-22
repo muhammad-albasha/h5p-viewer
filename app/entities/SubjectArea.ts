@@ -14,10 +14,6 @@ export class SubjectArea {
   color?: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt!: Date;
-
-  @UpdateDateColumn({ name: 'updated_at' })
+  createdAt!: Date;  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt!: Date;
-  @OneToMany("H5PContent", "subjectArea")
-  content!: any[];
 }

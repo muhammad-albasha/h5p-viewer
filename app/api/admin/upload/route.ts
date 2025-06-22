@@ -28,16 +28,14 @@ export async function POST(req: NextRequest) {
     const description = formData.get('description') as string;
     const file = formData.get('file') as File;
     const subjectAreaId = formData.get('subjectAreaId') as string;
-    const tagsString = formData.get('tags') as string;
-    const password = formData.get('password') as string;
-    
-    // Parse tags if provided
+    const tagsString = formData.get('tags') as string;      // Parse tags if provided
     const tagIds: number[] = [];
     if (tagsString) {
       try {
         const parsedTags = JSON.parse(tagsString);
         if (Array.isArray(parsedTags)) {
-          parsedTags.forEach(tag => {          if (typeof tag === 'number') tagIds.push(tag);
+          parsedTags.forEach(tag => {
+            if (typeof tag === 'number') tagIds.push(tag);
           });
         }
       } catch (e) {
@@ -50,9 +48,7 @@ export async function POST(req: NextRequest) {
         { error: "Title and file are required" },
         { status: 400 }
       );
-    }
-    
-    // Validate subject area ID if provided
+    }    // Validate subject area ID if provided
     let validSubjectAreaId: number | null = null;
     if (subjectAreaId && subjectAreaId !== "none") {
       const parsedId = parseInt(subjectAreaId);
@@ -107,46 +103,47 @@ export async function POST(req: NextRequest) {
           coverImagePath = `/api/h5p/cover/${slug}/content/images/cover.jpg`;
         }
       }
-      // === ENDE Cover-Bild ===
-
-      // Parse h5p.json to get content type if it exists
+      // === ENDE Cover-Bild ===      // Parse h5p.json to get content type if it exists
       let contentType = "Unknown";
       const h5pJsonPath = path.join(h5pDir, 'h5p.json');
       if (fs.existsSync(h5pJsonPath)) {
         try {
           const h5pJson = JSON.parse(fs.readFileSync(h5pJsonPath, 'utf8'));
-          contentType = h5pJson.mainLibrary || contentType;        } catch (err) {
+          contentType = h5pJson.mainLibrary || contentType;
+        } catch (err) {
           // Error parsing h5p.json, using default metadata
         }
-      }        // Save the file info in the database using TypeORM
-        const relativeFilePath = `/h5p/${slug}`; // Path to the extracted directory, not the file
+      }
+
+      // Save the file info in the database using TypeORM
+      const relativeFilePath = `/h5p/${slug}`; // Path to the extracted directory, not the file
+      
+      try {
+        const h5pContentService = new H5PContentService();
         
-        try {
-          const h5pContentService = new H5PContentService();          const newContent = await h5pContentService.create({
-            title,
-            description: description || undefined,
-            filePath: relativeFilePath,
-            coverImagePath, // Cover-Bild-Pfad hinzufügen
-            contentType,
-            subjectAreaId: validSubjectAreaId || undefined,
-            createdById: typeof session.user.id === 'string' ? parseInt(session.user.id) : session.user.id,
-            tagIds: tagIds.length > 0 ? tagIds : undefined,
-            password: password || undefined
-          });
-          
+        const newContent = await h5pContentService.create({
+          title,
+          description: description || undefined,
+          filePath: relativeFilePath,
+          coverImagePath, // Cover-Bild-Pfad hinzufügen
+          contentType,
+          subjectAreaId: validSubjectAreaId || undefined,
+          createdById: typeof session.user.id === 'string' ? parseInt(session.user.id) : session.user.id,
+          tagIds: tagIds.length > 0 ? tagIds : undefined
+        });
           return NextResponse.json({
-            message: "Upload successful, H5P content extracted",
-            success: true,
-            contentId: newContent.id,
-            extractedTo: relativeFilePath
-          });
-        } catch (dbError) {
-          // If database save fails, clean up extracted files
-          if (fs.existsSync(h5pDir)) {
-            fs.rmSync(h5pDir, { recursive: true, force: true });
-          }
-          throw dbError;
+          message: "Upload successful, H5P content extracted",
+          success: true,
+          contentId: newContent.id,
+          extractedTo: relativeFilePath
+        });
+      } catch (dbError) {
+        // If database save fails, clean up extracted files
+        if (fs.existsSync(h5pDir)) {
+          fs.rmSync(h5pDir, { recursive: true, force: true });
         }
+        throw dbError;
+      }
     } catch (extractError: unknown) {
       // If extraction fails, delete the temporary file and throw error
       fs.unlinkSync(tempFilePath);

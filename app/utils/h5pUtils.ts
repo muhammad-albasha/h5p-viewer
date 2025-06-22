@@ -67,11 +67,9 @@ const assignTags = (type: string, name: string): string[] => {
 export async function getH5PContents(): Promise<H5PContent[]> {
   try {
     const h5pContentService = new H5PContentService();
-    
-    // Get content from database with related entities
+      // Get content from database with related entities
     const dbContents = await h5pContentService.findAll();
-    
-    // If we have content in the database, use that
+      // If we have content in the database, use that
     if (dbContents.length > 0) {
       return dbContents.map(content => ({
         id: content.id,
@@ -89,7 +87,7 @@ export async function getH5PContents(): Promise<H5PContent[]> {
           slug: content.subjectArea.slug
         } : null
       }));
-    }    // If no database content, fall back to file system
+    }// If no database content, fall back to file system
     const h5pDir = path.join(process.cwd(), 'public', 'h5p');
     
     // Check if directory exists

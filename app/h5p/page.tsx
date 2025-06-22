@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Navbar from '@/app/components/layout/Navbar';
 import Header from '@/app/components/layout/Header';
@@ -26,7 +26,7 @@ interface H5PContent {
   coverImagePath?: string;
 }
 
-export default function AllH5PContent() {
+function H5PContentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { favorites } = useFavorites();
@@ -371,9 +371,27 @@ export default function AllH5PContent() {
               contents={filteredContent}
               loading={isLoading}
             />
-          )}
-        </div>
+          )}        </div>
       </div>
     </>
+  );
+}
+
+export default function AllH5PContent() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
+        <div className="container-fluid mx-auto px-4">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+            <div className="flex flex-col items-center justify-center p-12">
+              <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
+              <p className="text-gray-600 mt-4 font-medium">Inhalte werden geladen...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    }>
+      <H5PContentPage />
+    </Suspense>
   );
 }

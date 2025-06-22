@@ -5,8 +5,7 @@ import { H5PContent } from './H5PContent';
 export class FeaturedContent {
   @PrimaryGeneratedColumn()
   id!: number;
-
-  @ManyToOne(() => H5PContent, content => content.featuredContent)
+  @ManyToOne(() => H5PContent)
   @JoinColumn({ name: 'content_id' })
   content!: H5PContent;
 

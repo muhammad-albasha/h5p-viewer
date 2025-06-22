@@ -11,16 +11,14 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }    // Get content list from database with relationships
     const h5pContentService = new H5PContentService();
-    const contentItems = await h5pContentService.findAll();
-
-    // Format response to match existing API
+    const contentItems = await h5pContentService.findAll();    // Format response to match existing API
     const formattedItems = contentItems.map(content => ({
       id: content.id,
       title: content.title,
       slug: content.slug,
       content_type: content.contentType,
       created_at: content.createdAt,
-      subject_area_id: content.subjectArea?.id || null,
+      subject_area_id: content.subjectAreaId || null,
       subject_area_name: content.subjectArea?.name || null,
       subject_area_slug: content.subjectArea?.slug || null,
       tags: content.tags?.map(tag => ({

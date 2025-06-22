@@ -40,66 +40,50 @@ export class H5PContentService {
       h5pContentRepo: this.h5pContentRepository, 
       tagRepo: this.tagRepository 
     };
-  }
-
-  async findAll(): Promise<H5PContent[]> {
+  }  async findAll(): Promise<H5PContent[]> {
     const { h5pContentRepo } = await this.getRepositories();
     return h5pContentRepo.find({
-      relations: ['tags', 'subjectArea', 'createdBy'],
+      relations: ['tags', 'subjectArea'],
       order: { createdAt: 'DESC' }
     });
-  }
-
-  async findById(id: number): Promise<H5PContent | null> {
+  }  async findById(id: number): Promise<H5PContent | null> {
     const { h5pContentRepo } = await this.getRepositories();
     return h5pContentRepo.findOne({
       where: { id },
-      relations: ['tags', 'subjectArea', 'createdBy']
+      relations: ['tags', 'subjectArea']
     });
-  }
-
-  async findByIdWithDetails(id: number): Promise<H5PContent | null> {
+  }  async findByIdWithDetails(id: number): Promise<H5PContent | null> {
     const { h5pContentRepo } = await this.getRepositories();
     return h5pContentRepo.findOne({
       where: { id },
-      relations: ['tags', 'subjectArea', 'createdBy']
+      relations: ['tags', 'subjectArea']
     });
-  }
-
-  async findBySlug(slug: string): Promise<H5PContent | null> {
+  }  async findBySlug(slug: string): Promise<H5PContent | null> {
     const { h5pContentRepo } = await this.getRepositories();
     return h5pContentRepo.findOne({
       where: { slug },
-      relations: ['tags', 'subjectArea', 'createdBy']
+      relations: ['tags', 'subjectArea']
     });
-  }
-
-  async findBySubjectArea(subjectAreaId: number): Promise<H5PContent[]> {
+  }  async findBySubjectArea(subjectAreaId: number): Promise<H5PContent[]> {
     const { h5pContentRepo } = await this.getRepositories();
     return h5pContentRepo.find({
       where: { subjectAreaId },
-      relations: ['tags', 'subjectArea', 'createdBy'],
+      relations: ['tags', 'subjectArea'],
       order: { createdAt: 'DESC' }
     });
-  }
-
-  async findByTags(tagIds: number[]): Promise<H5PContent[]> {
+  }  async findByTags(tagIds: number[]): Promise<H5PContent[]> {
     const { h5pContentRepo } = await this.getRepositories();
     return h5pContentRepo.createQueryBuilder('content')
       .leftJoinAndSelect('content.tags', 'tag')
       .leftJoinAndSelect('content.subjectArea', 'subjectArea')
-      .leftJoinAndSelect('content.createdBy', 'createdBy')
       .where('tag.id IN (:...tagIds)', { tagIds })
       .orderBy('content.createdAt', 'DESC')
       .getMany();
-  }
-
-  async findBySubjectAreaAndTags(subjectAreaId: number, tagIds: number[]): Promise<H5PContent[]> {
+  }  async findBySubjectAreaAndTags(subjectAreaId: number, tagIds: number[]): Promise<H5PContent[]> {
     const { h5pContentRepo } = await this.getRepositories();
     return h5pContentRepo.createQueryBuilder('content')
       .leftJoinAndSelect('content.tags', 'tag')
       .leftJoinAndSelect('content.subjectArea', 'subjectArea')
-      .leftJoinAndSelect('content.createdBy', 'createdBy')
       .where('content.subjectAreaId = :subjectAreaId', { subjectAreaId })
       .andWhere('tag.id IN (:...tagIds)', { tagIds })
       .orderBy('content.createdAt', 'DESC')
@@ -175,14 +159,10 @@ export class H5PContentService {
     const { h5pContentRepo } = await this.getRepositories();
     const result = await h5pContentRepo.delete(id);
     return (result.affected ?? 0) > 0;
-  }
-
-  async searchByTitle(searchTerm: string): Promise<H5PContent[]> {
+  }  async searchByTitle(searchTerm: string): Promise<H5PContent[]> {
     const { h5pContentRepo } = await this.getRepositories();
     return h5pContentRepo.createQueryBuilder('content')
       .leftJoinAndSelect('content.tags', 'tag')
-      .leftJoinAndSelect('content.subjectArea', 'subjectArea')
-      .leftJoinAndSelect('content.createdBy', 'createdBy')
       .where('content.title LIKE :searchTerm', { searchTerm: `%${searchTerm}%` })
       .orderBy('content.createdAt', 'DESC')
       .getMany();

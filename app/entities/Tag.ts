@@ -10,9 +10,6 @@ export class Tag {
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
-
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt!: Date;
-  @ManyToMany("H5PContent", "tags")
-  content!: any[];
 }

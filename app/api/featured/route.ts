@@ -31,13 +31,9 @@ export async function GET(request: NextRequest) {
       path: `/h5p/content?id=${content.id}`,
       type: content.contentType || 'Interactive Content',
       tags: content.tags?.map(tag => tag.name) || [],
-      slug: content.slug,
-      coverImagePath: content.coverImagePath,
+      slug: content.slug,      coverImagePath: content.coverImagePath,
       description: content.description,
-      subject_area: content.subjectArea ? {
-        name: content.subjectArea.name,
-        slug: content.subjectArea.slug
-      } : null,
+      subject_area: null, // This would need to be fetched separately now
       created_at: content.createdAt
     }));
 

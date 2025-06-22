@@ -20,13 +20,11 @@ export class FeaturedContentService {
       featuredRepo: this.featuredContentRepository, 
       h5pRepo: this.h5pContentRepository 
     };
-  }
-
-  async getFeaturedContent(limit: number = 3): Promise<H5PContent[]> {
+  }  async getFeaturedContent(limit: number = 3): Promise<H5PContent[]> {
     const { featuredRepo } = await this.getRepositories();
     
     const featuredItems = await featuredRepo.find({
-      relations: ['content', 'content.tags', 'content.subjectArea', 'content.createdBy'],
+      relations: ['content'],
       order: { createdAt: 'DESC' },
       take: limit
     });

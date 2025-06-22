@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, ManyToMany, JoinTable, JoinColumn, OneToMany } from 'typeorm';
-import { SubjectArea } from './SubjectArea';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, ManyToOne, JoinColumn } from 'typeorm';
 import { Tag } from './Tag';
+import { SubjectArea } from './SubjectArea';
 
 @Entity('h5p_content')
 export class H5PContent {
@@ -22,19 +22,14 @@ export class H5PContent {
   contentType?: string;
   @Column({ type: 'text', nullable: true })
   description?: string;
-
   @Column({ type: 'varchar', length: 255, nullable: true })
   password?: string;
-
-  @ManyToOne(() => SubjectArea, subjectArea => subjectArea.content, { nullable: true })
-  @JoinColumn({ name: 'subject_area_id' })
-  subjectArea?: SubjectArea;
-
   @Column({ type: 'int', nullable: true, name: 'subject_area_id' })
   subjectAreaId?: number;
-  @ManyToOne("User", "createdContent", { nullable: true })
-  @JoinColumn({ name: 'created_by' })
-  createdBy?: any;
+
+  @ManyToOne(() => SubjectArea)
+  @JoinColumn({ name: 'subject_area_id' })
+  subjectArea?: SubjectArea;
 
   @Column({ type: 'int', nullable: true, name: 'created_by' })
   createdById?: number;
@@ -44,14 +39,11 @@ export class H5PContent {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt!: Date;
-
-  @ManyToMany(() => Tag, tag => tag.content)
+  @ManyToMany(() => Tag)
   @JoinTable({
     name: 'content_tags',
     joinColumn: { name: 'content_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'tag_id', referencedColumnName: 'id' }
   })
   tags!: Tag[];
-  @OneToMany("FeaturedContent", "content")
-  featuredContent!: any[];
 }

@@ -20,7 +20,7 @@ interface Contact {
 async function getContacts(): Promise<Contact[]> {
   try {
     const response = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/contacts`, {
-      cache: 'no-store'
+      next: { revalidate: 300 } // Revalidate every 5 minutes
     });
     
     if (!response.ok) {
