@@ -11,6 +11,7 @@ interface H5PContent {
   slug?: string;
   coverImagePath?: string;
   description?: string;
+  isPasswordProtected?: boolean;
   subject_area?: {
     name: string;
     slug: string;

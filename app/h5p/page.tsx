@@ -22,6 +22,7 @@ interface H5PContent {
   type: string;
   tags: string[];
   slug?: string;
+  isPasswordProtected?: boolean;
   subject_area?: SubjectArea | null;
   coverImagePath?: string;
 }

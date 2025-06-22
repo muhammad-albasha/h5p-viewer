@@ -11,6 +11,7 @@ interface H5PContent {
   slug?: string;
   coverImagePath?: string;
   description?: string;
+  isPasswordProtected?: boolean;
   subject_area?: {
     name: string;
     slug: string;
@@ -90,9 +91,15 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
                 <span className="px-3 py-1 bg-blue-500 text-white rounded-lg text-xs font-medium backdrop-blur-sm">
                   {content.type}
                 </span>
-              </div>
-              <div className="absolute top-3 left-3">
+              </div>              <div className="absolute top-3 left-3 flex items-center gap-2">
                 <FavoriteButton content={content} variant="card" />
+                {content.isPasswordProtected && (
+                  <div className="bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                )}
               </div>
             </div>
 

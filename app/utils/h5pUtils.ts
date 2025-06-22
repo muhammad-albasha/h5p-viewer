@@ -12,6 +12,7 @@ interface H5PContent {
   coverImagePath?: string;
   description?: string;
   created_at?: string;
+  isPasswordProtected?: boolean;
   subject_area?: {
     id: number;
     name: string;
@@ -70,8 +71,7 @@ export async function getH5PContents(): Promise<H5PContent[]> {
       // Get content from database with related entities
     const dbContents = await h5pContentService.findAll();
       // If we have content in the database, use that
-    if (dbContents.length > 0) {
-      return dbContents.map(content => ({
+    if (dbContents.length > 0) {      return dbContents.map(content => ({
         id: content.id,
         name: content.title,
         path: content.filePath,
@@ -81,6 +81,7 @@ export async function getH5PContents(): Promise<H5PContent[]> {
         coverImagePath: content.coverImagePath,
         description: content.description,
         created_at: content.createdAt.toISOString(),
+        isPasswordProtected: !!(content.password && content.password.trim() !== ''),
         subject_area: content.subjectArea ? {
           id: content.subjectArea.id,
           name: content.subjectArea.name,
@@ -113,8 +114,7 @@ export async function getH5PContents(): Promise<H5PContent[]> {
       
       // Construct cover image path
       const coverImagePath = `/api/h5p/cover/${dir}/content/images/cover.jpg`;
-        
-      return {
+          return {
         id: index + 1,
         name,
         path: `/h5p/${dir}`,
@@ -123,6 +123,7 @@ export async function getH5PContents(): Promise<H5PContent[]> {
         slug: dir,
         coverImagePath,
         created_at: new Date().toISOString(),
+        isPasswordProtected: false, // File system fallback cannot determine password protection
         subject_area: null
       };
     });
