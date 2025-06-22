@@ -4,6 +4,9 @@ import Image from 'next/image';
 import Navbar from '@/app/components/layout/Navbar';
 import Header from '@/app/components/layout/Header';
 
+// Force dynamic rendering to avoid build-time API calls
+export const dynamic = 'force-dynamic';
+
 interface Contact {
   id: number;
   name: string;
