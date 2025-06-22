@@ -13,6 +13,7 @@ export interface CreateH5PContentData {
   subjectAreaId?: number;
   createdById?: number;
   tagIds?: number[];
+  password?: string;
 }
 
 export interface UpdateH5PContentData {
@@ -22,6 +23,7 @@ export interface UpdateH5PContentData {
   description?: string;
   subjectAreaId?: number;
   tagIds?: number[];
+  password?: string;
 }
 
 export class H5PContentService {
@@ -108,8 +110,7 @@ export class H5PContentService {
     const { h5pContentRepo, tagRepo } = await this.getRepositories();
     
     // Generate slug from title
-    const slug = await this.generateUniqueSlug(data.title);
-      // Create content entity
+    const slug = await this.generateUniqueSlug(data.title);    // Create content entity
     const content = h5pContentRepo.create({
       title: data.title,
       slug,
@@ -118,7 +119,8 @@ export class H5PContentService {
       contentType: data.contentType,
       description: data.description,
       subjectAreaId: data.subjectAreaId,
-      createdById: data.createdById
+      createdById: data.createdById,
+      password: data.password
     });
     
     // Save content first
@@ -145,13 +147,13 @@ export class H5PContentService {
     
     if (!content) {
       return null;
-    }
-      // Update basic fields
+    }    // Update basic fields
     if (data.title !== undefined) content.title = data.title;
     if (data.coverImagePath !== undefined) content.coverImagePath = data.coverImagePath;
     if (data.contentType !== undefined) content.contentType = data.contentType;
     if (data.description !== undefined) content.description = data.description;
     if (data.subjectAreaId !== undefined) content.subjectAreaId = data.subjectAreaId;
+    if (data.password !== undefined) content.password = data.password;
     
     // Update tags if provided
     if (data.tagIds !== undefined) {

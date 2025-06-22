@@ -154,14 +154,15 @@ export async function PUT(
     let subject_area_id: string | null = null;
     let tags: number[] = [];
     let coverImage: File | null = null;
+    let password = "";
 
     // Detect content type and parse accordingly
     const contentType = request.headers.get("content-type") || "";
     if (contentType.includes("multipart/form-data")) {
-      const formData = await request.formData();
-      title = formData.get("title") as string;
+      const formData = await request.formData();      title = formData.get("title") as string;
       description = formData.get("description") as string || "";
       subject_area_id = formData.get("subject_area_id") as string;
+      password = formData.get("password") as string || "";
       const tagsString = formData.get("tags") as string;
       if (tagsString) {
         try {
@@ -183,10 +184,10 @@ export async function PUT(
         return NextResponse.json(
           { error: "Invalid request data format" },
           { status: 400 }
-        );      }
-      title = reqData.title;
+        );      }      title = reqData.title;
       description = reqData.description || "";
       subject_area_id = reqData.subject_area_id;
+      password = reqData.password || "";
       tags = reqData.tags || [];
     }
 
@@ -254,12 +255,12 @@ export async function PUT(
         // Continue with update even if cover image fails
       }
     }// Update content using TypeORM service
-    const subjectAreaId = subject_area_id && subject_area_id !== "none" ? parseInt(subject_area_id) : undefined;
-    const updatedContent = await h5pContentService.update(id, {
+    const subjectAreaId = subject_area_id && subject_area_id !== "none" ? parseInt(subject_area_id) : undefined;    const updatedContent = await h5pContentService.update(id, {
       title: title.trim(),
       description: description.trim() || undefined,
       subjectAreaId,
-      tagIds: tags.length > 0 ? tags : undefined
+      tagIds: tags.length > 0 ? tags : undefined,
+      password: password || undefined
     });
 
     if (!updatedContent) {
@@ -332,6 +333,7 @@ export async function GET(
       subject_area_id: content.subjectArea?.id || null,
       subject_area_name: content.subjectArea?.name || null,
       cover_image_path: content.coverImagePath,
+      password: content.password,
       tags: content.tags?.map(tag => ({
         id: tag.id,
         name: tag.name

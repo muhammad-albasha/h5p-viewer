@@ -29,9 +29,9 @@ export default function UploadH5P() {
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [isLoadingOptions, setIsLoadingOptions] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [progress, setProgress] = useState(0);
+  const [error, setError] = useState<string | null>(null);  const [progress, setProgress] = useState(0);
   const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [password, setPassword] = useState("");
   
   // Fetch subject areas and tags when component loads
   useEffect(() => {
@@ -96,11 +96,13 @@ export default function UploadH5P() {
       setIsUploading(true);
       setError(null);      // Create FormData object to send the file and metadata
       const formData = new FormData();
-      formData.append("file", file);
-      formData.append("title", title);
+      formData.append("file", file);      formData.append("title", title);
       formData.append("description", description);
       formData.append("subjectAreaId", selectedSubjectArea);
       formData.append("tags", JSON.stringify(selectedTags));
+      if (password.trim()) {
+        formData.append("password", password);
+      }
       if (coverImage) {
         formData.append("coverImage", coverImage);
       }
@@ -239,8 +241,7 @@ export default function UploadH5P() {
                   </div>
                 </div>
               </div>
-              
-              <div>
+                <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="description">
                   Beschreibung (optional)
                 </label>
@@ -253,6 +254,21 @@ export default function UploadH5P() {
                   rows={3}
                 />
                 <p className="text-xs text-gray-500 mt-1">Diese Beschreibung wird auf der Inhaltsseite angezeigt</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="password">
+                  Passwort-Schutz (optional)
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                  placeholder="Passwort eingeben (leer lassen für öffentlichen Zugriff)"
+                />
+                <p className="text-xs text-gray-500 mt-1">Wenn gesetzt, müssen Benutzer dieses Passwort eingeben, um den Inhalt anzuzeigen</p>
               </div>
               
               <div>

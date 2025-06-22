@@ -8,6 +8,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
 import FavoriteButton from "@/app/components/common/FavoriteButton";
+import PasswordProtection from "@/app/components/common/PasswordProtection";
 
 interface H5PContentDetails {
   id: number;
@@ -23,17 +24,21 @@ interface H5PContentDetails {
   } | null;
   slug?: string;
   coverImagePath?: string;
+  isPasswordProtected?: boolean;
 }
 
 // Separate component that uses useSearchParams
 function H5PContentViewer() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-
   const [contentDetails, setContentDetails] =
     useState<H5PContentDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isPasswordProtected, setIsPasswordProtected] = useState(false);
+  const [isPasswordVerified, setIsPasswordVerified] = useState(false);
+  const [passwordError, setPasswordError] = useState<string>('');
+  const [passwordLoading, setPasswordLoading] = useState(false);
 
   useEffect(() => {
     const fetchContentDetails = async () => {
@@ -55,10 +60,20 @@ function H5PContentViewer() {
         const contentIndex = parseInt(id) - 1; // ID starts at 1, array at 0
         const content =
           contents[contentIndex] ||
-          contents.find((item: H5PContentDetails) => item.id.toString() === id);
-
-        if (content) {
+          contents.find((item: H5PContentDetails) => item.id.toString() === id);        if (content) {
           setContentDetails(content);
+          // Check if content is password protected using API
+          const protectionResponse = await fetch(`/api/h5p/check-protection/${content.id}`);
+          if (protectionResponse.ok) {
+            const protectionData = await protectionResponse.json();
+            if (protectionData.isPasswordProtected) {
+              setIsPasswordProtected(true);
+            } else {
+              setIsPasswordVerified(true);
+            }
+          } else {
+            setIsPasswordVerified(true);
+          }
         } else {
           setError(`Content mit ID "${id}" nicht gefunden`);
         }
@@ -68,10 +83,49 @@ function H5PContentViewer() {
       } finally {
         setLoading(false);
       }
-    };
+    };    fetchContentDetails();
+  }, [id]);
+  const handlePasswordSubmit = async (enteredPassword: string) => {
+    setPasswordLoading(true);
+    setPasswordError('');
 
-    fetchContentDetails();
-  }, [id]);  return (
+    try {
+      const response = await fetch('/api/h5p/verify-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contentId: contentDetails?.id,
+          password: enteredPassword,
+        }),
+      });
+
+      if (response.ok) {
+        setIsPasswordVerified(true);
+        setIsPasswordProtected(false);
+      } else {
+        const data = await response.json();
+        setPasswordError(data.error || 'Falsches Passwort. Bitte versuchen Sie es erneut.');
+      }
+    } catch (error) {
+      setPasswordError('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
+    } finally {
+      setPasswordLoading(false);
+    }
+  };
+
+  // Show password protection screen if content is password protected and not yet verified
+  if (isPasswordProtected && !isPasswordVerified && contentDetails) {
+    return (
+      <PasswordProtection
+        title={contentDetails.name}
+        onPasswordSubmit={handlePasswordSubmit}
+        error={passwordError}
+        loading={passwordLoading}
+      />
+    );
+  }return (
     <>
       {/* Modern Header Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800">

@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
     const file = formData.get('file') as File;
     const subjectAreaId = formData.get('subjectAreaId') as string;
     const tagsString = formData.get('tags') as string;
+    const password = formData.get('password') as string;
     
     // Parse tags if provided
     const tagIds: number[] = [];
@@ -129,7 +130,8 @@ export async function POST(req: NextRequest) {
             contentType,
             subjectAreaId: validSubjectAreaId || undefined,
             createdById: typeof session.user.id === 'string' ? parseInt(session.user.id) : session.user.id,
-            tagIds: tagIds.length > 0 ? tagIds : undefined
+            tagIds: tagIds.length > 0 ? tagIds : undefined,
+            password: password || undefined
           });
           
           return NextResponse.json({

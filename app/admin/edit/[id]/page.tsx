@@ -20,6 +20,7 @@ interface ContentData {
   subject_area_name: string | null;
   tags: Array<{ id: number; name: string }>;
   cover_image_path?: string;
+  password?: string;
 }
 
 interface SubjectArea {
@@ -46,12 +47,12 @@ export default function EditContent() {
   // Form state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [subjectAreaId, setSubjectAreaId] = useState<number | null>(null);
-  const [selectedTags, setSelectedTags] = useState<number[]>([]);
+  const [subjectAreaId, setSubjectAreaId] = useState<number | null>(null);  const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);  const [previewMode, setPreviewMode] = useState(false);
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
+  const [password, setPassword] = useState("");
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -103,6 +104,7 @@ export default function EditContent() {
         setTitle(data.content.title || "");
         setDescription(data.content.description || "");
         setSubjectAreaId(data.content.subject_area_id || null);
+        setPassword(data.content.password || "");
 
         // Safely handle tags
         if (data.content.tags && Array.isArray(data.content.tags)) {
@@ -134,8 +136,8 @@ export default function EditContent() {
       formData.append(
         "subject_area_id",
         subjectAreaId ? String(subjectAreaId) : ""
-      );
-      formData.append("tags", JSON.stringify(selectedTags));
+      );      formData.append("tags", JSON.stringify(selectedTags));
+      formData.append("password", password);
       if (coverImage) {
         formData.append("coverImage", coverImage);
       }
@@ -403,6 +405,21 @@ export default function EditContent() {
                         rows={3}
                       />
                       <p className="text-xs text-gray-500 mt-1">Diese Beschreibung wird auf der Inhaltsseite angezeigt</p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2" htmlFor="content-password">
+                        Passwort-Schutz (optional)
+                      </label>
+                      <input
+                        id="content-password"
+                        type="password"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Passwort eingeben (leer lassen für öffentlichen Zugriff)"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Wenn gesetzt, müssen Benutzer dieses Passwort eingeben, um den Inhalt anzuzeigen</p>
                     </div>
 
                     <div>

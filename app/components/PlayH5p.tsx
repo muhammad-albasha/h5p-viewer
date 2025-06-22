@@ -20,7 +20,7 @@ interface PlayH5pProps {
 }
 
 function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
-  const h5pcontainer-fluid = useRef(null);
+  const h5pContainer = useRef(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,7 +38,7 @@ function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
           H5PConstructor = H5PModule.H5PStandalone;
         } else {
           throw new Error("Could not find H5P constructor in the module");
-        }        const el = h5pcontainer-fluid.current;
+        }        const el = h5pContainer.current;
         
         // Ensure path is correctly formatted for the H5P library
         // The library expects a directory path and will append h5p.json itself
@@ -141,9 +141,8 @@ function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
             </div>
           </div>
         </div>
-      )}<div 
-        ref={h5pcontainer-fluid} 
-        className={`h5p-container-fluid w-full relative z-10 ${error || loading ? styles.h5pcontainer-fluidHidden : styles.h5pcontainer-fluid}`}
+      )}<div        ref={h5pContainer} 
+        className={`h5p-container-fluid w-full relative z-10 ${error || loading ? styles.h5pcontainerFluidHidden : styles.h5pcontainerFluid}`}
       ></div>
     </div>
   );

@@ -20,9 +20,11 @@ export class H5PContent {
   coverImagePath?: string;
   @Column({ type: 'varchar', length: 100, nullable: true, name: 'content_type' })
   contentType?: string;
-
   @Column({ type: 'text', nullable: true })
   description?: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  password?: string;
 
   @ManyToOne(() => SubjectArea, subjectArea => subjectArea.content, { nullable: true })
   @JoinColumn({ name: 'subject_area_id' })
