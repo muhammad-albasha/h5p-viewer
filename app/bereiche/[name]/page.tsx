@@ -7,6 +7,7 @@ import { useParams, useRouter } from 'next/navigation'
 import PlayH5p from '@/app/components/PlayH5p'
 import ContentFilter from '@/app/components/content/ContentFilter'
 import FavoriteButton from '@/app/components/common/FavoriteButton'
+import PasswordProtection from '@/app/components/common/PasswordProtection'
 
 interface SubjectAreaContent {
   id: number;
@@ -21,18 +22,25 @@ interface SubjectAreaContent {
   tags: string[];
   slug?: string;
   coverImagePath?: string;
+  isPasswordProtected?: boolean;
 }
 
 const Bereich = () => {
   const params = useParams();
   const router = useRouter();
   const subjectAreaSlug = params.name as string;
-    const [content, setContent] = useState<SubjectAreaContent[]>([]);
+  const [content, setContent] = useState<SubjectAreaContent[]>([]);
   const [subjectAreaName, setSubjectAreaName] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedContent, setSelectedContent] = useState<SubjectAreaContent | null>(null);
   const [viewMode, setViewMode] = useState<'list' | 'view'>('list');
+  
+  // Password protection states
+  const [isPasswordProtected, setIsPasswordProtected] = useState(false);
+  const [isPasswordVerified, setIsPasswordVerified] = useState(false);
+  const [passwordError, setPasswordError] = useState<string>('');
+  const [passwordLoading, setPasswordLoading] = useState(false);
   
   // Filter states
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -70,14 +78,68 @@ const Bereich = () => {
     
     fetchContent();
   }, [subjectAreaSlug]);
-
-  const handleContentSelect = (item: SubjectAreaContent) => {
+  const handleContentSelect = async (item: SubjectAreaContent) => {
     setSelectedContent(item);
     setViewMode('view');
-  };
-  const handleBackToList = () => {
+    
+    // Check if content is password protected
+    try {
+      const protectionResponse = await fetch(`/api/h5p/check-protection/${item.id}`);
+      if (protectionResponse.ok) {
+        const protectionData = await protectionResponse.json();
+        if (protectionData.isPasswordProtected) {
+          setIsPasswordProtected(true);
+          setIsPasswordVerified(false);
+        } else {
+          setIsPasswordProtected(false);
+          setIsPasswordVerified(true);
+        }
+      } else {
+        setIsPasswordProtected(false);
+        setIsPasswordVerified(true);
+      }
+    } catch (error) {
+      // If protection check fails, assume no protection
+      setIsPasswordProtected(false);
+      setIsPasswordVerified(true);
+    }
+  };  const handleBackToList = () => {
     setSelectedContent(null);
     setViewMode('list');
+    // Reset password protection states
+    setIsPasswordProtected(false);
+    setIsPasswordVerified(false);
+    setPasswordError('');
+  };
+
+  const handlePasswordSubmit = async (enteredPassword: string) => {
+    setPasswordLoading(true);
+    setPasswordError('');
+
+    try {
+      const response = await fetch('/api/h5p/verify-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contentId: selectedContent?.id,
+          password: enteredPassword,
+        }),
+      });
+
+      if (response.ok) {
+        setIsPasswordVerified(true);
+        setIsPasswordProtected(false);
+      } else {
+        const data = await response.json();
+        setPasswordError(data.error || 'Falsches Passwort. Bitte versuchen Sie es erneut.');
+      }
+    } catch (error) {
+      setPasswordError('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
+    } finally {
+      setPasswordLoading(false);
+    }
   };
 
   // Get available tags from content
@@ -236,11 +298,20 @@ const Bereich = () => {
                   Zu allen Bereichen
                 </Link>
               </div>
-            </div>
-          ) : viewMode === 'view' && selectedContent ? (
+            </div>          ) : viewMode === 'view' && selectedContent ? (
             <>
-              {/* Enhanced Header for View Mode */}
-              <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 rounded-2xl -mx-4 -mt-12 mb-8">
+              {/* Password Protection Check */}
+              {isPasswordProtected && !isPasswordVerified ? (
+                <PasswordProtection
+                  title={selectedContent.name}
+                  onPasswordSubmit={handlePasswordSubmit}
+                  error={passwordError}
+                  loading={passwordLoading}
+                />
+              ) : (
+                <>
+                  {/* Enhanced Header for View Mode */}
+                  <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 rounded-2xl -mx-4 -mt-12 mb-8">
                 <div className="absolute inset-0">
                   <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-48 -translate-y-48 backdrop-blur-3xl"></div>
                   <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
@@ -337,8 +408,9 @@ const Bereich = () => {
                   <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
                     <PlayH5p h5pJsonPath={selectedContent.path} />
                   </div>
-                </div>
-              </div>
+                </div>              </div>
+                </>
+              )}
             </>) : viewMode === 'list' && (
             <>
               {/* Content Filter */}
