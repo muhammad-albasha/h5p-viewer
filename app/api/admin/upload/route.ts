@@ -28,7 +28,8 @@ export async function POST(req: NextRequest) {
     const description = formData.get('description') as string;
     const file = formData.get('file') as File;
     const subjectAreaId = formData.get('subjectAreaId') as string;
-    const tagsString = formData.get('tags') as string;      // Parse tags if provided
+    const tagsString = formData.get('tags') as string;
+    const password = formData.get('password') as string;// Parse tags if provided
     const tagIds: number[] = [];
     if (tagsString) {
       try {
@@ -120,8 +121,7 @@ export async function POST(req: NextRequest) {
       
       try {
         const h5pContentService = new H5PContentService();
-        
-        const newContent = await h5pContentService.create({
+          const newContent = await h5pContentService.create({
           title,
           description: description || undefined,
           filePath: relativeFilePath,
@@ -129,7 +129,8 @@ export async function POST(req: NextRequest) {
           contentType,
           subjectAreaId: validSubjectAreaId || undefined,
           createdById: typeof session.user.id === 'string' ? parseInt(session.user.id) : session.user.id,
-          tagIds: tagIds.length > 0 ? tagIds : undefined
+          tagIds: tagIds.length > 0 ? tagIds : undefined,
+          password: password || undefined
         });
           return NextResponse.json({
           message: "Upload successful, H5P content extracted",
