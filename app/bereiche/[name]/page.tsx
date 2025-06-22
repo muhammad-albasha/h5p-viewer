@@ -150,7 +150,6 @@ const Bereich = () => {
     });
     return Array.from(tags).sort();
   }, [content]);
-
   // Filter content based on search and tags
   const filteredContent = useMemo(() => {
     return content.filter(item => {
@@ -165,7 +164,7 @@ const Bereich = () => {
         selectedTags.every(selectedTag => item.tags.includes(selectedTag));
 
       return matchesSearch && matchesTags;
-    });
+    }).sort((a, b) => a.name.localeCompare(b.name));
   }, [content, searchQuery, selectedTags]);
 
   // Toggle tag selection
@@ -343,12 +342,13 @@ const Bereich = () => {
                       
                       <p className="text-blue-100 text-xl leading-relaxed max-w-2xl">
                         Interaktiver {selectedContent.type}-Inhalt für optimales Lernen
-                      </p>
-
-                      {/* Tags */}
+                      </p>                      {/* Tags */}
                       {selectedContent.tags && selectedContent.tags.length > 0 && (
                         <div className="flex flex-wrap gap-2">
-                          {selectedContent.tags.map((tag, idx) => (
+                          {selectedContent.tags
+                            .slice()
+                            .sort((a, b) => a.localeCompare(b))
+                            .map((tag, idx) => (
                             <span
                               key={idx}
                               className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium hover:bg-white/30 transition-all duration-200 border border-white/30"
@@ -564,11 +564,9 @@ const Bereich = () => {
                           {/* Description */}
                           <p className="text-gray-600 text-sm leading-relaxed">
                             Interaktiver {item.type}-Inhalt für optimales Lernen
-                          </p>
-
-                          {/* Tags */}
+                          </p>                          {/* Tags */}
                           <div className="flex flex-wrap gap-2">
-                            {item.tags?.slice(0, 3).map((tag, idx) => (
+                            {item.tags?.slice().sort((a, b) => a.localeCompare(b)).slice(0, 3).map((tag, idx) => (
                               <span
                                 key={idx}
                                 className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors"

@@ -51,10 +51,12 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
       </div>
     );
   }
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {contents.map((content, index) => {
+      {contents
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((content, index) => {
         // Determine image URL - prioritize coverImagePath from database
         let imageUrl = content.coverImagePath;
         
@@ -121,11 +123,9 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
               {/* Description */}
               <p className="text-gray-600 text-sm leading-relaxed">
                 {content.description || `Interaktiver ${content.type}-Inhalt für optimales Lernen`}
-              </p>
-
-              {/* Tags */}
+              </p>              {/* Tags */}
               <div className="flex flex-wrap gap-2">
-                {content.tags?.slice(0, 3).map((tag, idx) => (
+                {content.tags?.slice().sort((a, b) => a.localeCompare(b)).slice(0, 3).map((tag, idx) => (
                   <span
                     key={idx}
                     className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors"

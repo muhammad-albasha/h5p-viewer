@@ -182,11 +182,12 @@ const BereichOverview = () => {
                     Wählen Sie einen Bereich, um die verfügbaren H5P-Lerninhalte zu entdecken
                   </p>
                 </div>
-              </div>
-
-              {/* Subject Areas Grid */}
+              </div>              {/* Subject Areas Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {subjectAreas.map((area, index) => {
+                {subjectAreas
+                  .slice()
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((area, index) => {
                   const contentCount = contentCounts[area.slug] || 0;
                   const colors = [
                     'from-blue-500 to-purple-600',
