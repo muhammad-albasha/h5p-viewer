@@ -80,28 +80,6 @@ const ContentFilter = ({
           </div>
         </div>
 
-        {/* Subject Area Filter */}
-        {subjectAreas.length > 0 && (
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Bereich
-            </label>
-            <select
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white/50 backdrop-blur-sm"
-              value={selectedSubjectArea}
-              onChange={(e) => setSelectedSubjectArea(e.target.value)}
-              aria-label="Bereich auswählen"
-            >
-              <option value="">Alle Bereiche</option>
-              {subjectAreas.map((area) => (
-                <option key={area.id} value={area.slug}>
-                  {area.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-
         {/* Tags Filter */}
         <div>
           <div className="flex items-center justify-between mb-3">
