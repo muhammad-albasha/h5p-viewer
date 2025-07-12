@@ -185,14 +185,15 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Quick Actions */}
-            <div className="flex flex-wrap gap-3">
+            {/* Responsive Admin Menu */}
+            <div className="responsive-grid-admin-menu">
+              {/* Primary Action - Upload */}
               <Link
                 href="/admin/upload"
-                className="inline-flex items-center px-6 py-3 bg-white text-primary font-semibold rounded-xl hover: transition-all duration-200 transform hover:scale-105 shadow-lg"
+                className="admin-menu-card admin-menu-card-primary"
               >
                 <svg
-                  className="w-5 h-5 mr-2"
+                  className="w-5 h-5 sm:w-6 sm:h-6"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -202,115 +203,120 @@ export default function AdminDashboard() {
                     clipRule="evenodd"
                   />
                 </svg>
-                Inhalt hochladen
+                <span className="text-sm sm:text-base font-semibold">Inhalt hochladen</span>
               </Link>
 
-              <div className="flex gap-2">
-                <Link
-                  href="/admin/2fa"
-                  className="inline-flex items-center px-4 py-3 bg-white/10 backdrop-blur-sm text-white font-medium rounded-xl hover:bg-white/20 transition-all duration-200 border border-white/20"
+              {/* Security & Settings */}
+              <Link
+                href="/admin/2fa"
+                className="admin-menu-card"
+              >
+                <svg
+                  className="w-4 h-4 sm:w-5 sm:h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
                 >
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  2FA
-                </Link>
-                <Link
-                  href="/admin/pages"
-                  className="inline-flex items-center px-4 py-3 bg-white/10 backdrop-blur-sm text-white font-medium rounded-xl hover:bg-white/20 transition-all duration-200 border border-white/20"
+                  <path
+                    fillRule="evenodd"
+                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span className="text-sm sm:text-base font-medium">2FA</span>
+              </Link>
+
+              {/* Content Management */}
+              <Link
+                href="/admin/pages"
+                className="admin-menu-card"
+              >
+                <svg
+                  className="w-4 h-4 sm:w-5 sm:h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
                 >
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Seiten
-                </Link>{" "}
-                <Link
-                  href="/admin/legal-pages"
-                  className="inline-flex items-center px-4 py-3 bg-white/10 backdrop-blur-sm text-white font-medium rounded-xl hover:bg-white/20 transition-all duration-200 border border-white/20"
+                  <path
+                    fillRule="evenodd"
+                    d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span className="text-sm sm:text-base font-medium">Seiten</span>
+              </Link>
+
+              <Link
+                href="/admin/legal-pages"
+                className="admin-menu-card"
+              >
+                <svg
+                  className="w-4 h-4 sm:w-5 sm:h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                    />
-                  </svg>
-                  Rechtliche Seiten
-                </Link>
-                <Link
-                  href="/admin/contacts"
-                  className="inline-flex items-center px-4 py-3 bg-white/10 backdrop-blur-sm text-white font-medium rounded-xl hover:bg-white/20 transition-all duration-200 border border-white/20"
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                  />
+                </svg>
+                <span className="text-sm sm:text-base font-medium">Rechtliche Seiten</span>
+              </Link>
+
+              <Link
+                href="/admin/contacts"
+                className="admin-menu-card"
+              >
+                <svg
+                  className="w-4 h-4 sm:w-5 sm:h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
                 >
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Kontakte
-                </Link>
-                <Link
-                  href="/admin/subject-areas"
-                  className="inline-flex items-center px-4 py-3 bg-white/10 backdrop-blur-sm text-white font-medium rounded-xl hover:bg-white/20 transition-all duration-200 border border-white/20"
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span className="text-sm sm:text-base font-medium">Kontakte</span>
+              </Link>
+
+              <Link
+                href="/admin/subject-areas"
+                className="admin-menu-card"
+              >
+                <svg
+                  className="w-4 h-4 sm:w-5 sm:h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
                 >
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Bereiche
-                </Link>
-                <Link
-                  href="/admin/tags"
-                  className="inline-flex items-center px-4 py-3 bg-white/10 backdrop-blur-sm text-white font-medium rounded-xl hover:bg-white/20 transition-all duration-200 border border-white/20"
+                  <path
+                    fillRule="evenodd"
+                    d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span className="text-sm sm:text-base font-medium">Bereiche</span>
+              </Link>
+
+              <Link
+                href="/admin/tags"
+                className="admin-menu-card"
+              >
+                <svg
+                  className="w-4 h-4 sm:w-5 sm:h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
                 >
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Tags
-                </Link>
-              </div>
+                  <path
+                    fillRule="evenodd"
+                    d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span className="text-sm sm:text-base font-medium">Tags</span>
+              </Link>
             </div>
           </div>
         </div>
