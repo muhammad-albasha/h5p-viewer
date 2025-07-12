@@ -61,13 +61,12 @@ const Navbar = () => {
     );
   };
   return (
-    <nav className="bg-base-100 shadow-md py-2 px-4">
-      {" "}
-      <div className="container-fluid mx-auto flex justify-end items-center">
-        <div className="flex gap-3">
+    <nav className="bg-base-100 shadow-md py-2 px-4 sticky top-0 z-50 responsive-hide-print">
+      <div className="container-responsive flex justify-end items-center">
+        <div className="flex gap-2 md:gap-3">
           <div className="flex items-center gap-1">
             <button
-              className="btn btn-sm btn-ghost"
+              className="btn btn-sm btn-ghost p-2 md:p-3"
               onClick={decreaseFontSize}
               title="Schriftgröße verkleinern"
               aria-label="Schriftgröße verkleinern"
@@ -76,16 +75,16 @@ const Navbar = () => {
               <span className="sr-only">Schriftgröße verkleinern</span>
             </button>
             <button
-              className="btn btn-sm btn-ghost"
+              className="btn btn-sm btn-ghost p-2 md:p-3"
               onClick={increaseFontSize}
               title="Schriftgröße vergrößern"
               aria-label="Schriftgröße vergrößern"
             >
               <BiFont className="text-lg" />
               <span className="sr-only">Schriftgröße vergrößern</span>
-            </button>{" "}
+            </button>
             <button
-              className="btn btn-sm btn-ghost normal-case"
+              className="btn btn-sm btn-ghost normal-case p-2 md:p-3"
               onClick={toggleDarkMode}
               aria-label={
                 darkMode
@@ -94,14 +93,14 @@ const Navbar = () => {
               }
             >
               {darkMode ? <FiSun /> : <FiMoon />}
-              <span className="hidden md:inline ml-1">Kontrast</span>
-            </button>{" "}
+              <span className="hidden md:inline ml-1 text-fluid-sm">Kontrast</span>
+            </button>
             <Link
               href="/easy-language"
-              className="btn btn-sm btn-ghost normal-case"
+              className="btn btn-sm btn-ghost normal-case p-2 md:p-3"
             >
-              <TbLanguage className="mr-1" />
-              <span className="hidden md:inline">Leichte Sprache</span>
+              <TbLanguage className="mr-0 md:mr-1" />
+              <span className="hidden lg:inline text-fluid-sm">Leichte Sprache</span>
             </Link>
           </div>
         </div>

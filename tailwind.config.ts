@@ -63,6 +63,22 @@ export default {
     hoverOnlyWhenSupported: true,
   },
   theme: {
+    screens: {
+      'xs': '380px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+      '3xl': '1920px',
+      '4xl': '2560px',
+      // Geräte-spezifische Breakpoints
+      'mobile': {'max': '767px'},
+      'tablet': {'min': '768px', 'max': '1023px'},
+      'desktop': {'min': '1024px'},
+      'widescreen': {'min': '1920px'},
+      'ultrawide': {'min': '2560px'},
+    },
     extend: {
       colors: {
         primary: {
@@ -270,14 +286,84 @@ export default {
           maxWidth: '1200px',
           marginLeft: 'auto',
           marginRight: 'auto',
-          paddingLeft: theme('spacing.md') as string,
-          paddingRight: theme('spacing.md') as string,
+          paddingLeft: theme('spacing.4') as string,
+          paddingRight: theme('spacing.4') as string,
+          '@screen sm': {
+            paddingLeft: theme('spacing.6') as string,
+            paddingRight: theme('spacing.6') as string,
+          },
+          '@screen md': {
+            paddingLeft: theme('spacing.8') as string,
+            paddingRight: theme('spacing.8') as string,
+          },
+          '@screen lg': {
+            paddingLeft: theme('spacing.md') as string,
+            paddingRight: theme('spacing.md') as string,
+          },
+          '@screen xl': {
+            maxWidth: '1400px',
+          },
+          '@screen 2xl': {
+            maxWidth: '1600px',
+          },
+          '@screen 3xl': {
+            maxWidth: '1920px',
+          },
+          '@screen 4xl': {
+            maxWidth: '2400px',
+            paddingLeft: theme('spacing.xl') as string,
+            paddingRight: theme('spacing.xl') as string,
+          },
         },
         '.text-responsive': {
-          fontSize: 'clamp(1rem, 2.5vw, 1.5rem)',
+          fontSize: 'clamp(0.875rem, 2.5vw, 1.125rem)',
+          lineHeight: '1.6',
         },
         '.text-responsive-lg': {
-          fontSize: 'clamp(1.5rem, 4vw, 3rem)',
+          fontSize: 'clamp(1.125rem, 4vw, 2rem)',
+          lineHeight: '1.4',
+        },
+        '.text-responsive-xl': {
+          fontSize: 'clamp(1.5rem, 5vw, 3.5rem)',
+          lineHeight: '1.2',
+        },
+        '.text-responsive-2xl': {
+          fontSize: 'clamp(2rem, 6vw, 4.5rem)',
+          lineHeight: '1.1',
+        },
+        '.spacing-responsive': {
+          padding: 'clamp(1rem, 4vw, 2rem)',
+        },
+        '.spacing-responsive-sm': {
+          padding: 'clamp(0.5rem, 2vw, 1rem)',
+        },
+        '.spacing-responsive-lg': {
+          padding: 'clamp(2rem, 6vw, 4rem)',
+        },
+        '.grid-responsive': {
+          display: 'grid',
+          gap: theme('spacing.4') as string,
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          '@screen sm': {
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: theme('spacing.6') as string,
+          },
+          '@screen md': {
+            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+            gap: theme('spacing.8') as string,
+          },
+          '@screen lg': {
+            gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+          },
+          '@screen xl': {
+            gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))',
+          },
+        },
+        '.aspect-responsive': {
+          aspectRatio: '16/9',
+          '@screen mobile': {
+            aspectRatio: '4/3',
+          },
         },
       };
 

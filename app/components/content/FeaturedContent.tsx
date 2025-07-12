@@ -149,26 +149,26 @@ export default function FeaturedContent() {
 
   if (loading) {
     return (
-      <section className="py-16 px-4 bg-gradient-to-br from-gray-50 via-gray-50 to-gray-50">
-        <div className="container-fluid mx-auto ">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20 px-4 bg-gradient-to-br from-gray-50 via-gray-50 to-gray-50">
+        <div className="container-responsive">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-fluid-2xl md:text-fluid-3xl font-bold text-gray-900 mb-4">
               Beliebte Lerninhalte
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-fluid-base md:text-fluid-lg text-gray-600 max-w-2xl mx-auto">
               Entdecke unsere meistgenutzten interaktiven H5P-Elemente
             </p>
           </div>
 
           {/* Loading skeleton */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid-auto-responsive">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20 animate-pulse"
+                className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20 animate-pulse card-responsive"
               >
                 {/* Skeleton Image */}
-                <div className="h-48 bg-gradient-to-br from-blue-100 to-purple-100 relative">
+                <div className="aspect-responsive-video bg-gradient-to-br from-blue-100 to-purple-100 relative">
                   <div className="absolute top-3 right-3">
                     <div className="h-6 bg-blue-200 rounded-lg w-16"></div>
                   </div>
@@ -177,13 +177,13 @@ export default function FeaturedContent() {
                   </div>
                 </div>
 
-                <div className="p-6 space-y-4">
+                <div className="p-4 md:p-6 space-y-3 md:space-y-4">
                   <div className="flex justify-start">
                     <div className="h-5 bg-purple-200 rounded-lg w-20"></div>
                   </div>
                   <div className="h-6 bg-gray-200 rounded w-3/4"></div>
                   <div className="h-12 bg-gray-200 rounded w-full"></div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     <div className="h-5 bg-gray-200 rounded-lg w-16"></div>
                     <div className="h-5 bg-gray-200 rounded-lg w-20"></div>
                     <div className="h-5 bg-gray-200 rounded-lg w-14"></div>
@@ -201,14 +201,14 @@ export default function FeaturedContent() {
   }
 
   return (
-    <section className="py-16 px-4 bg-gradient-to-br from-gray-50 via-gray-50 to-gray-50">
-      <div className="container-fluid mx-auto ">
+    <section className="py-8 sm:py-12 md:py-16 lg:py-20 px-4 bg-gradient-to-br from-gray-50 via-gray-50 to-gray-50">
+      <div className="container-responsive">
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-8 md:mb-12">
+          <h2 className="text-fluid-2xl md:text-fluid-3xl font-bold text-gray-900 mb-4">
             Beliebte Lerninhalte
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-fluid-base md:text-fluid-lg text-gray-600 max-w-2xl mx-auto">
             Entdecke unsere meistgenutzten interaktiven H5P-Elemente und starte
             dein Lernabenteuer
           </p>
@@ -216,12 +216,12 @@ export default function FeaturedContent() {
 
         {/* Check if no featured content */}
         {featuredContents.length === 0 ? (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
-            <div className="text-center py-16 px-8">
-              <div className="mb-8">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20 card-responsive">
+            <div className="text-center py-12 md:py-16 px-6 md:px-8">
+              <div className="mb-6 md:mb-8">
                 <div className="p-4 bg-primary/10 rounded-full inline-block">
                   <svg
-                    className="w-12 h-12 text-primary"
+                    className="w-10 h-10 md:w-12 md:h-12 text-primary"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -229,16 +229,16 @@ export default function FeaturedContent() {
                   </svg>
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              <h3 className="text-fluid-xl md:text-fluid-2xl font-bold text-gray-900 mb-4">
                 Keine Featured-Inhalte verfügbar
               </h3>
-              <p className="text-lg text-gray-600 mb-8 max-w-lg mx-auto">
+              <p className="text-fluid-base md:text-fluid-lg text-gray-600 mb-6 md:mb-8 max-w-lg mx-auto">
                 Es wurden noch keine H5P-Elemente als Featured markiert. Besuche
                 alle verfügbaren Inhalte oder kontaktiere den Administrator.
               </p>
               <Link
                 href="/h5p"
-                className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                className="inline-flex items-center gap-2 px-6 md:px-8 py-3 bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg btn-responsive"
               >
                 <svg
                   className="w-5 h-5"

@@ -101,7 +101,7 @@ export default function HeroSection({
   }, [h5pContents.length]);
 
   return (
-    <section className="relative bg-gradient-to-br from-primary/10 via-base-100 to-secondary/10 py-16 px-4 overflow-hidden">
+    <section className="relative bg-gradient-to-br from-primary/10 via-base-100 to-secondary/10 py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24 px-4 overflow-hidden">
       <div className="absolute inset-0 opacity-30">
         <div className="banner-decoration">
           <div className="banner-decoration-circle banner-circle-1"></div>
@@ -110,32 +110,32 @@ export default function HeroSection({
         </div>
       </div>
 
-      <div className="container-fluid mx-auto  relative z-10 max-w-6xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-base-content leading-tight">
+      <div className="container-responsive relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 xl:gap-16 items-center">
+          <div className="space-y-4 md:space-y-6 lg:space-y-8">
+            <div className="space-y-3 md:space-y-4">
+              <h1 className="text-fluid-3xl md:text-fluid-4xl font-bold text-base-content leading-tight">
                 {title}
               </h1>
-              <p className="text-xl md:text-2xl text-base-content/80 font-medium">
+              <p className="text-fluid-lg md:text-fluid-xl text-base-content/80 font-medium">
                 {subtitle}
               </p>
             </div>
 
-            <p className="text-lg text-base-content/70 leading-relaxed max-w-lg">
+            <p className="text-fluid-base md:text-fluid-lg text-base-content/70 leading-relaxed max-w-lg">
               {description}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-4">
               <a
                 href="/h5p"
-                className="btn btn-primary btn-lg px-8 py-3 text-lg font-semibold"
+                className="btn btn-primary btn-lg px-6 md:px-8 py-3 text-base md:text-lg font-semibold btn-responsive"
               >
                 Jetzt entdecken
               </a>
               <a
                 href="/about"
-                className="btn btn-outline btn-lg px-8 py-3 text-lg font-semibold"
+                className="btn btn-outline btn-lg px-6 md:px-8 py-3 text-base md:text-lg font-semibold btn-responsive"
               >
                 Mehr erfahren
               </a>
@@ -143,7 +143,7 @@ export default function HeroSection({
           </div>
 
           <div className="flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-md lg:max-w-lg">
+            <div className="relative w-full max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
               {coverImage ? (
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                   <img

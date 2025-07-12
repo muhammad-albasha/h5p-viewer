@@ -148,35 +148,37 @@ function H5PContentPage() {
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
         </div>
         
-        <div className="relative container-fluid mx-auto  px-4 py-4">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div className="text-white">              <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+        <div className="relative container-responsive px-4 py-4 md:py-6">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-8">
+            <div className="text-white">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 md:p-3 bg-white/20 rounded-xl backdrop-blur-sm">
                   {showOnlyFavorites ? (
-                    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
                   ) : (
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
                   )}
                 </div>
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+                <h1 className="text-fluid-3xl md:text-fluid-4xl font-bold tracking-tight">
                   {showOnlyFavorites ? "Meine Favoriten" : "H5P-Inhalte"}
                 </h1>
               </div>
-              <p className="text-blue-100 text-lg max-w-2xl">
+              <p className="text-blue-100 text-fluid-base md:text-fluid-lg max-w-2xl leading-relaxed">
                 {showOnlyFavorites 
                   ? "Ihre gespeicherten interaktiven Lerninhalte"
                   : "Entdecken Sie alle verfügbaren interaktiven Lerninhalte"
                 }
-              </p>              <div className="flex items-center gap-6 mt-6">
+              </p>
+              <div className="flex flex-wrap items-center gap-4 lg:gap-6 mt-4 md:mt-6">
                 <div className="flex items-center gap-2 text-blue-100">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
-                  <span className="text-sm font-medium">
+                  <span className="text-fluid-sm font-medium">
                     {showOnlyFavorites 
                       ? `${favorites.length} Favoriten` 
                       : `${content.length} Inhalte verfügbar`
@@ -185,17 +187,18 @@ function H5PContentPage() {
                 </div>
                 {!showOnlyFavorites && (
                   <div className="flex items-center gap-2 text-blue-100">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                     </svg>
-                    <span className="text-sm font-medium">{availableTags.length} Tags</span>
+                    <span className="text-fluid-sm font-medium">{availableTags.length} Tags</span>
                   </div>
                 )}
               </div>
-            </div>            <div className="flex flex-col sm:flex-row gap-3">
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 lg:flex-shrink-0">
               <button
                 onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
-                className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20 ${
+                className={`responsive-btn inline-flex items-center justify-center gap-2 rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20 ${
                   showOnlyFavorites 
                     ? 'bg-red-500/80 hover:bg-red-600/80 text-white' 
                     : 'bg-white/20 hover:bg-white/30 text-white'
@@ -230,8 +233,8 @@ function H5PContentPage() {
       </div>
       
       {/* Main Content */}
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-5">
-        <div className="container-fluid mx-auto  px-4 space-y-8">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-4 md:py-6 lg:py-8">
+        <div className="container-responsive space-y-6 md:space-y-8">
           
           {/* Content Filter */}
           <ContentFilter 

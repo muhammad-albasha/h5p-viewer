@@ -51,43 +51,39 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-primary py-4 px-4 shadow-sm">
+    <header className="bg-primary py-4 px-4 shadow-sm relative">
       <div className="container-fluid mx-auto flex justify-between items-center">
         {" "}
         <div className="flex items-center">
-          {" "}
           <Link href="/" className="flex items-center">
             <img
               src="/assets/logo_header_white.svg"
               alt="H5P Logo"
-              width="128"
-              height="100"
-              className="h-20 w-60 brightness-100 dark:brightness-0"
+              className="h-12 w-auto sm:h-16 md:h-20 sm:w-auto md:w-60 brightness-100 dark:brightness-0 transition-all duration-200"
             />
-            {/*  <span className="ml-3 text-xl font-semibold">H5P Viewer</span> */}
           </Link>
         </div>
-        {/* Mobile Menu Button */}{" "}
         <button
-          className={`md:hidden btn btn-ghost btn-icon btn-sm px-2 focus:outline-none focus:ring-2 focus:ring-primary/50 rounded-lg ${
-            isMobileMenuOpen ? "active" : ""
+          className={`md:hidden btn btn-ghost btn-sm min-w-12 min-h-12 p-3 focus:outline-none focus:ring-2 focus:ring-white/30 rounded-lg transition-all duration-200 ${
+            isMobileMenuOpen ? "bg-white/10" : "hover:bg-white/10"
           }`}
           onClick={toggleMobileMenu}
           aria-label="Menü"
+          
         >
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 w-6 h-6 flex flex-col justify-center">
             <div
-              className={`w-5 h-0.5 bg-current transition-all duration-300 ${
+              className={`w-6 h-0.5 bg-white transition-all duration-300 ${
                 isMobileMenuOpen ? "rotate-45 translate-y-2" : ""
               }`}
             ></div>
             <div
-              className={`w-5 h-0.5 bg-current transition-all duration-300 ${
+              className={`w-6 h-0.5 bg-white transition-all duration-300 ${
                 isMobileMenuOpen ? "opacity-0" : "opacity-100"
               }`}
             ></div>
             <div
-              className={`w-5 h-0.5 bg-current transition-all duration-300 ${
+              className={`w-6 h-0.5 bg-white transition-all duration-300 ${
                 isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
               }`}
             ></div>
@@ -187,39 +183,42 @@ const Header = () => {
         {isMobileMenuOpen && (
           <div
             ref={mobileMenuRef}
-            className="absolute top-full left-0 right-0 bg-base-100 shadow-lg p-4 z-50 animate-fade-in-down md:hidden border-t border-base-200"
+            className="absolute top-full left-0 right-0 bg-base-100 shadow-xl p-4 z-[60] animate-fade-in-down md:hidden border-t border-base-200"
           >
-            <nav className="flex flex-col space-y-3">
+            <nav className="flex flex-col space-y-1">
               <Link
                 href="/"
-                className="text-base-content hover:text-primary px-3 py-2 rounded-md hover:bg-primary/10"
+                className="text-base-content hover:text-primary px-4 py-3 rounded-md hover:bg-primary/10 transition-all duration-200 text-lg font-medium"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Startseite
               </Link>
               <Link
                 href="/h5p"
-                className="text-base-content hover:text-primary px-3 py-2 rounded-md hover:bg-primary/10"
+                className="text-base-content hover:text-primary px-4 py-3 rounded-md hover:bg-primary/10 transition-all duration-200 text-lg font-medium"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Alle Inhalte
               </Link>
               <Link
                 href="/bereiche"
-                className="text-base-content hover:text-primary px-3 py-2 rounded-md hover:bg-primary/10"
+                className="text-base-content hover:text-primary px-4 py-3 rounded-md hover:bg-primary/10 transition-all duration-200 text-lg font-medium"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Bereiche
               </Link>
-              <div className="border-t border-base-300 my-2"></div>
+              <div className="border-t border-base-300 my-3"></div>
               {status === "authenticated" && session?.user ? (
                 <>
+                  <div className="px-4 py-2 text-sm text-base-content/70 border-b border-base-300 mb-2">
+                    Angemeldet als: {session.user.name || "Benutzer"}
+                  </div>
                   <Link
                     href="/admin"
-                    className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/10"
+                    className="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition-all duration-200 text-lg font-medium"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <MdDashboard size={18} className="text-primary" />
+                    <MdDashboard size={20} className="text-primary" />
                     <span>Dashboard</span>
                   </Link>
                   <button
@@ -227,19 +226,19 @@ const Header = () => {
                       signOut({ callbackUrl: "/" });
                       setIsMobileMenuOpen(false);
                     }}
-                    className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/10 text-left w-full"
+                    className="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition-all duration-200 text-left w-full text-lg font-medium"
                   >
-                    <FiLogOut size={18} className="text-primary" />
+                    <FiLogOut size={20} className="text-primary" />
                     <span>Abmelden</span>
                   </button>
                 </>
               ) : (
                 <Link
                   href="/login"
-                  className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-primary/10"
+                  className="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition-all duration-200 text-lg font-medium"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <BiUserCircle size={18} className="text-primary" />
+                  <BiUserCircle size={20} className="text-primary" />
                   <span>Anmelden</span>
                 </Link>
               )}
