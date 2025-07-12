@@ -71,7 +71,7 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
   }
   
   return (
-    <div className="responsive-grid-cards">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {contents
         .slice()
         .sort((a, b) => a.name.localeCompare(b.name))
@@ -97,30 +97,30 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
           return (
             <div
               key={content.id || index}
-              className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl overflow-hidden border border-white/20 transition-all duration-300 hover:scale-105 group cursor-pointer responsive-card"
+              className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl overflow-hidden border border-white/20 transition-all duration-300 hover:scale-105 group cursor-pointer"
             >
               {/* Card Image */}
-              <div className="relative aspect-responsive-video bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden">
+              <div className="relative h-48 bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden">
                 <img
                   src={imageUrl}
                   alt={content.name}
-                  className="responsive-img w-full h-full object-cover"
+                  className="w-full h-full object-cover"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).src =
                       "/assets/placeholder-image.svg";
                   }}
                 />
-                <div className="absolute top-2 md:top-3 right-2 md:right-3">
-                  <span className="px-2 py-1 md:px-3 md:py-1 bg-blue-500 text-white rounded-lg text-xs font-medium backdrop-blur-sm">
+                <div className="absolute top-3 right-3">
+                  <span className="px-3 py-1 bg-blue-500 text-white rounded-lg text-xs font-medium backdrop-blur-sm">
                     {content.type}
                   </span>
                 </div>
-                <div className="absolute top-2 md:top-3 left-2 md:left-3 flex items-center gap-1 md:gap-2">
+                <div className="absolute top-3 left-3 flex items-center gap-2">
                   <FavoriteButton content={content} variant="card" />
                   {content.isPasswordProtected && (
-                    <div className="bg-white/20 backdrop-blur-sm rounded-full p-1.5 md:p-2 border border-white/30">
+                    <div className="bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30">
                       <svg
-                        className="w-3 h-3 md:w-4 md:h-4"
+                        className="w-4 h-4"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -135,26 +135,29 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
                 </div>
               </div>
 
-              <div className="responsive-padding-md space-y-3 md:space-y-4">
+              <div className="p-6 space-y-4">
                 {/* Subject Area Badge */}
                 {content.subject_area && (
                   <div className="flex justify-start">
-                    <span className="px-2 py-1 md:px-3 md:py-1 bg-purple-100 text-purple-800 rounded-lg text-xs font-medium">
+                    <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-lg text-xs font-medium">
                       {content.subject_area.name}
                     </span>
                   </div>
                 )}
+
                 {/* Title */}
-                <h3 className="text-fluid-lg font-bold text-gray-900 group-hover: transition-colors leading-tight line-clamp-2">
+                <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors leading-tight">
                   {content.name}
                 </h3>
+
                 {/* Description */}
-                <p className="text-gray-600 text-fluid-sm leading-relaxed line-clamp-2">
+                <p className="text-gray-600 text-sm leading-relaxed">
                   {content.description ||
                     `Interaktiver ${content.type}-Inhalt für optimales Lernen`}
                 </p>
+
                 {/* Tags */}
-                <div className="flex flex-wrap gap-1 md:gap-2">
+                <div className="flex flex-wrap gap-2">
                   {content.tags
                     ?.slice()
                     .sort((a, b) => a.localeCompare(b))
@@ -162,25 +165,26 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
                     .map((tag, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-1 md:px-3 md:py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors"
+                        className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors"
                       >
                         {tag}
                       </span>
                     ))}
                   {content.tags && content.tags.length > 3 && (
-                    <span className="px-2 py-1 md:px-3 md:py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">
+                    <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">
                       +{content.tags.length - 3} weitere
                     </span>
                   )}
                 </div>
+
                 {/* Action Button */}
-                <div className="pt-3 md:pt-4 border-t border-gray-100">
+                <div className="pt-4 border-t border-gray-100">
                   <Link
                     href={`/h5p/content?id=${content.id || index + 1}`}
-                    className="responsive-btn w-full bg-gradient-to-r from-primary to-secondary hover: text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2"
+                    className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary-dark hover:to-secondary text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2"
                   >
                     <svg
-                      className="w-4 h-4 md:w-5 md:h-5"
+                      className="w-5 h-5"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -192,8 +196,7 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
                         d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                       />
                     </svg>
-                    <span className="hidden sm:inline">Jetzt starten</span>
-                    <span className="sm:hidden">Starten</span>
+                    Jetzt starten
                   </Link>
                 </div>
               </div>
