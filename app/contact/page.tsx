@@ -93,7 +93,7 @@ export default async function ContactPage() {
         <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 translate-y-12 -translate-x-12 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
 
-        <div className="relative z-10 container-fluid mx-auto  px-4 py-16">
+        <div className="relative z-10 container-fluid mx-auto  px-4 py-4">
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-2xl mb-6 backdrop-blur-sm">
               <svg
