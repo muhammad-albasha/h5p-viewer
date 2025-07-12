@@ -51,7 +51,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-primary py-4 px-4 shadow-sm relative">
+    <header className="bg-primary dark:bg-black py-4 px-4 shadow-sm relative">
       <div className="container-fluid mx-auto flex justify-between items-center">
         {" "}
         <div className="flex items-center">
@@ -59,7 +59,7 @@ const Header = () => {
             <img
               src="/assets/logo_header_white.svg"
               alt="H5P Logo"
-              className="h-12 w-auto sm:h-16 md:h-20 sm:w-auto md:w-60 brightness-100 dark:brightness-0 transition-all duration-200"
+              className="h-12 w-auto sm:h-16 md:h-20 sm:w-auto md:w-60 brightness-100 dark:brightness-200 transition-all duration-200"
             />
           </Link>
         </div>

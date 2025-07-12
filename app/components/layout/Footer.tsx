@@ -2,7 +2,7 @@
 
 export default function Footer() {
   return (
-    <footer className="bg-primary text-white p-6 md:p-8 lg:p-10 border-t border-white responsive-hide-print">
+    <footer className="bg-primary dark:bg-black text-white p-6 md:p-8 lg:p-10 border-t border-white responsive-hide-print">
       <div className="container-responsive">
         {/* Footer Columns Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
