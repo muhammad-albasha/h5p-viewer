@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import React, { useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 
 // This component redirects from the old URL format (/h5p/[name]) to the new format (/h5p?id=1)
 const H5PContentRedirect = () => {
@@ -9,36 +9,38 @@ const H5PContentRedirect = () => {
   const params = useParams();
   const name = params.name as string;
   const decodedName = decodeURIComponent(name);
-  
+
   useEffect(() => {
     // Fetch contents to find the index of the content with the given name
     const redirectToNewFormat = async () => {
       try {
-        const response = await fetch('/api/h5p-content');
+        const response = await fetch("/api/h5p-content");
         if (!response.ok) {
-          throw new Error('Failed to fetch H5P content');
+          throw new Error("Failed to fetch H5P content");
         }
-        
-        const contents = await response.json();        
-        const contentIndex = contents.findIndex((content: any) => 
-          content.name.toLowerCase() === decodedName.toLowerCase()
+
+        const contents = await response.json();
+        const contentIndex = contents.findIndex(
+          (content: any) =>
+            content.name.toLowerCase() === decodedName.toLowerCase()
         );
-        
+
         // If content found, redirect to new URL with the index + 1 as ID
         if (contentIndex !== -1) {
-          router.replace(`/h5p/content?id=${contentIndex + 1}`);        } else {
+          router.replace(`/h5p/content?id=${contentIndex + 1}`);
+        } else {
           // If not found, redirect to home or show error
-          router.replace('/');
+          router.replace("/");
         }
       } catch (error) {
         // Error fetching content - redirect to home
-        router.replace('/');
+        router.replace("/");
       }
     };
-    
+
     redirectToNewFormat();
   }, [decodedName, router]);
-  
+
   // Show loading state while redirect is processing
   return (
     <div className="flex justify-center items-center min-h-screen">

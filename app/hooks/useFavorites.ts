@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface H5PContent {
   id: number;
@@ -26,13 +26,13 @@ export const useFavorites = () => {
   useEffect(() => {
     const loadFavorites = () => {
       try {
-        const storedFavorites = localStorage.getItem('h5p-favorites');
+        const storedFavorites = localStorage.getItem("h5p-favorites");
         if (storedFavorites) {
           const parsedFavorites = JSON.parse(storedFavorites);
           setFavorites(parsedFavorites);
         }
       } catch (error) {
-        console.error('Error loading favorites from localStorage:', error);
+        console.error("Error loading favorites from localStorage:", error);
       } finally {
         setIsLoading(false);
       }
@@ -45,30 +45,30 @@ export const useFavorites = () => {
   useEffect(() => {
     if (!isLoading) {
       try {
-        localStorage.setItem('h5p-favorites', JSON.stringify(favorites));
+        localStorage.setItem("h5p-favorites", JSON.stringify(favorites));
       } catch (error) {
-        console.error('Error saving favorites to localStorage:', error);
+        console.error("Error saving favorites to localStorage:", error);
       }
     }
   }, [favorites, isLoading]);
 
   const addToFavorites = (content: H5PContent) => {
-    setFavorites(prev => {
+    setFavorites((prev) => {
       // Check if already in favorites
-      const exists = prev.some(fav => fav.id === content.id);
+      const exists = prev.some((fav) => fav.id === content.id);
       if (exists) return prev;
-      
+
       return [...prev, content];
     });
   };
 
   const removeFromFavorites = (contentId: number) => {
-    setFavorites(prev => prev.filter(fav => fav.id !== contentId));
+    setFavorites((prev) => prev.filter((fav) => fav.id !== contentId));
   };
 
   const toggleFavorite = (content: H5PContent) => {
-    const isFavorite = favorites.some(fav => fav.id === content.id);
-    
+    const isFavorite = favorites.some((fav) => fav.id === content.id);
+
     if (isFavorite) {
       removeFromFavorites(content.id);
     } else {
@@ -77,7 +77,7 @@ export const useFavorites = () => {
   };
 
   const isFavorite = (contentId: number) => {
-    return favorites.some(fav => fav.id === contentId);
+    return favorites.some((fav) => fav.id === contentId);
   };
 
   const clearAllFavorites = () => {
@@ -91,6 +91,6 @@ export const useFavorites = () => {
     removeFromFavorites,
     toggleFavorite,
     isFavorite,
-    clearAllFavorites
+    clearAllFavorites,
   };
 };

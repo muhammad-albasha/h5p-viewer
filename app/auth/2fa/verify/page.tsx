@@ -11,7 +11,7 @@ function TwoFactorForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/admin";
-  
+
   const [token, setToken] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -25,9 +25,10 @@ function TwoFactorForm() {
       }
     };
     checkAuth();
-  }, [router, callbackUrl]);  const handleSubmit = async (e: React.FormEvent) => {
+  }, [router, callbackUrl]);
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!token || token.length !== 6) {
       setError("Bitte geben Sie einen 6-stelligen Code ein");
       return;
@@ -58,7 +59,7 @@ function TwoFactorForm() {
         setError(data.error || "Verifikation fehlgeschlagen");
         return;
       }
-      
+
       if (data.verified) {
         console.log("2FA verification successful, redirecting...");
         // Force a page refresh to update the session
@@ -68,7 +69,9 @@ function TwoFactorForm() {
       }
     } catch (error) {
       console.error("2FA completion error:", error);
-      setError("Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.");
+      setError(
+        "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -80,25 +83,29 @@ function TwoFactorForm() {
         <div className="bg-base-100 rounded-xl shadow-xl overflow-hidden">
           <div className="p-6 border-b border-base-300">
             <h2 className="text-xl font-bold">Zwei-Faktor-Authentifizierung</h2>
-            <p className="text-sm opacity-70">Geben Sie den Code aus Ihrer Authenticator-App ein</p>
+            <p className="text-sm opacity-70">
+              Geben Sie den Code aus Ihrer Authenticator-App ein
+            </p>
           </div>
-          
+
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
             {error && (
               <div className="bg-error/10 border-l-4 border-error p-4 rounded-r text-error-content">
                 <p>{error}</p>
               </div>
             )}
-            
+
             <div className="form-control w-full">
               <label className="label">
                 <span className="label-text font-medium">6-stelliger Code</span>
               </label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={token}
-                onChange={(e) => setToken(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                className="input input-bordered w-full text-center text-2xl tracking-widest" 
+                onChange={(e) =>
+                  setToken(e.target.value.replace(/\D/g, "").slice(0, 6))
+                }
+                className="input input-bordered w-full text-center text-2xl tracking-widest"
                 placeholder="000000"
                 maxLength={6}
                 autoComplete="one-time-code"
@@ -109,24 +116,25 @@ function TwoFactorForm() {
                 </span>
               </label>
             </div>
-            
-            <button 
-              type="submit" 
-              className={`btn btn-primary w-full ${isLoading ? 'loading' : ''}`}
+
+            <button
+              type="submit"
+              className={`btn btn-primary w-full ${isLoading ? "loading" : ""}`}
               disabled={isLoading || token.length !== 6}
             >
-              {isLoading ? 'Verifiziere...' : 'Code verifizieren'}
+              {isLoading ? "Verifiziere..." : "Code verifizieren"}
             </button>
-            
+
             <div className="text-center text-sm opacity-70 pt-4">
               <p>
-                Haben Sie Probleme? Verwenden Sie einen Ihrer{' '}
+                Haben Sie Probleme? Verwenden Sie einen Ihrer{" "}
                 <span className="text-primary font-medium">Backup-Codes</span>
               </p>
               <p className="mt-2">
-                Zurück zur <button 
+                Zurück zur{" "}
+                <button
                   type="button"
-                  onClick={() => router.push('/login')}
+                  onClick={() => router.push("/login")}
                   className="text-primary hover:underline"
                 >
                   Anmeldung
@@ -163,15 +171,19 @@ export default function TwoFactorPage() {
     <>
       <Navbar />
       <Header />
-      
+
       <div className="bg-gradient-to-br from-primary to-secondary text-primary-content py-12 relative overflow-hidden">
         <div className="absolute inset-0 pattern-dots pattern-opacity-10 pattern-white pattern-size-2"></div>
         <div className="container-fluid mx-auto  px-4 relative z-10">
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">Sicherheitsverifizierung</h1>
-          <p className="text-primary-content/80 mt-2">Bestätigen Sie Ihre Identität mit 2FA</p>
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+            Sicherheitsverifizierung
+          </h1>
+          <p className="text-primary-content/80 mt-2">
+            Bestätigen Sie Ihre Identität mit 2FA
+          </p>
         </div>
       </div>
-      
+
       <Suspense fallback={<TwoFactorFormFallback />}>
         <TwoFactorForm />
       </Suspense>

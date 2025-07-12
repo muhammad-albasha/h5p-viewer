@@ -138,15 +138,15 @@ export default function PageSettingsPage() {
       <Header />
       
       {/* Modern Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800">
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-primary">
         {/* Background decorative elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-48 -translate-y-48 backdrop-blur-3xl"></div>
+          <div className=""></div>
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
         </div>
         
-        <div className="relative container-fluid mx-auto  px-4 py-16">
+        <div className="relative container-fluid mx-auto  px-4 py-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="text-white">
               <div className="flex items-center gap-3 mb-4">
@@ -177,7 +177,7 @@ export default function PageSettingsPage() {
       </div>
       
       {/* Main Content */}
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-5">
         <div className="container-fluid mx-auto  px-4">
           {/* Message */}
           {message && (
@@ -203,19 +203,6 @@ export default function PageSettingsPage() {
             {/* Hero Settings Form */}
             <div className="lg:col-span-1">
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
-                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white/20 rounded-lg">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                    </div>
-                    <h2 className="text-xl font-bold">Hero-Bereich bearbeiten</h2>
-                  </div>
-                  <p className="text-blue-100 mt-2 text-sm">
-                    Passen Sie den Hauptinhalt Ihrer Startseite an
-                  </p>
-                </div>
                 
                 <div className="p-6 space-y-6">
                   <div>
@@ -280,7 +267,7 @@ export default function PageSettingsPage() {
                     <button
                       onClick={saveHeroSettings}
                       disabled={isSaving}
-                      className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                      className="flex-1 bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover: text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                     >
                       {isSaving ? (
                         <>
@@ -314,7 +301,7 @@ export default function PageSettingsPage() {
             {/* Preview Section */}
             <div className="lg:col-span-1">
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
-                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
+                <div className="bg-gradient-to-r from-primary to-primary p-6 text-white">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-white/20 rounded-lg">
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -330,7 +317,7 @@ export default function PageSettingsPage() {
                 </div>
                 
                 <div className="p-6">
-                  <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-8 rounded-2xl">
+                  <div className="bg-gradient-to-r from-primary to-secondary text-white p-8 rounded-2xl">
                     <h1 className="text-3xl lg:text-4xl font-bold mb-4 leading-tight">
                       {heroSettings.title || 'Ihr Titel hier'}
                     </h1>

@@ -32,21 +32,6 @@ const ContentFilter = ({
 }: ContentFilterProps) => {
   return (
     <div className="mb-8 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
-      {/* Filter Header */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">        <div className="flex items-center gap-3">
-          <div className="p-2 bg-white/20 rounded-lg">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-            </svg>
-          </div>
-          <div>
-            <h2 className="text-xl font-bold">Inhalte filtern</h2>
-            <p className="text-blue-100 text-sm mt-1">
-              Suchen und filtern Sie H5P-Inhalte
-            </p>
-          </div>
-        </div>
-      </div>
 
       {/* Filter Content */}
       <div className="p-6 space-y-6">
@@ -104,7 +89,7 @@ const ContentFilter = ({
                   key={tag}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 ${
                     selectedTags.includes(tag)
-                      ? "bg-blue-500 text-white shadow-lg"
+                      ? "bg-primary text-white shadow-lg"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200"
                   }`}
                   onClick={() => toggleTag(tag)}

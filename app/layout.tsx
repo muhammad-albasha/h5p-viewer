@@ -25,7 +25,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (    <html lang="de" data-theme="light">
+  return (
+    <html lang="de" data-theme="light">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
@@ -34,9 +35,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <div className="min-h-screen flex flex-col">
-            <main className="flex-grow">
-              {children}
-            </main>
+            <main className="flex-grow">{children}</main>
             <Footer />
           </div>
         </AuthProvider>

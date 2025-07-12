@@ -1,6 +1,6 @@
-import { Repository } from 'typeorm';
-import { Tag } from '../entities/Tag';
-import { getDataSource } from '../lib/datasource';
+import { Repository } from "typeorm";
+import { Tag } from "../entities/Tag";
+import { getDataSource } from "../lib/datasource";
 
 export class TagService {
   private tagRepository!: Repository<Tag>;
@@ -16,7 +16,7 @@ export class TagService {
   async findAll(): Promise<Tag[]> {
     const repo = await this.getRepository();
     return repo.find({
-      order: { name: 'ASC' }
+      order: { name: "ASC" },
     });
   }
 
@@ -32,30 +32,30 @@ export class TagService {
 
   async create(name: string): Promise<Tag> {
     const repo = await this.getRepository();
-    
+
     // Check if tag already exists
     const existingTag = await this.findByName(name);
     if (existingTag) {
-      throw new Error('Tag with this name already exists');
+      throw new Error("Tag with this name already exists");
     }
-    
+
     const tag = repo.create({ name });
     return repo.save(tag);
   }
 
   async update(id: number, name: string): Promise<Tag | null> {
     const repo = await this.getRepository();
-    
+
     // Check if another tag with this name already exists
-    const existingTag = await repo.findOne({ 
+    const existingTag = await repo.findOne({
       where: { name },
-      select: ['id'] 
+      select: ["id"],
     });
-    
+
     if (existingTag && existingTag.id !== id) {
-      throw new Error('Tag with this name already exists');
+      throw new Error("Tag with this name already exists");
     }
-    
+
     await repo.update(id, { name });
     return this.findById(id);
   }
@@ -68,9 +68,10 @@ export class TagService {
 
   async findTagsUsedInContent(): Promise<Tag[]> {
     const repo = await this.getRepository();
-    return repo.createQueryBuilder('tag')
-      .innerJoin('tag.content', 'content')
-      .orderBy('tag.name', 'ASC')
+    return repo
+      .createQueryBuilder("tag")
+      .innerJoin("tag.content", "content")
+      .orderBy("tag.name", "ASC")
       .getMany();
   }
 }

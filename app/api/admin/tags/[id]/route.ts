@@ -3,7 +3,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/lib/auth";
 import { TagService } from "@/app/services";
 
-export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     // Check authentication
     const session = await getServerSession(authOptions);
@@ -19,8 +22,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     // Parse request body
     const { name } = await request.json();
-    
-    if (!name || name.trim() === '') {
+
+    if (!name || name.trim() === "") {
       return NextResponse.json(
         { error: "Tag name is required" },
         { status: 400 }
@@ -30,7 +33,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     // Update tag
     const tagService = new TagService();
     const updatedTag = await tagService.update(id, name.trim());
-    
+
     if (!updatedTag) {
       return NextResponse.json({ error: "Tag not found" }, { status: 404 });
     }
@@ -38,16 +41,16 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     return NextResponse.json(updatedTag);
   } catch (error: any) {
     // Error updating tag
-    console.error('Error updating tag:', error);
-    
+    console.error("Error updating tag:", error);
+
     // Check for duplicate entry
-    if (error.message.includes('already exists')) {
+    if (error.message.includes("already exists")) {
       return NextResponse.json(
         { error: "A tag with this name already exists" },
         { status: 409 }
       );
     }
-    
+
     return NextResponse.json(
       { error: "Failed to update tag" },
       { status: 500 }
@@ -55,7 +58,10 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     // Check authentication
     const session = await getServerSession(authOptions);
@@ -72,7 +78,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     // Delete tag
     const tagService = new TagService();
     const deleted = await tagService.delete(id);
-    
+
     if (!deleted) {
       return NextResponse.json({ error: "Tag not found" }, { status: 404 });
     }
@@ -80,7 +86,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     return NextResponse.json({ success: true });
   } catch (error) {
     // Error deleting tag
-    console.error('Error deleting tag:', error);
+    console.error("Error deleting tag:", error);
     return NextResponse.json(
       { error: "Failed to delete tag" },
       { status: 500 }

@@ -97,8 +97,9 @@
   justify-content: center;
   min-height: 400px;
   padding: var(--space-2xl);
-  background: linear-gradient(135deg, 
-    rgba(var(--color-primary), 0.05), 
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-primary), 0.05),
     rgba(var(--color-secondary), 0.05)
   );
   border-radius: var(--radius-xl);
@@ -134,8 +135,9 @@
 
 .loadingProgressBar {
   height: 100%;
-  background: linear-gradient(90deg, 
-    rgb(var(--color-primary)), 
+  background: linear-gradient(
+    90deg,
+    rgb(var(--color-primary)),
     rgb(var(--color-secondary))
   );
   border-radius: var(--radius-full);
@@ -179,7 +181,11 @@
 }
 
 .retryButton {
-  background: linear-gradient(135deg, rgb(var(--color-primary)), rgb(var(--color-secondary)));
+  background: linear-gradient(
+    135deg,
+    rgb(var(--color-primary)),
+    rgb(var(--color-secondary))
+  );
   color: rgb(var(--text-inverse));
   border: none;
   padding: var(--space-sm) var(--space-lg);
@@ -194,13 +200,17 @@
 }
 
 .retryButton::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgb(var(--color-primary-dark)), rgb(var(--color-secondary)));
+  background: linear-gradient(
+    135deg,
+    rgb(var(--color-primary-dark)),
+    rgb(var(--color-secondary))
+  );
   opacity: 0;
   transition: opacity var(--transition-fast);
 }
@@ -222,8 +232,9 @@
 /* Success States */
 .successcontainer-fluid {
   padding: var(--space-lg);
-  background: linear-gradient(135deg, 
-    rgba(var(--color-success), 0.05), 
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-success), 0.05),
     rgba(var(--color-accent), 0.05)
   );
   border: 1px solid rgba(var(--color-success), 0.2);
@@ -259,8 +270,9 @@
 }
 
 .h5pStyleWrapper :global(.h5p-button) {
-  background: linear-gradient(135deg, 
-    rgb(var(--color-primary)), 
+  background: linear-gradient(
+    135deg,
+    rgb(var(--color-primary)),
     rgb(var(--color-secondary))
   ) !important;
   color: rgb(var(--text-inverse)) !important;
@@ -301,26 +313,27 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .h5pcontainer-fluid, .h5pFrame {
+  .h5pcontainer-fluid,
+  .h5pFrame {
     min-height: 300px;
     border-radius: var(--radius-lg);
   }
-  
+
   .h5pWrapper {
     margin: var(--space-sm);
   }
-  
+
   .loadingcontainer-fluid,
   .errorcontainer-fluid {
     min-height: 300px;
     padding: var(--space-lg);
   }
-  
+
   .loadingSpinner {
     width: 2rem;
     height: 2rem;
   }
-  
+
   .errorIcon {
     width: 3rem;
     height: 3rem;
@@ -329,14 +342,26 @@
 
 /* Animationen */
 @keyframes loading-progress {
-  0% { transform: translateX(-100%); }
-  50% { transform: translateX(0%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes fadeInScale {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .h5pcontainer-fluid:not(.h5pcontainer-fluidHidden) {
@@ -368,8 +393,9 @@
   .successcontainer-fluid {
     display: none !important;
   }
-  
-  .h5pWrapper, .h5pcontainer-fluid {
+
+  .h5pWrapper,
+  .h5pcontainer-fluid {
     box-shadow: none !important;
     border: 1px solid #000 !important;
     background-color: white !important;

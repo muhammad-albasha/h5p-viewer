@@ -152,15 +152,15 @@ export default function UploadH5P() {
       <Header />
       
       {/* Modern Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800">
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-primary">
         {/* Background decorative elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-48 -translate-y-48 backdrop-blur-3xl"></div>
+          <div className=""></div>
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
         </div>
         
-        <div className="relative container-fluid mx-auto  px-4 py-16">
+        <div className="relative container-fluid mx-auto  px-4 py-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="text-white">
               <div className="flex items-center gap-3 mb-4">
@@ -191,22 +191,9 @@ export default function UploadH5P() {
       </div>
       
       {/* Main Content */}
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-5">
         <div className="container-fluid mx-auto  px-4">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/20 rounded-lg">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <h2 className="text-xl font-bold">Upload-Formular</h2>
-              </div>
-              <p className="text-blue-100 mt-2 text-sm">
-                Füllen Sie alle erforderlichen Felder aus
-              </p>
-            </div>
             
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               {error && (
@@ -396,7 +383,7 @@ export default function UploadH5P() {
                 </Link>
                 <button 
                   type="submit" 
-                  className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                  className="flex-1 bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover: text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                   disabled={isUploading}
                 >
                   {isUploading ? (

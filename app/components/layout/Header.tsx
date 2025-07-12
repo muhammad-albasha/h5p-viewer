@@ -51,9 +51,10 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-base-300 py-4 px-4 shadow-sm">
+    <header className="bg-primary py-4 px-4 shadow-sm">
       <div className="container-fluid mx-auto flex justify-between items-center">
-        {" "}        <div className="flex items-center">
+        {" "}
+        <div className="flex items-center">
           {" "}
           <Link href="/" className="flex items-center">
             <img
@@ -61,7 +62,7 @@ const Header = () => {
               alt="H5P Logo"
               width="128"
               height="100"
-              className="h-20 w-60 brightness-0 dark:brightness-100"
+              className="h-20 w-60 brightness-100 dark:brightness-0"
             />
             {/*  <span className="ml-3 text-xl font-semibold">H5P Viewer</span> */}
           </Link>
@@ -97,19 +98,19 @@ const Header = () => {
         <nav className="hidden md:flex items-center gap-5">
           <Link
             href="/"
-            className="text-base-content hover:text-primary transition-colors duration-200 px-2 py-1 rounded-md hover:bg-primary/10"
+            className="text-white hover:scale-105 transition-colors duration-200 px-2 py-1 rounded-md hover:bg-primary/10"
           >
             Startseite
           </Link>
           <Link
             href="/h5p"
-            className="text-base-content hover:text-primary transition-colors duration-200 px-2 py-1 rounded-md hover:bg-primary/10"
+            className="text-white hover:scale-105 transition-colors duration-200 px-2 py-1 rounded-md hover:bg-primary/10"
           >
             Alle Inhalte
           </Link>
           <Link
             href="/bereiche"
-            className="text-base-content hover:text-primary transition-colors duration-200 px-2 py-1 rounded-md hover:bg-primary/10"
+            className="text-white hover:scale-105 transition-colors duration-200 px-2 py-1 rounded-md hover:bg-primary/10"
           >
             Bereiche
           </Link>
@@ -126,7 +127,7 @@ const Header = () => {
             >
               <FiSettings
                 size={16}
-                className={`transition-all duration-200 text-base-content/70 ${
+                className={`transition-all duration-200 text-white ${
                   isDropdownOpen ? "rotate-90 text-base-content" : ""
                 }`}
               />

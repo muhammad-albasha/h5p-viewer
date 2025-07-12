@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 // Define the tag interface
 interface Tag {
@@ -22,39 +22,46 @@ export default function useTags() {
     const fetchTags = async () => {
       try {
         setIsLoading(true);
-        
+
         // Check if we have valid cached data
         const now = Date.now();
-        if (cachedTags && cacheTimestamp && (now - cacheTimestamp < CACHE_DURATION)) {
+        if (
+          cachedTags &&
+          cacheTimestamp &&
+          now - cacheTimestamp < CACHE_DURATION
+        ) {
           // Use cached data if it's still fresh
-          setTags(cachedTags.map(tag => tag.name));
+          setTags(cachedTags.map((tag) => tag.name));
           setIsLoading(false);
           return;
         }
-        
+
         // Fetch fresh data if cache is stale or doesn't exist
-        const response = await fetch('/api/tags');
-        
+        const response = await fetch("/api/tags");
+
         if (!response.ok) {
           throw new Error(`Error fetching tags: ${response.status}`);
         }
-        
+
         const data: Tag[] = await response.json();
-        
+
         // Update the cache
         cachedTags = data;
         cacheTimestamp = now;
-        
+
         // Update state with tag names
-        setTags(data.map(tag => tag.name));      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Unknown error fetching tags'));
+        setTags(data.map((tag) => tag.name));
+      } catch (err) {
+        setError(
+          err instanceof Error ? err : new Error("Unknown error fetching tags")
+        );
       } finally {
         setIsLoading(false);
       }
     };
-    
+
     fetchTags();
   }, []);
-  
+
   return { tags, isLoading, error };
 }

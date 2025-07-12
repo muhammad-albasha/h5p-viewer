@@ -14,11 +14,11 @@ export async function GET() {
     // Get tags list from database
     const tagService = new TagService();
     const tags = await tagService.findAll();
-    
+
     return NextResponse.json(tags);
   } catch (error) {
     // Error fetching tags
-    console.error('Error fetching admin tags:', error);
+    console.error("Error fetching admin tags:", error);
     return NextResponse.json(
       { error: "Failed to fetch tags" },
       { status: 500 }
@@ -36,8 +36,8 @@ export async function POST(request: Request) {
 
     // Parse request body
     const { name } = await request.json();
-    
-    if (!name || name.trim() === '') {
+
+    if (!name || name.trim() === "") {
       return NextResponse.json(
         { error: "Tag name is required" },
         { status: 400 }
@@ -47,20 +47,20 @@ export async function POST(request: Request) {
     // Create new tag
     const tagService = new TagService();
     const newTag = await tagService.create(name.trim());
-    
+
     return NextResponse.json(newTag);
   } catch (error: any) {
     // Error creating tag
-    console.error('Error creating tag:', error);
-    
+    console.error("Error creating tag:", error);
+
     // Check for duplicate entry
-    if (error.message.includes('already exists')) {
+    if (error.message.includes("already exists")) {
       return NextResponse.json(
         { error: "A tag with this name already exists" },
         { status: 409 }
       );
     }
-    
+
     return NextResponse.json(
       { error: "Failed to create tag" },
       { status: 500 }

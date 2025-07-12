@@ -65,8 +65,6 @@ const Navbar = () => {
       {" "}
       <div className="container-fluid mx-auto flex justify-end items-center">
         <div className="flex gap-3">
-
-
           <div className="flex items-center gap-1">
             <button
               className="btn btn-sm btn-ghost"
@@ -86,21 +84,25 @@ const Navbar = () => {
               <BiFont className="text-lg" />
               <span className="sr-only">Schriftgröße vergrößern</span>
             </button>{" "}
-          <button
-            className="btn btn-sm btn-ghost normal-case"
-            onClick={toggleDarkMode}
-            aria-label={
-              darkMode
-                ? "Zum hellen Modus wechseln"
-                : "Zum dunklen Modus wechseln"
-            }
-          >
-            {darkMode ? <FiSun /> : <FiMoon />}
-            <span className="hidden md:inline ml-1">Kontrast</span>
-          </button>          <Link href="/easy-language" className="btn btn-sm btn-ghost normal-case">
-            <TbLanguage className="mr-1" />
-            <span className="hidden md:inline">Leichte Sprache</span>
-          </Link>
+            <button
+              className="btn btn-sm btn-ghost normal-case"
+              onClick={toggleDarkMode}
+              aria-label={
+                darkMode
+                  ? "Zum hellen Modus wechseln"
+                  : "Zum dunklen Modus wechseln"
+              }
+            >
+              {darkMode ? <FiSun /> : <FiMoon />}
+              <span className="hidden md:inline ml-1">Kontrast</span>
+            </button>{" "}
+            <Link
+              href="/easy-language"
+              className="btn btn-sm btn-ghost normal-case"
+            >
+              <TbLanguage className="mr-1" />
+              <span className="hidden md:inline">Leichte Sprache</span>
+            </Link>
           </div>
         </div>
       </div>

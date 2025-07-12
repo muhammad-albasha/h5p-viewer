@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Navbar from "../components/layout/Navbar";
 import Header from "../components/layout/Header";
@@ -16,15 +16,17 @@ interface HomePageContentProps {
   heroSettings: HeroSettings;
 }
 
-export default function HomePageContent({ heroSettings }: HomePageContentProps) {
+export default function HomePageContent({
+  heroSettings,
+}: HomePageContentProps) {
   return (
     <>
       {/* 1. Navigation Bar */}
       <Navbar />
-      
+
       {/* 2. Header with Logo and Settings */}
       <Header />
-        {/* 3. Hero Section with Dynamic Content */}
+      {/* 3. Hero Section with Dynamic Content */}
       <HeroSection
         title={heroSettings.title}
         subtitle={heroSettings.subtitle}

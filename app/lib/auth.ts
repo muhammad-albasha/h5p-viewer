@@ -3,7 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { UserService } from "../services/UserService";
 
 export const authOptions: NextAuthOptions = {
-  providers: [    CredentialsProvider({
+  providers: [
+    CredentialsProvider({
       name: "Credentials",
       credentials: {
         email: { label: "E-Mail", type: "email" },
@@ -16,10 +17,13 @@ export const authOptions: NextAuthOptions = {
 
         try {
           const userService = new UserService();
-          
+
           // Authenticate user with password verification
-          const user = await userService.authenticate(credentials.email, credentials.password);
-            if (user) {
+          const user = await userService.authenticate(
+            credentials.email,
+            credentials.password
+          );
+          if (user) {
             return {
               id: user.id.toString(),
               name: user.username,
@@ -29,16 +33,18 @@ export const authOptions: NextAuthOptions = {
               requiresTwoFactor: user.twoFactorEnabled, // Mark that 2FA is needed
             };
           }
-          
+
           return null;
         } catch (error) {
-          console.error('Authentication error:', error);
+          console.error("Authentication error:", error);
           // Authentication failed
           return null;
         }
       },
     }),
-  ],  callbacks: {    async jwt({ token, user }) {
+  ],
+  callbacks: {
+    async jwt({ token, user }) {
       // Add role to token if it exists on the user
       if (user) {
         token.role = user.role;
@@ -48,7 +54,8 @@ export const authOptions: NextAuthOptions = {
         token.requiresTwoFactor = user.requiresTwoFactor;
       }
       return token;
-    },async session({ session, token }) {
+    },
+    async session({ session, token }) {
       // Add role to session from token
       if (session.user) {
         session.user.role = token.role as string;
@@ -61,8 +68,8 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: '/login',
-    error: '/login',
+    signIn: "/login",
+    error: "/login",
   },
   session: {
     strategy: "jwt",
@@ -80,7 +87,7 @@ declare module "next-auth" {
     twoFactorEnabled?: boolean;
     requiresTwoFactor?: boolean;
   }
-  
+
   interface Session {
     user: {
       id?: string;

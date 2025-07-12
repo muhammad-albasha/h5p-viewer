@@ -10,7 +10,7 @@ const FavoritesSection: React.FC = () => {
 
   if (isLoading) {
     return (
-      <section className="py-16 px-4 bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50">
+      <section className="py-16 px-4 bg-gradient-to-br from-primary via-secondary to-primary">
         <div className="container-fluid mx-auto ">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -43,7 +43,7 @@ const FavoritesSection: React.FC = () => {
 
   if (favorites.length === 0) {
     return (
-      <section className="py-16 px-4 bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50">
+      <section className="py-16 px-4 bg-gradient-to-br from-gray-50 via-gray-50 to-gray-50">
         <div className="container-fluid mx-auto ">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -57,9 +57,9 @@ const FavoritesSection: React.FC = () => {
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
             <div className="text-center py-16 px-8">
               <div className="mb-8">
-                <div className="p-4 bg-purple-100 rounded-full inline-block">
+                <div className="p-4 bg-primary/10 rounded-full inline-block">
                   <svg
-                    className="w-12 h-12 text-purple-500"
+                    className="w-12 h-12 text-primary"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -83,7 +83,7 @@ const FavoritesSection: React.FC = () => {
               </p>
               <Link
                 href="/h5p"
-                className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
               >
                 <svg
                   className="w-5 h-5"
@@ -108,14 +108,14 @@ const FavoritesSection: React.FC = () => {
   }
 
   return (
-    <section className="py-16 px-4 bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50">
+    <section className="py-16 px-4 bg-gradient-to-br from-gray-50 via-gray-50 to-gray-50">
       <div className="container-fluid mx-auto ">
         {/* Section Header */}
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="p-3 bg-purple-100 rounded-xl">
+            <div className="p-3 bg-primary/10 rounded-xl">
               <svg
-                className="w-8 h-8 text-purple-600"
+                className="w-8 h-8 text-primary"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
@@ -180,7 +180,8 @@ const FavoritesSection: React.FC = () => {
                         (e.currentTarget as HTMLImageElement).src =
                           "/assets/placeholder-image.svg";
                       }}
-                    />                    <div className="absolute top-2 left-2 flex items-center gap-1">
+                    />{" "}
+                    <div className="absolute top-2 left-2 flex items-center gap-1">
                       <FavoriteButton
                         content={content}
                         variant="card"
@@ -188,8 +189,16 @@ const FavoritesSection: React.FC = () => {
                       />
                       {content.isPasswordProtected && (
                         <div className="inline-flex items-center justify-center w-6 h-6 bg-amber-500/80 hover:bg-amber-600/80 text-white rounded-md backdrop-blur-sm transition-all duration-200">
-                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          <svg
+                            className="w-3 h-3"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                         </div>
                       )}
@@ -201,7 +210,6 @@ const FavoritesSection: React.FC = () => {
                     <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors text-sm leading-tight overflow-hidden text-ellipsis line-clamp-2">
                       {content.name}
                     </h3>
-
                   </div>
                 </div>
               </Link>

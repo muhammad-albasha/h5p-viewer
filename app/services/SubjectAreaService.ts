@@ -1,6 +1,6 @@
-import { Repository } from 'typeorm';
-import { SubjectArea } from '../entities/SubjectArea';
-import { getDataSource } from '../lib/datasource';
+import { Repository } from "typeorm";
+import { SubjectArea } from "../entities/SubjectArea";
+import { getDataSource } from "../lib/datasource";
 
 export class SubjectAreaService {
   private subjectAreaRepository!: Repository<SubjectArea>;
@@ -16,7 +16,7 @@ export class SubjectAreaService {
   async findAll(): Promise<SubjectArea[]> {
     const repo = await this.getRepository();
     return repo.find({
-      order: { name: 'ASC' }
+      order: { name: "ASC" },
     });
   }
 
@@ -36,51 +36,55 @@ export class SubjectAreaService {
   }
   async create(name: string, color?: string): Promise<SubjectArea> {
     const repo = await this.getRepository();
-    
+
     // Check if subject area already exists
     const existingSubjectArea = await this.findByName(name);
     if (existingSubjectArea) {
-      throw new Error('Subject area with this name already exists');
+      throw new Error("Subject area with this name already exists");
     }
-    
+
     // Generate slug from name
     const slug = this.generateSlug(name);
-    
+
     // Check if slug already exists
     const existingSlug = await this.findBySlug(slug);
     if (existingSlug) {
-      throw new Error('Subject area with this slug already exists');
+      throw new Error("Subject area with this slug already exists");
     }
-    
+
     const subjectArea = repo.create({ name, slug, color });
     return repo.save(subjectArea);
   }
-  async update(id: number, name: string, color?: string): Promise<SubjectArea | null> {
+  async update(
+    id: number,
+    name: string,
+    color?: string
+  ): Promise<SubjectArea | null> {
     const repo = await this.getRepository();
-    
+
     // Check if another subject area with this name already exists
-    const existingSubjectArea = await repo.findOne({ 
+    const existingSubjectArea = await repo.findOne({
       where: { name },
-      select: ['id'] 
+      select: ["id"],
     });
-    
+
     if (existingSubjectArea && existingSubjectArea.id !== id) {
-      throw new Error('Subject area with this name already exists');
+      throw new Error("Subject area with this name already exists");
     }
-    
+
     // Generate new slug
     const slug = this.generateSlug(name);
-    
+
     // Check if slug conflicts with another subject area
-    const existingSlug = await repo.findOne({ 
+    const existingSlug = await repo.findOne({
       where: { slug },
-      select: ['id'] 
+      select: ["id"],
     });
-    
+
     if (existingSlug && existingSlug.id !== id) {
-      throw new Error('Subject area with this slug already exists');
+      throw new Error("Subject area with this slug already exists");
     }
-    
+
     await repo.update(id, { name, slug, color });
     return this.findById(id);
   }
@@ -93,9 +97,10 @@ export class SubjectAreaService {
 
   async findSubjectAreasWithContent(): Promise<SubjectArea[]> {
     const repo = await this.getRepository();
-    return repo.createQueryBuilder('subjectArea')
-      .innerJoin('subjectArea.content', 'content')
-      .orderBy('subjectArea.name', 'ASC')
+    return repo
+      .createQueryBuilder("subjectArea")
+      .innerJoin("subjectArea.content", "content")
+      .orderBy("subjectArea.name", "ASC")
       .getMany();
   }
 
@@ -104,16 +109,16 @@ export class SubjectAreaService {
       .toLowerCase()
       .replace(/[äöüß]/g, (match) => {
         const replacements: { [key: string]: string } = {
-          'ä': 'ae',
-          'ö': 'oe', 
-          'ü': 'ue',
-          'ß': 'ss'
+          ä: "ae",
+          ö: "oe",
+          ü: "ue",
+          ß: "ss",
         };
         return replacements[match] || match;
       })
-      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/[^a-z0-9\s-]/g, "")
       .trim()
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-');
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
   }
 }

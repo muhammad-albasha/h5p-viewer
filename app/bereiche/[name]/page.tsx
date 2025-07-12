@@ -180,15 +180,15 @@ const Bereich = () => {
       <Navbar />
       <Header />      
       {viewMode === 'list' && (
-        <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800">
+        <div className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-primary">
           {/* Background decorative elements */}
           <div className="absolute inset-0">
-            <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-48 -translate-y-48 backdrop-blur-3xl"></div>
+            <div className=""></div>
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
             <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
           </div>
           
-          <div className="relative container-fluid mx-auto  px-4 py-16">
+          <div className="relative container-fluid mx-auto  px-4 py-4">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div className="text-white">
                 <div className="flex items-center gap-3 mb-4">
@@ -252,12 +252,12 @@ const Bereich = () => {
         </div>
       )}
 
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-5">
         <div className={`${viewMode === 'view' ? 'w-full px-4' : 'container-fluid mx-auto  px-4'} space-y-8`}>
           {isLoading ? (
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
               <div className="flex flex-col items-center justify-center p-12">
-                <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
+                <div className="w-12 h-12 border-4 border-blue-200 border-t-primary rounded-full animate-spin"></div>
                 <p className="text-gray-600 mt-4 font-medium">Inhalte werden geladen...</p>
                 <p className="text-gray-500 text-sm mt-1">Bitte warten Sie einen Moment</p>
               </div>
@@ -283,8 +283,8 @@ const Bereich = () => {
           ) : viewMode === 'list' && content.length === 0 ? (
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
               <div className="flex flex-col items-center justify-center p-12">
-                <div className="p-4 bg-blue-100 rounded-full mb-4">
-                  <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="p-4 bg-primary/10 rounded-full mb-4">
+                  <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
                 </div>
@@ -292,7 +292,7 @@ const Bereich = () => {
                 <p className="text-gray-500 text-sm mt-1">Für diesen Bereich sind noch keine H5P-Inhalte verfügbar.</p>
                 <Link 
                   href="/bereiche"
-                  className="mt-4 px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200 hover:scale-105"
+                  className="mt-4 px-6 py-2 bg-primary hover: text-white rounded-lg transition-all duration-200 hover:scale-105"
                 >
                   Zu allen Bereichen
                 </Link>
@@ -310,13 +310,13 @@ const Bereich = () => {
               ) : (
                 <>
                   {/* Enhanced Header for View Mode */}
-                  <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 rounded-2xl -mx-4 -mt-12 mb-8">
+                  <div className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-primary rounded-2xl -mx-4 -mt-12 mb-8">
                 <div className="absolute inset-0">
-                  <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-48 -translate-y-48 backdrop-blur-3xl"></div>
+                  <div className=""></div>
                   <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
                 </div>
                 
-                <div className="relative container-fluid mx-auto  px-4 py-16">
+                <div className="relative container-fluid mx-auto  px-4 py-4">
                   {/* Breadcrumb Navigation */}
                   <nav className="flex items-center space-x-2 text-sm mb-8 text-blue-100">
                     <Link href="/" className="hover:text-white transition-colors">Startseite</Link>
@@ -397,19 +397,6 @@ const Bereich = () => {
 
               {/* H5P Content Player */}
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
-                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white/20 rounded-lg">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h2 className="text-xl font-bold">Interaktiver Lerninhalt</h2>
-                      <p className="text-blue-100 text-sm mt-1">Starten Sie Ihre Lernerfahrung</p>
-                    </div>
-                  </div>
-                </div>
                 
                 <div className="p-6">
                   <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
@@ -497,7 +484,7 @@ const Bereich = () => {
                 </div>
               ) : (
                 /* Content Grid */
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                   {filteredContent.map(item => {
                     // ...existing code...
                     let imageUrl = item.coverImagePath;
@@ -557,7 +544,7 @@ const Bereich = () => {
                           )}
 
                           {/* Title */}
-                          <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors leading-tight">
+                          <h3 className="text-xl font-bold text-gray-900 group-hover: transition-colors leading-tight">
                             {item.name}
                           </h3>
 
@@ -583,7 +570,7 @@ const Bereich = () => {
 
                           {/* Action Button */}
                           <div className="pt-4 border-t border-gray-100">
-                            <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2">
+                            <button className="w-full bg-gradient-to-r from-primary to-secondary  hover: text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2">
                               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                               </svg>

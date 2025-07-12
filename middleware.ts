@@ -22,6 +22,6 @@ export default withAuth(
 );
 
 // Protect these routes with authentication
-export const config = { 
-  matcher: ["/admin/:path*"]
+export const config = {
+  matcher: ["/admin/:path*"],
 };

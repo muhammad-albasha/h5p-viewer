@@ -29,7 +29,8 @@ export default function ContactsAdmin() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [editingContact, setEditingContact] = useState<Contact | null>(null);  const [formData, setFormData] = useState({
+  const [editingContact, setEditingContact] = useState<Contact | null>(null);
+  const [formData, setFormData] = useState({
     name: "",
     position: "",
     department: "",
@@ -39,7 +40,7 @@ export default function ContactsAdmin() {
     bio: "",
     office: "",
     linkedin: "",
-    displayOrder: 0
+    displayOrder: 0,
   });
 
   // Redirect to login if not authenticated
@@ -82,12 +83,13 @@ export default function ContactsAdmin() {
       bio: "",
       office: "",
       linkedin: "",
-      displayOrder: 0
+      displayOrder: 0,
     });
     setEditingContact(null);
     setShowAddForm(false);
   };
-  const handleEdit = (contact: Contact) => {    setFormData({
+  const handleEdit = (contact: Contact) => {
+    setFormData({
       name: contact.name,
       position: contact.position || "",
       department: contact.department,
@@ -97,7 +99,7 @@ export default function ContactsAdmin() {
       bio: contact.bio || "",
       office: contact.office || "",
       linkedin: contact.linkedin || "",
-      displayOrder: contact.displayOrder
+      displayOrder: contact.displayOrder,
     });
     setEditingContact(contact);
     setShowAddForm(true);
@@ -105,14 +107,14 @@ export default function ContactsAdmin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
-      const url = editingContact 
+      const url = editingContact
         ? `/api/contacts/${editingContact.id}`
         : "/api/contacts";
-      
+
       const method = editingContact ? "PUT" : "POST";
-      
+
       const response = await fetch(url, {
         method,
         headers: {
@@ -129,7 +131,9 @@ export default function ContactsAdmin() {
       const savedContact = await response.json();
 
       if (editingContact) {
-        setContacts(contacts.map(c => c.id === editingContact.id ? savedContact : c));
+        setContacts(
+          contacts.map((c) => (c.id === editingContact.id ? savedContact : c))
+        );
       } else {
         setContacts([...contacts, savedContact]);
       }
@@ -154,7 +158,7 @@ export default function ContactsAdmin() {
         throw new Error("Failed to delete contact");
       }
 
-      setContacts(contacts.filter(c => c.id !== id));
+      setContacts(contacts.filter((c) => c.id !== id));
     } catch (err) {
       setError("Fehler beim Löschen");
     }
@@ -174,9 +178,8 @@ export default function ContactsAdmin() {
       <Header />
 
       {/* Header */}
-      <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative z-10 container-fluid mx-auto  px-4 py-12">
+      <div className="bg-gradient-to-br from-primary via-secondary to-primary text-white relative overflow-hidden">
+        <div className="relative z-10 container-fluid mx-auto  px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl lg:text-4xl font-bold tracking-tight">
@@ -188,10 +191,18 @@ export default function ContactsAdmin() {
             </div>
             <button
               onClick={() => setShowAddForm(true)}
-              className="inline-flex items-center px-6 py-3 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all duration-200 transform hover:scale-105 shadow-lg"
+              className="inline-flex items-center px-6 py-3 bg-white text-primary font-semibold rounded-xl hover:bg-blue-50 transition-all duration-200 transform hover:scale-105 shadow-lg"
             >
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                  clipRule="evenodd"
+                />
               </svg>
               Neuen Kontakt hinzufügen
             </button>
@@ -224,90 +235,114 @@ export default function ContactsAdmin() {
             <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden mb-8">
               <div className="px-6 py-5 bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
                 <h2 className="text-xl font-bold text-gray-900">
-                  {editingContact ? "Kontakt bearbeiten" : "Neuen Kontakt hinzufügen"}
+                  {editingContact
+                    ? "Kontakt bearbeiten"
+                    : "Neuen Kontakt hinzufügen"}
                 </h2>
               </div>
-              
+
               <form onSubmit={handleSubmit} className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Name *
-                    </label>                    <input
+                    </label>{" "}
+                    <input
                       type="text"
                       required
                       value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
                       placeholder="Vor- und Nachname"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
-                  </div>                  <div>
+                  </div>{" "}
+                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Position
-                    </label>                    <input
+                    </label>{" "}
+                    <input
                       type="text"
                       value={formData.position}
-                      onChange={(e) => setFormData({...formData, position: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, position: e.target.value })
+                      }
                       placeholder="z.B. Projektleiter"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
-
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Abteilung *
-                    </label>                    <input
+                    </label>{" "}
+                    <input
                       type="text"
                       required
                       value={formData.department}
-                      onChange={(e) => setFormData({...formData, department: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, department: e.target.value })
+                      }
                       placeholder="z.B. IT & Entwicklung"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
-
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       E-Mail *
-                    </label>                    <input
+                    </label>{" "}
+                    <input
                       type="email"
                       required
                       value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
                       placeholder="name@example.com"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
-
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Telefon
-                    </label>                    <input
+                    </label>{" "}
+                    <input
                       type="tel"
                       value={formData.phone}
-                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
                       placeholder="+49 123 456 789"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
-                  </div>                  <div>
+                  </div>{" "}
+                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Büro
-                    </label>                    <input
+                    </label>{" "}
+                    <input
                       type="text"
                       value={formData.office}
-                      onChange={(e) => setFormData({...formData, office: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, office: e.target.value })
+                      }
                       placeholder="z.B. Raum 301, Hauptgebäude"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
-
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Reihenfolge
-                    </label>                    <input
+                    </label>{" "}
+                    <input
                       type="number"
                       value={formData.displayOrder}
-                      onChange={(e) => setFormData({...formData, displayOrder: parseInt(e.target.value) || 0})}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          displayOrder: parseInt(e.target.value) || 0,
+                        })
+                      }
                       placeholder="0"
                       min="0"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -319,16 +354,21 @@ export default function ContactsAdmin() {
                 <div className="mt-6">
                   <PhotoUpload
                     currentPhoto={formData.photo}
-                    onPhotoChange={(photoUrl) => setFormData({...formData, photo: photoUrl})}
+                    onPhotoChange={(photoUrl) =>
+                      setFormData({ ...formData, photo: photoUrl })
+                    }
                   />
                 </div>
 
                 <div className="mt-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Biografie
-                  </label>                  <textarea
+                  </label>{" "}
+                  <textarea
                     value={formData.bio}
-                    onChange={(e) => setFormData({...formData, bio: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, bio: e.target.value })
+                    }
                     rows={3}
                     placeholder="Kurze Beschreibung der Person und ihrer Expertise..."
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -357,7 +397,9 @@ export default function ContactsAdmin() {
           {/* Contacts Grid */}
           <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
             <div className="px-6 py-5 bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900">Kontakte ({contacts.length})</h2>
+              <h2 className="text-xl font-bold text-gray-900">
+                Kontakte ({contacts.length})
+              </h2>
             </div>
 
             {isLoading ? (
@@ -369,9 +411,12 @@ export default function ContactsAdmin() {
                 <p className="text-gray-600">Keine Kontakte gefunden.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
                 {contacts.map((contact) => (
-                  <div key={contact.id} className="border border-gray-200 rounded-xl p-4 hover:shadow-lg transition-shadow">
+                  <div
+                    key={contact.id}
+                    className="border border-gray-200 rounded-xl p-4 hover:shadow-lg transition-shadow"
+                  >
                     <div className="flex items-center gap-4 mb-4">
                       <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200">
                         <Image
@@ -382,12 +427,19 @@ export default function ContactsAdmin() {
                           className="w-full h-full object-cover"
                           unoptimized
                         />
-                      </div>                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900">{contact.name}</h3>
+                      </div>{" "}
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900">
+                          {contact.name}
+                        </h3>
                         {contact.position && (
-                          <p className="text-sm text-blue-600">{contact.position}</p>
+                          <p className="text-sm text-blue-600">
+                            {contact.position}
+                          </p>
                         )}
-                        <p className="text-xs text-gray-500">{contact.department}</p>
+                        <p className="text-xs text-gray-500">
+                          {contact.department}
+                        </p>
                       </div>
                     </div>
 

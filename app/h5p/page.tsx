@@ -140,15 +140,15 @@ function H5PContentPage() {
       <Header />
       
       {/* Modern Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800">
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-primary">
         {/* Background decorative elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-48 -translate-y-48 backdrop-blur-3xl"></div>
+          <div className=""></div>
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
         </div>
         
-        <div className="relative container-fluid mx-auto  px-4 py-16">
+        <div className="relative container-fluid mx-auto  px-4 py-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="text-white">              <div className="flex items-center gap-3 mb-4">
                 <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
@@ -230,7 +230,7 @@ function H5PContentPage() {
       </div>
       
       {/* Main Content */}
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-5">
         <div className="container-fluid mx-auto  px-4 space-y-8">
           
           {/* Content Filter */}
@@ -329,13 +329,13 @@ function H5PContentPage() {
             </div>          ) : filteredContent.length === 0 ? (
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
               <div className="flex flex-col items-center justify-center p-12">
-                <div className="p-4 bg-blue-100 rounded-full mb-4">
+                <div className="p-4 bg-primary/10 rounded-full mb-4">
                   {showOnlyFavorites ? (
                     <svg className="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
                   ) : (
-                    <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   )}
@@ -360,7 +360,7 @@ function H5PContentPage() {
                       setSelectedTags([]);
                       setSelectedSubjectArea('');
                     }}
-                    className="mt-4 px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200 hover:scale-105"
+                    className="mt-4 px-6 py-2 bg-primary hover: text-white rounded-lg transition-all duration-200 hover:scale-105"
                   >
                     Alle Inhalte anzeigen
                   </button>
@@ -381,7 +381,7 @@ function H5PContentPage() {
 export default function AllH5PContent() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-5">
         <div className="container-fluid mx-auto px-4">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
             <div className="flex flex-col items-center justify-center p-12">

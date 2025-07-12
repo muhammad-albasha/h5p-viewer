@@ -160,7 +160,7 @@ export default function LegalPagesAdmin() {
     return (
       <div className="flex justify-center items-center h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="text-center">
-          <div className="loading loading-spinner loading-lg text-blue-600"></div>
+          <div className="loading loading-spinner loading-lg text-primary"></div>
           <p className="mt-4 text-gray-600">Seiten werden geladen...</p>
         </div>
       </div>
@@ -173,10 +173,10 @@ export default function LegalPagesAdmin() {
       <Header />
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 py-16">
+      <div className="relative overflow-hidden bg-gradient-to-r from-primary via-secondary to-primary py-16">
         {/* Background decorative elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-48 -translate-y-48 backdrop-blur-3xl"></div>
+          <div className=""></div>
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
           <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32 backdrop-blur-2xl"></div>
         </div>
@@ -307,7 +307,7 @@ export default function LegalPagesAdmin() {
 
           {/* Content Editor */}
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
+            <div className="bg-gradient-to-r from-primary to-primary p-6 text-white">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-white/20 rounded-lg">
                   <svg
@@ -358,7 +358,7 @@ export default function LegalPagesAdmin() {
                   <button
                     onClick={handleSave}
                     disabled={isSaving}
-                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                    className="flex-1 bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover: text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                   >
                     {isSaving ? (
                       <>
