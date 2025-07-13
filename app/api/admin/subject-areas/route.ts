@@ -7,7 +7,14 @@ export async function GET() {
   try {
     // Check authentication
     const session = await getServerSession(authOptions);
+    console.log("Admin API - Session:", session);
+    console.log("Admin API - User role:", session?.user?.role);
+
     if (!session || session.user.role !== "admin") {
+      console.log("Admin API - Authentication failed:", {
+        hasSession: !!session,
+        userRole: session?.user?.role,
+      });
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
