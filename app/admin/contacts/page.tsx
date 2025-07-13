@@ -56,7 +56,7 @@ export default function ContactsAdmin() {
     const fetchContacts = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("/api/contacts");
+        const response = await fetch(withBasePath("/api/contacts"));
         if (!response.ok) {
           throw new Error("Failed to fetch contacts");
         }

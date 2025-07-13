@@ -42,7 +42,7 @@ export default function SubjectAreasPage() {
     const fetchSubjectAreas = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("/api/admin/subject-areas");
+        const response = await fetch(withBasePath("/api/admin/subject-areas"));
         
         if (!response.ok) {
           throw new Error("Failed to fetch subject areas");
@@ -75,7 +75,7 @@ export default function SubjectAreasPage() {
       setIsSubmitting(true);
       setFormError(null);
       
-      const response = await fetch("/api/admin/subject-areas", {
+      const response = await fetch(withBasePath("/api/admin/subject-areas"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

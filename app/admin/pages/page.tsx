@@ -53,7 +53,7 @@ export default function PageSettingsPage() {
     }
   }, [status]);  const fetchHeroSettings = async () => {
     try {
-      const response = await fetch('/api/admin/pages');
+      const response = await fetch(withBasePath('/api/admin/pages'));
       if (response.ok) {
         const data = await response.json();
         setHeroSettings(data.hero || { title: '', subtitle: '', description: '' });
@@ -76,7 +76,7 @@ export default function PageSettingsPage() {
 
     setIsSaving(true);
     try {
-      const response = await fetch('/api/admin/pages', {
+      const response = await fetch(withBasePath('/api/admin/pages'), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

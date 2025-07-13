@@ -41,7 +41,7 @@ export default function TagsPage() {
     const fetchTags = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("/api/admin/tags");
+        const response = await fetch(withBasePath("/api/admin/tags"));
         
         if (!response.ok) {
           throw new Error("Failed to fetch tags");
@@ -74,7 +74,7 @@ export default function TagsPage() {
       setIsSubmitting(true);
       setFormError(null);
       
-      const response = await fetch("/api/admin/tags", {
+      const response = await fetch(withBasePath("/api/admin/tags"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

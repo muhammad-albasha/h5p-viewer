@@ -41,7 +41,7 @@ export default function UploadH5P() {
         setIsLoadingOptions(true);
         
         // Fetch subject areas
-        const subjectAreaResponse = await fetch("/api/admin/subject-areas");
+        const subjectAreaResponse = await fetch(withBasePath("/api/admin/subject-areas"));
         if (!subjectAreaResponse.ok) {
           throw new Error("Failed to fetch subject areas");
         }
@@ -49,7 +49,7 @@ export default function UploadH5P() {
         setSubjectAreas(subjectAreaData);
         
         // Fetch tags
-        const tagsResponse = await fetch("/api/admin/tags");
+        const tagsResponse = await fetch(withBasePath("/api/admin/tags"));
         if (!tagsResponse.ok) {
           throw new Error("Failed to fetch tags");
         }
@@ -120,7 +120,7 @@ export default function UploadH5P() {
       }, 500);
       
       // Send request to API
-      const response = await fetch("/api/admin/upload", {
+      const response = await fetch(withBasePath("/api/admin/upload"), {
         method: "POST",
         body: formData,
       });

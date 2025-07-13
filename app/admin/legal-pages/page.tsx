@@ -54,7 +54,7 @@ export default function LegalPagesAdmin() {
     const fetchContent = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("/api/admin/legal-pages");
+        const response = await fetch(withBasePath("/api/admin/legal-pages"));
 
         if (!response.ok) {
           throw new Error("Failed to fetch content");
@@ -88,7 +88,7 @@ export default function LegalPagesAdmin() {
   const handleSave = async () => {
     try {
       setIsSaving(true);
-      const response = await fetch("/api/admin/legal-pages", {
+      const response = await fetch(withBasePath("/api/admin/legal-pages"), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
