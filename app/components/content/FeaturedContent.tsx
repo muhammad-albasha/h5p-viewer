@@ -238,7 +238,7 @@ export default function FeaturedContent() {
                 alle verfügbaren Inhalte oder kontaktiere den Administrator.
               </p>
               <Link
-                href={withBasePath("/h5p")}
+                href="/h5p"
                 className="inline-flex items-center gap-2 px-6 md:px-8 py-3 bg-primary dark:bg-black hover:from-secondary hover:to-primary text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg btn-responsive"
               >
                 <svg
@@ -376,7 +376,7 @@ export default function FeaturedContent() {
             {/* View All Button */}
             <div className="text-center">
               <Link
-                href={withBasePath("/h5p")}
+                href="/h5p"
                 className="inline-flex items-center gap-2 px-8 py-3 bg-white/80 backdrop-blur-sm hover:bg-white/90 text-gray-700 hover: font-semibold rounded-xl border-2 border-gray-200 hover: transition-all duration-200 hover:scale-105 hover:shadow-lg"
               >
                 <svg
