@@ -7,7 +7,7 @@ interface BannerProps {
 
 const Banner = ({ title, subtitle }: BannerProps) => {
   return (
-    <div className="bg-gradient-to-r from-primary to-secondary text-primary-content py-6 relative overflow-hidden">
+    <div className="bg-primary dark:bg-black text-primary-content py-6 relative overflow-hidden">
       <div className="banner-decoration absolute inset-0 opacity-10">
         <div className="banner-decoration-circle banner-circle-1"></div>
         <div className="banner-decoration-circle banner-circle-2"></div>

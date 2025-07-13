@@ -152,7 +152,7 @@ export default function UploadH5P() {
       <Header />
       
       {/* Modern Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-primary">
+      <div className="relative overflow-hidden bg-primary dark:bg-black">
         {/* Background decorative elements */}
         <div className="absolute inset-0">
           <div className=""></div>
@@ -383,7 +383,7 @@ export default function UploadH5P() {
                 </Link>
                 <button 
                   type="submit" 
-                  className="flex-1 bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover: text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                  className="flex-1 bg-primary dark:bg-black text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                   disabled={isUploading}
                 >
                   {isUploading ? (

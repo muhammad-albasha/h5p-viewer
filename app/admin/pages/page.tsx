@@ -138,7 +138,7 @@ export default function PageSettingsPage() {
       <Header />
       
       {/* Modern Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-primary">
+      <div className="relative overflow-hidden bg-primary dark:bg-black">
         {/* Background decorative elements */}
         <div className="absolute inset-0">
           <div className=""></div>
@@ -267,7 +267,7 @@ export default function PageSettingsPage() {
                     <button
                       onClick={saveHeroSettings}
                       disabled={isSaving}
-                      className="flex-1 bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover: text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                      className="flex-1 bg-primary dark:bg-black hover:from-primary/80 hover: text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                     >
                       {isSaving ? (
                         <>
@@ -317,7 +317,7 @@ export default function PageSettingsPage() {
                 </div>
                 
                 <div className="p-6">
-                  <div className="bg-gradient-to-r from-primary to-secondary text-white p-8 rounded-2xl">
+                  <div className="bg-primary dark:bg-black text-white p-8 rounded-2xl">
                     <h1 className="text-3xl lg:text-4xl font-bold mb-4 leading-tight">
                       {heroSettings.title || 'Ihr Titel hier'}
                     </h1>

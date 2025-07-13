@@ -83,7 +83,7 @@ const FavoritesSection: React.FC = () => {
               </p>
               <Link
                 href="/h5p"
-                className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-primary dark:bg-black hover:from-secondary hover:to-primary text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
               >
                 <svg
                   className="w-5 h-5"

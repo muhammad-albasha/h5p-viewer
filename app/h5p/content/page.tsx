@@ -137,7 +137,7 @@ function H5PContentViewer() {
   return (
     <>
       {/* Modern Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-primary">
+      <div className="relative overflow-hidden bg-primary dark:bg-black">
         {/* Background decorative elements */}
         <div className="absolute inset-0">
           <div className=""></div>
@@ -436,7 +436,7 @@ function H5PContentViewer() {
 // Loading component for Suspense fallback
 function LoadingFallback() {
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-primary">
+    <div className="relative overflow-hidden bg-primary dark:bg-black">
       {/* Background decorative elements */}
       <div className="absolute inset-0">
         <div className=""></div>

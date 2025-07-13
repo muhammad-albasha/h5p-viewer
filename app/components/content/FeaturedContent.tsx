@@ -238,7 +238,7 @@ export default function FeaturedContent() {
               </p>
               <Link
                 href="/h5p"
-                className="inline-flex items-center gap-2 px-6 md:px-8 py-3 bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg btn-responsive"
+                className="inline-flex items-center gap-2 px-6 md:px-8 py-3 bg-primary dark:bg-black hover:from-secondary hover:to-primary text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg btn-responsive"
               >
                 <svg
                   className="w-5 h-5"
@@ -349,7 +349,7 @@ export default function FeaturedContent() {
                     <div className="pt-4 border-t border-gray-100">
                       <Link
                         href={content.path}
-                        className="w-full bg-gradient-to-r from-primary to-secondary hover: text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2"
+                        className="w-full bg-primary dark:bg-black hover: text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2"
                       >
                         <svg
                           className="w-5 h-5"

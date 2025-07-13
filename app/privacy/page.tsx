@@ -42,7 +42,7 @@ export default function PrivacyPage() {
       <Header />
       
       {/* Modern Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-primary text-white">
+      <div className="relative overflow-hidden bg-primary dark:bg-black text-white">
         {/* Background decorative elements */}
         <div className="absolute inset-0">
           <div className=""></div>

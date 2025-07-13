@@ -190,7 +190,7 @@ export default function SubjectAreasPage() {
       <Header />
       
       {/* Modern Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-primary">
+      <div className="relative overflow-hidden bg-primary dark:bg-black">
         {/* Background decorative elements */}
         <div className="absolute inset-0">
           <div className=""></div>
@@ -285,7 +285,7 @@ export default function SubjectAreasPage() {
                   
                   <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover:to-secondary/80 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                    className="w-full bg-primary dark:bg-black hover:from-primary/80 hover:to-secondary/80 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (
