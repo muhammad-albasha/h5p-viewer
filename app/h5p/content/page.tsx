@@ -8,6 +8,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
 import FavoriteButton from "@/app/components/common/FavoriteButton";
+import { withBasePath } from "../../utils/paths";
 import PasswordProtection from "@/app/components/common/PasswordProtection";
 
 interface H5PContentDetails {
@@ -51,7 +52,7 @@ function H5PContentViewer() {
           return;
         }
 
-        const response = await fetch("/api/h5p-content");
+        const response = await fetch(withBasePath("/api/h5p-content"));
         if (!response.ok) {
           throw new Error("Failed to fetch H5P content");
         }
@@ -65,7 +66,7 @@ function H5PContentViewer() {
           setContentDetails(content);
           // Check if content is password protected using API
           const protectionResponse = await fetch(
-            `/api/h5p/check-protection/${content.id}`
+            withBasePath(`/api/h5p/check-protection/${content.id}`)
           );
           if (protectionResponse.ok) {
             const protectionData = await protectionResponse.json();
@@ -94,7 +95,7 @@ function H5PContentViewer() {
     setPasswordError("");
 
     try {
-      const response = await fetch("/api/h5p/verify-password", {
+      const response = await fetch(withBasePath("/api/h5p/verify-password"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -209,7 +210,7 @@ function H5PContentViewer() {
 
             <div className="lg:col-span-4 flex flex-col gap-3">
               <Link
-                href="/h5p"
+                href={withBasePath("/h5p")}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20"
               >
                 <svg
@@ -307,7 +308,7 @@ function H5PContentViewer() {
                 <p className="text-gray-600 text-sm mt-1">{error}</p>
                 <div className="flex gap-3 mt-6">
                   <Link
-                    href="/h5p"
+                    href={withBasePath("/h5p")}
                     className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-all duration-200 hover:scale-105 font-medium"
                   >
                     <svg
@@ -386,7 +387,7 @@ function H5PContentViewer() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Link
-                    href="/h5p"
+                    href={withBasePath("/h5p")}
                     className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-all duration-200 hover:scale-105 font-medium"
                   >
                     <svg
@@ -405,7 +406,7 @@ function H5PContentViewer() {
                     Alle Inhalte anzeigen
                   </Link>
                   <Link
-                    href="/"
+                    href={withBasePath("/")}
                     className="inline-flex items-center gap-2 px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-all duration-200 hover:scale-105 font-medium"
                   >
                     <svg

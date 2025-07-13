@@ -6,11 +6,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, getSession } from "next-auth/react";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
+import { withBasePath } from "../../../utils/paths";
 
 function TwoFactorForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/admin";
+  const callbackUrl = searchParams.get("callbackUrl") || withBasePath("/admin");
 
   const [token, setToken] = useState("");
   const [error, setError] = useState("");
@@ -134,7 +135,7 @@ function TwoFactorForm() {
                 Zurück zur{" "}
                 <button
                   type="button"
-                  onClick={() => router.push("/login")}
+                  onClick={() => router.push(withBasePath("/login"))}
                   className="text-primary hover:underline"
                 >
                   Anmeldung

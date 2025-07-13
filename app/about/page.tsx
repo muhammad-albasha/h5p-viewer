@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
+import { withBasePath } from "../utils/paths";
 
 export default function AboutPage() {
   const [content, setContent] = useState("");
@@ -12,7 +13,7 @@ export default function AboutPage() {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const response = await fetch("/api/legal-page?type=about_us");
+        const response = await fetch(withBasePath("/api/legal-page?type=about_us"));
         if (response.ok) {
           const data = await response.json();
           setContent(data.content || "");

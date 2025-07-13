@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="de" data-theme="light">
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/h5p-viewer/favicon.ico" sizes="any" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

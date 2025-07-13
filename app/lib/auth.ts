@@ -68,8 +68,8 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: "/login",
-    error: "/login",
+    signIn: "/h5p-viewer/login",
+    error: "/h5p-viewer/login",
   },
   session: {
     strategy: "jwt",

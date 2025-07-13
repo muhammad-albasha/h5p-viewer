@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { H5PContentService } from "@/app/services";
+import { withBasePath } from "./paths";
 
 interface H5PContent {
   id: number;
@@ -133,7 +134,7 @@ export async function getH5PContents(): Promise<H5PContent[]> {
       const tags = assignTags(type, name);
 
       // Construct cover image path
-      const coverImagePath = `/api/h5p/cover/${dir}/content/images/cover.jpg`;
+      const coverImagePath = withBasePath(`/api/h5p/cover/${dir}/content/images/cover.jpg`);
       return {
         id: index + 1,
         name,

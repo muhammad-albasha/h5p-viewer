@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useFavorites } from "@/app/hooks/useFavorites";
 import FavoriteButton from "@/app/components/common/FavoriteButton";
+import { withBasePath } from '@/app/utils/paths';
 
 const FavoritesSection: React.FC = () => {
   const { favorites, isLoading, clearAllFavorites } = useFavorites();
@@ -82,7 +83,7 @@ const FavoritesSection: React.FC = () => {
                 jedem Inhalt.
               </p>
               <Link
-                href="/h5p"
+                href={withBasePath("/h5p")}
                 className="inline-flex items-center gap-2 px-8 py-3 bg-primary dark:bg-black hover:from-secondary hover:to-primary text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
               >
                 <svg
@@ -178,7 +179,7 @@ const FavoritesSection: React.FC = () => {
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         (e.currentTarget as HTMLImageElement).src =
-                          "/assets/placeholder-image.svg";
+                          withBasePath("/assets/placeholder-image.svg");
                       }}
                     />{" "}
                     <div className="absolute top-2 left-2 flex items-center gap-1">
@@ -220,7 +221,7 @@ const FavoritesSection: React.FC = () => {
         {/* View All Favorites Button */}
         <div className="text-center">
           <Link
-            href="/h5p?favorites=true"
+            href={withBasePath("/h5p?favorites=true")}
             className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 backdrop-blur-sm hover:bg-white/90 text-gray-700 hover:text-purple-600 font-semibold rounded-xl border-2 border-gray-200 hover:border-purple-300 transition-all duration-200 hover:scale-105 hover:shadow-lg"
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

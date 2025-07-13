@@ -5,11 +5,11 @@ export default withAuth(
   // Function that is executed on each request
   function middleware(req) {
     const token = req.nextauth.token;
-    const isAdminRoute = req.nextUrl.pathname.startsWith("/admin");
+    const isAdminRoute = req.nextUrl.pathname.startsWith("/admin") || req.nextUrl.pathname.startsWith("/h5p-viewer/admin");
 
     // Check if trying to access admin route without admin role
     if (isAdminRoute && token?.role !== "admin") {
-      return NextResponse.redirect(new URL("/login", req.url));
+      return NextResponse.redirect(new URL("/h5p-viewer/login", req.url));
     }
 
     return NextResponse.next();
@@ -23,5 +23,5 @@ export default withAuth(
 
 // Protect these routes with authentication
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/h5p-viewer/admin/:path*"],
 };

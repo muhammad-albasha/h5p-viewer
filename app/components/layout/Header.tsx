@@ -6,6 +6,7 @@ import { FiSettings, FiLogOut } from "react-icons/fi";
 import { BiUserCircle } from "react-icons/bi";
 import { MdDashboard } from "react-icons/md";
 import { useSession, signOut } from "next-auth/react";
+import { withBasePath } from '@/app/utils/paths';
 
 const Header = () => {
   const { data: session, status } = useSession();
@@ -57,7 +58,7 @@ const Header = () => {
         <div className="flex items-center">
           <Link href="/" className="flex items-center">
             <img
-              src="/assets/logo_header_white.svg"
+              src={withBasePath("/assets/logo_header_white.svg")}
               alt="H5P Logo"
               className="h-12 w-auto sm:h-16 md:h-20 sm:w-auto md:w-60 brightness-100 dark:brightness-200 transition-all duration-200"
             />
@@ -154,7 +155,7 @@ const Header = () => {
                       <button
                         role="menuitem"
                         onClick={() => {
-                          signOut({ callbackUrl: "/" });
+                          signOut({ callbackUrl: "/h5p-viewer/" });
                           setIsDropdownOpen(false);
                         }}
                         className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-primary/10 transition-all duration-200 text-left"
@@ -223,7 +224,7 @@ const Header = () => {
                   </Link>
                   <button
                     onClick={() => {
-                      signOut({ callbackUrl: "/" });
+                      signOut({ callbackUrl: "/h5p-viewer/" });
                       setIsMobileMenuOpen(false);
                     }}
                     className="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition-all duration-200 text-left w-full text-lg font-medium"

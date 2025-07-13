@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { withBasePath } from "../../../utils/paths";
 
 interface TwoFactorSetupData {
   secret: string;
@@ -24,7 +25,7 @@ export default function TwoFactorSetupPage() {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/login");
+      router.push(withBasePath("/login"));
     }
   }, [status, router]);
 
@@ -329,7 +330,7 @@ export default function TwoFactorSetupPage() {
                 </div>
 
                 <button
-                  onClick={() => router.push("/admin")}
+                  onClick={() => router.push(withBasePath("/admin"))}
                   className="btn btn-primary"
                 >
                   Zum Admin-Bereich

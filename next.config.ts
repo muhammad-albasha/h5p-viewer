@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  basePath: "/h5p-viewer",
+  assetPrefix: "/h5p-viewer",
+  trailingSlash: false,
 };
 
 export default nextConfig;

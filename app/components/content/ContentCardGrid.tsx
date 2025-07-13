@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import FavoriteButton from "@/app/components/common/FavoriteButton";
+import { withBasePath } from "../../utils/paths";
 
 interface H5PContent {
   id: number;
@@ -107,7 +108,7 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).src =
-                      "/assets/placeholder-image.svg";
+                      withBasePath("/assets/placeholder-image.svg");
                   }}
                 />
                 <div className="absolute top-3 right-3">

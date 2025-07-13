@@ -7,6 +7,7 @@ import Link from "next/link";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
 import RichTextEditor from "@/app/components/RichTextEditor";
+import { withBasePath } from "../../utils/paths";
 
 interface LegalContent {
   imprint: string;
@@ -44,7 +45,7 @@ export default function LegalPagesAdmin() {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/login");
+      router.push(withBasePath("/login"));
     }
   }, [status, router]);
 
@@ -385,7 +386,7 @@ export default function LegalPagesAdmin() {
                     )}
                   </button>
                   <button
-                    onClick={() => router.push("/admin")}
+                    onClick={() => router.push(withBasePath("/admin"))}
                     className="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 flex items-center gap-2"
                   >
                     <svg

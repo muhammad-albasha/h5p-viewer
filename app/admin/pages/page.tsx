@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
+import { withBasePath } from "../../utils/paths";
 
 interface HeroSettings {
   title: string;
@@ -39,7 +40,7 @@ export default function PageSettingsPage() {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/login");
+      router.push(withBasePath("/login"));
     }
   }, [status, router]);
   useEffect(() => {

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { withBasePath } from '@/app/utils/paths';
 
 interface DatabaseErrorBannerProps {
   error?: string;
@@ -41,7 +42,7 @@ export default function DatabaseErrorBanner({
 
         <div className="flex items-center gap-2">
           <Link
-            href="/about"
+            href={withBasePath("/about")}
             className="btn btn-sm btn-outline border-error-content/20 text-error-content"
           >
             Hilfe

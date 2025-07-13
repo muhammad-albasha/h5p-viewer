@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
+import { withBasePath } from "../utils/paths";
 
 interface H5PContent {
   id: number;
@@ -31,7 +32,7 @@ export default function AdminDashboard() {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/login");
+      router.push(withBasePath("/login"));
     }
   }, [status, router]);
   // Fetch H5P contents when component loads
@@ -39,7 +40,7 @@ export default function AdminDashboard() {
     const fetchContents = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("/api/admin/content");
+        const response = await fetch(withBasePath("/api/admin/content"));
 
         if (!response.ok) {
           throw new Error("Failed to fetch content");
@@ -49,7 +50,7 @@ export default function AdminDashboard() {
 
         // Load featured content to mark featured status
         try {
-          const featuredResponse = await fetch("/api/featured");
+          const featuredResponse = await fetch(withBasePath("/api/featured"));
           if (featuredResponse.ok) {
             const featuredData = await featuredResponse.json();
             const featuredIds = featuredData.map((item: any) => item.id);

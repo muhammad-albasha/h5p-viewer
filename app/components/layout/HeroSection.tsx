@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { withBasePath } from '@/app/utils/paths';
 
 interface H5PContent {
   id: number;
@@ -30,7 +31,7 @@ export default function HeroSection({
     const fetchCoverImages = async () => {
       try {
         console.log("Fetching H5P content...");
-        const response = await fetch("/api/h5p-content");
+        const response = await fetch(withBasePath("/api/h5p-content"));
 
         if (response.ok) {
           const content: H5PContent[] = await response.json();
@@ -127,18 +128,18 @@ export default function HeroSection({
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-4">
-              <a
+              <Link
                 href="/h5p"
                 className="btn bg-primary dark:bg-black text-white btn-lg px-6 md:px-8 py-3 text-base md:text-lg font-semibold btn-responsive"
               >
                 Jetzt entdecken
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/about"
                 className="btn btn-outline btn-lg px-6 md:px-8 py-3 text-base md:text-lg font-semibold btn-responsive"
               >
                 Mehr erfahren
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -197,7 +198,7 @@ export default function HeroSection({
                                 } else if (
                                   !originalSrc.includes("placeholder")
                                 ) {
-                                  target.src = "/assets/placeholder-image.svg";
+                                  target.src = withBasePath("/assets/placeholder-image.svg");
                                 } else {
                                   target.style.display = "none";
                                   target.onerror = null;

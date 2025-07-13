@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
 import Link from "next/link";
+import { withBasePath } from "../utils/paths";
 
 interface SubjectArea {
   id: number;
@@ -26,14 +27,14 @@ const BereichOverview = () => {
         setIsLoading(true);
 
         // Fetch subject areas
-        const response = await fetch("/api/admin/subject-areas");
+        const response = await fetch(withBasePath("/api/admin/subject-areas"));
         if (!response.ok) {
           throw new Error("Bereiche konnten nicht geladen werden");
         }
         const areas = await response.json();
 
         // Fetch all content to count by subject area
-        const contentResponse = await fetch("/api/h5p-content");
+        const contentResponse = await fetch(withBasePath("/api/h5p-content"));
         if (contentResponse.ok) {
           const allContent = await contentResponse.json();
           const counts: Record<string, number> = {};

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import { withBasePath } from "../utils/paths";
 
 interface PhotoUploadProps {
   currentPhoto?: string;
@@ -10,7 +11,7 @@ interface PhotoUploadProps {
 }
 
 export default function PhotoUpload({
-  currentPhoto = "/assets/placeholder-image.svg",
+  currentPhoto = withBasePath("/assets/placeholder-image.svg"),
   onPhotoChange,
   className = "",
 }: PhotoUploadProps) {
@@ -21,7 +22,7 @@ export default function PhotoUpload({
   const validCurrentPhoto =
     currentPhoto && currentPhoto.trim() !== ""
       ? currentPhoto
-      : "/assets/placeholder-image.svg";
+      : withBasePath("/assets/placeholder-image.svg");
   const [previewUrl, setPreviewUrl] = useState<string>(validCurrentPhoto);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -71,7 +72,7 @@ export default function PhotoUpload({
       const formData = new FormData();
       formData.append("photo", file);
 
-      const response = await fetch("/api/contacts/upload-photo", {
+      const response = await fetch(withBasePath("/api/contacts/upload-photo"), {
         method: "POST",
         body: formData,
       });
@@ -94,7 +95,7 @@ export default function PhotoUpload({
       const fallbackPhoto =
         currentPhoto && currentPhoto.trim() !== ""
           ? currentPhoto
-          : "/assets/placeholder-image.svg";
+          : withBasePath("/assets/placeholder-image.svg");
       setPreviewUrl(fallbackPhoto);
     } finally {
       setIsUploading(false);
@@ -106,8 +107,8 @@ export default function PhotoUpload({
   };
 
   const handleRemovePhoto = () => {
-    setPreviewUrl("/assets/placeholder-image.svg");
-    onPhotoChange("/assets/placeholder-image.svg");
+    setPreviewUrl(withBasePath("/assets/placeholder-image.svg"));
+    onPhotoChange(withBasePath("/assets/placeholder-image.svg"));
     setUploadError(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -126,7 +127,7 @@ export default function PhotoUpload({
           <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-200 bg-gray-100">
             {" "}
             <Image
-              src={previewUrl || "/assets/placeholder-image.svg"}
+              src={previewUrl || withBasePath("/assets/placeholder-image.svg")}
               alt="Foto Vorschau"
               width={96}
               height={96}
@@ -184,7 +185,7 @@ export default function PhotoUpload({
               {isUploading ? "Uploading..." : "Foto auswählen"}
             </button>
 
-            {previewUrl !== "/assets/placeholder-image.svg" && (
+            {previewUrl !== withBasePath("/assets/placeholder-image.svg") && (
               <button
                 type="button"
                 onClick={handleRemovePhoto}

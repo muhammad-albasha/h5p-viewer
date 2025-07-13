@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { withBasePath } from "../../utils/paths";
 
 // This component redirects from the old URL format (/h5p/[name]) to the new format (/h5p?id=1)
 const H5PContentRedirect = () => {
@@ -14,7 +15,7 @@ const H5PContentRedirect = () => {
     // Fetch contents to find the index of the content with the given name
     const redirectToNewFormat = async () => {
       try {
-        const response = await fetch("/api/h5p-content");
+        const response = await fetch(withBasePath("/api/h5p-content"));
         if (!response.ok) {
           throw new Error("Failed to fetch H5P content");
         }

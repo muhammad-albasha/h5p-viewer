@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
+import { withBasePath } from "@/app/utils/paths";
 
 interface SubjectArea {
   id: number;
@@ -135,7 +136,7 @@ export default function UploadH5P() {
       
       // Redirect to admin dashboard after successful upload
       setTimeout(() => {
-        router.push("/admin");
+        router.push(withBasePath("/admin"));
         router.refresh();
       }, 1000);
       

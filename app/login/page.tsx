@@ -7,12 +7,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
+import { withBasePath } from "../utils/paths";
 
 // Separate component that uses useSearchParams
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/admin";
+  const callbackUrl = searchParams.get("callbackUrl") || withBasePath("/admin");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,7 +43,7 @@ function LoginForm() {
         setError("Ungültige E-Mail-Adresse oder Passwort");
       } else if (result?.ok) {
         // Get the updated session to check 2FA requirements
-        const sessionResponse = await fetch("/api/auth/session");
+        const sessionResponse = await fetch(withBasePath("/api/auth/session"));
         const session = await sessionResponse.json();
 
         console.log("Session after login:", session);
@@ -51,7 +52,7 @@ function LoginForm() {
           // Redirect to 2FA verification
           console.log("Redirecting to 2FA verification");
           router.push(
-            `/auth/2fa/verify?callbackUrl=${encodeURIComponent(callbackUrl)}`
+            withBasePath(`/auth/2fa/verify?callbackUrl=${encodeURIComponent(callbackUrl)}`)
           );
         } else {
           // Normal login, redirect to callback URL

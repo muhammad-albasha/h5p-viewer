@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+import Link from "next/link";
+import { withBasePath } from '@/app/utils/paths';
 
 interface PasswordProtectionProps {
   onPasswordSubmit: (password: string) => void;
@@ -125,12 +127,12 @@ const PasswordProtection: React.FC<PasswordProtectionProps> = ({
                 ← Zurück
               </button>
               <div className="text-gray-300">|</div>
-              <a
-                href="/"
+              <Link
+                href={withBasePath("/")}
                 className="font-medium text-indigo-600 hover:text-indigo-500 text-sm"
               >
                 Zur Startseite
-              </a>
+              </Link>
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
+import { withBasePath } from "../utils/paths";
 
 // Force dynamic rendering to avoid build-time API calls
 export const dynamic = "force-dynamic";
@@ -51,7 +52,7 @@ function getDefaultContacts(): Contact[] {
       department: "Digitale Bildung",
       email: "sarah.weber@h5p-viewer.de",
       phone: "+49 123 456 789",
-      photo: "/assets/placeholder-image.svg",
+      photo: withBasePath("/assets/placeholder-image.svg"),
       bio: "Expertin für digitale Lernplattformen mit über 10 Jahren Erfahrung in der Bildungstechnologie.",
       office: "Raum 301, Hauptgebäude",
     },
@@ -62,7 +63,7 @@ function getDefaultContacts(): Contact[] {
       department: "IT & Entwicklung",
       email: "mark.schmidt@h5p-viewer.de",
       phone: "+49 123 456 790",
-      photo: "/assets/placeholder-image.svg",
+      photo: withBasePath("/assets/placeholder-image.svg"),
       bio: "Fullstack-Entwickler spezialisiert auf moderne Web-Technologien und interaktive Lerninhalte.",
       office: "Raum 205, IT-Zentrum",
     },
@@ -73,7 +74,7 @@ function getDefaultContacts(): Contact[] {
       department: "Didaktik & Design",
       email: "anna.mueller@h5p-viewer.de",
       phone: "+49 123 456 791",
-      photo: "/assets/placeholder-image.svg",
+      photo: withBasePath("/assets/placeholder-image.svg"),
       bio: "Spezialistin für didaktisches Design und Erstellung interaktiver Lerninhalte.",
       office: "Raum 150, Kreativbereich",
     },

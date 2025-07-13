@@ -8,6 +8,7 @@ import {
 } from "@/app/services";
 import fs from "fs";
 import path from "path";
+import { withBasePath } from "@/app/utils/paths";
 
 // DELETE endpoint to remove H5P content
 export async function DELETE(
@@ -266,7 +267,7 @@ export async function PUT(
 
         // Update the cover image path in database
         await h5pContentService.update(id, {
-          coverImagePath: `/api/h5p/cover/${actualSlug}/content/images/cover.jpg`,
+          coverImagePath: withBasePath(`/api/h5p/cover/${actualSlug}/content/images/cover.jpg`),
         });
       } catch (err) {
         console.error("Error saving cover image:", err);

@@ -7,6 +7,7 @@ import Image from "next/image";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
 import PhotoUpload from "@/app/components/PhotoUpload";
+import { withBasePath } from "../../utils/paths";
 
 interface Contact {
   id: number;
@@ -46,7 +47,7 @@ export default function ContactsAdmin() {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/login");
+      router.push(withBasePath("/login"));
     }
   }, [status, router]);
 

@@ -6,6 +6,7 @@ import { FiSun, FiMoon, FiLogOut } from "react-icons/fi";
 import { BiFont, BiUserCircle } from "react-icons/bi";
 import { TbLanguage } from "react-icons/tb";
 import { useSession, signOut } from "next-auth/react";
+import { withBasePath } from '@/app/utils/paths';
 
 const Navbar = () => {
   const { data: session, status } = useSession();
@@ -96,7 +97,7 @@ const Navbar = () => {
               <span className="hidden md:inline ml-1 text-fluid-sm">Kontrast</span>
             </button>
             <Link
-              href="/easy-language"
+              href={withBasePath("/easy-language")}
               className="btn btn-sm btn-ghost normal-case p-2 md:p-3"
             >
               <TbLanguage className="mr-0 md:mr-1" />

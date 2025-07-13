@@ -8,6 +8,9 @@ interface Tag {
   name: string;
 }
 
+// Import path utility
+import { withBasePath } from "../utils/paths";
+
 // Create a simple in-memory cache
 let cachedTags: Tag[] | null = null;
 let cacheTimestamp: number | null = null;
@@ -37,7 +40,7 @@ export default function useTags() {
         }
 
         // Fetch fresh data if cache is stale or doesn't exist
-        const response = await fetch("/api/tags");
+        const response = await fetch(withBasePath("/api/tags"));
 
         if (!response.ok) {
           throw new Error(`Error fetching tags: ${response.status}`);

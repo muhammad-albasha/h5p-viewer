@@ -8,6 +8,7 @@ import PlayH5p from '@/app/components/PlayH5p'
 import ContentFilter from '@/app/components/content/ContentFilter'
 import FavoriteButton from '@/app/components/common/FavoriteButton'
 import PasswordProtection from '@/app/components/common/PasswordProtection'
+import { withBasePath } from '../../utils/paths'
 
 interface SubjectAreaContent {
   id: number;
@@ -50,7 +51,7 @@ const Bereich = () => {
     const fetchContent = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('/api/h5p-content');
+        const response = await fetch(withBasePath('/api/h5p-content'));
         
         if (!response.ok) {
           throw new Error("Inhalte konnten nicht geladen werden");
@@ -117,7 +118,7 @@ const Bereich = () => {
     setPasswordError('');
 
     try {
-      const response = await fetch('/api/h5p/verify-password', {
+      const response = await fetch(withBasePath('/api/h5p/verify-password'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -515,7 +516,7 @@ const Bereich = () => {
                             alt={item.name}
                             className="w-full h-full object-cover"
                             onError={(e) => {
-                              (e.currentTarget as HTMLImageElement).src = '/assets/placeholder-image.svg';
+                              (e.currentTarget as HTMLImageElement).src = withBasePath('/assets/placeholder-image.svg');
                             }}
                           />                          <div className="absolute top-3 right-3">
                             <span className="px-3 py-1 bg-blue-500 text-white rounded-lg text-xs font-medium backdrop-blur-sm">

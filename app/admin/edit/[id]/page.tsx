@@ -7,6 +7,7 @@ import Link from "next/link";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
 import PlayH5p from "@/app/components/PlayH5p";
+import { withBasePath } from "@/app/utils/paths";
 
 interface ContentData {
   id: number;
@@ -57,7 +58,7 @@ export default function EditContent() {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/login");
+      router.push(withBasePath("/login"));
     }
   }, [status, router]);
   useEffect(() => {
@@ -238,7 +239,7 @@ export default function EditContent() {
         alert(
           "Inhalt erfolgreich gelöscht. Alle zugehörigen H5P-Dateien wurden vom Server entfernt."
         );
-        router.push("/admin");
+        router.push(withBasePath("/admin"));
       } catch (err: any) {
         const errorMsg =
           err.message || "Ein unbekannter Fehler ist aufgetreten";

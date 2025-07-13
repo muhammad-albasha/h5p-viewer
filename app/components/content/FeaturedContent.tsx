@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import FavoriteButton from "@/app/components/common/FavoriteButton";
+import { withBasePath } from '@/app/utils/paths';
 
 interface H5PContent {
   id: number;
@@ -40,7 +41,7 @@ export default function FeaturedContent() {
         headers["If-None-Match"] = currentETag;
       }
 
-      const response = await fetch("/api/featured", {
+      const response = await fetch(withBasePath("/api/featured"), {
         cache: "no-store",
         headers,
       });
@@ -237,7 +238,7 @@ export default function FeaturedContent() {
                 alle verfügbaren Inhalte oder kontaktiere den Administrator.
               </p>
               <Link
-                href="/h5p"
+                href={withBasePath("/h5p")}
                 className="inline-flex items-center gap-2 px-6 md:px-8 py-3 bg-primary dark:bg-black hover:from-secondary hover:to-primary text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg btn-responsive"
               >
                 <svg
@@ -278,7 +279,7 @@ export default function FeaturedContent() {
                       onError={(e) => {
                         // Fallback to placeholder
                         (e.currentTarget as HTMLImageElement).src =
-                          "/assets/placeholder-image.svg";
+                          withBasePath("/assets/placeholder-image.svg");
                       }}
                     />{" "}
                     {/* Content type overlay */}
@@ -375,7 +376,7 @@ export default function FeaturedContent() {
             {/* View All Button */}
             <div className="text-center">
               <Link
-                href="/h5p"
+                href={withBasePath("/h5p")}
                 className="inline-flex items-center gap-2 px-8 py-3 bg-white/80 backdrop-blur-sm hover:bg-white/90 text-gray-700 hover: font-semibold rounded-xl border-2 border-gray-200 hover: transition-all duration-200 hover:scale-105 hover:shadow-lg"
               >
                 <svg
