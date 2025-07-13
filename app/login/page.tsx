@@ -7,7 +7,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
-import { withBasePath } from "../utils/paths";
 
 // Separate component that uses useSearchParams
 function LoginForm() {
@@ -42,28 +41,15 @@ function LoginForm() {
       if (result?.error) {
         setError("Ungültige E-Mail-Adresse oder Passwort");
       } else if (result?.ok) {
-        // Get the updated session to check 2FA requirements
-        const sessionResponse = await fetch(withBasePath("/api/auth/session"));
-        const session = await sessionResponse.json();
-
-        console.log("Session after login:", session);
-
-        if (session?.user?.requiresTwoFactor) {
-          // Redirect to 2FA verification
-          console.log("Redirecting to 2FA verification");
-          router.push(
-            withBasePath(`/auth/2fa/verify?callbackUrl=${encodeURIComponent(callbackUrl)}`)
-          );
-        } else {
-          // Normal login, redirect to callback URL
-          console.log("Normal login, redirecting to:", callbackUrl);
-          router.push(callbackUrl);
-        }
+        // Login successful, redirect immediately
+        console.log("Login successful, redirecting to:", callbackUrl);
+        router.push(callbackUrl);
       } else {
         setError("Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.");
       }
     } catch (error) {
       // Login failed - show error message
+      console.error("Login error:", error);
       setError(
         "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
       );
@@ -82,7 +68,7 @@ function LoginForm() {
         <div className="w-full">
           {/* Logo/Brand Section */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-4 shadow-lg">
               <svg
                 className="w-8 h-8 text-white"
                 fill="currentColor"
@@ -187,7 +173,7 @@ function LoginForm() {
 
                 <button
                   type="submit"
-                  className={`w-full py-3 px-4 rounded-xl font-semibold text-white bg-primary hover: focus:outline-none focus:ring-2 focus: focus:ring-offset-2 transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
+                  className={`w-full py-3 px-4 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
                     isLoading ? "opacity-75 cursor-not-allowed" : ""
                   } shadow-lg`}
                   disabled={isLoading}
@@ -224,8 +210,8 @@ function LoginForm() {
                   <p className="text-sm text-gray-600">
                     Zurück zur{" "}
                     <Link
-                      href={withBasePath("/")}
-                      className="font-semibold text-black hover: transition-colors duration-200"
+                      href="/"
+                      className="font-semibold text-blue-600 hover:text-blue-500 transition-colors duration-200"
                     >
                       Startseite
                     </Link>
@@ -255,7 +241,7 @@ function LoginFormFallback() {
       <div className="relative z-10 container-fluid mx-auto max-w-lg py-12 px-4 min-h-screen flex items-center">
         <div className="w-full">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4 shadow-lg">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-4 shadow-lg">
               <svg
                 className="w-8 h-8 text-white"
                 fill="currentColor"
@@ -277,7 +263,7 @@ function LoginFormFallback() {
           <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
             <div className="p-8 flex justify-center">
               <svg
-                className="animate-spin h-8 w-8 text-black"
+                className="animate-spin h-8 w-8 text-blue-500"
                 fill="none"
                 viewBox="0 0 24 24"
               >

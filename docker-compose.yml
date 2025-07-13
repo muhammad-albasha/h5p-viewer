@@ -3,7 +3,7 @@ services:
   database:
     image: "mysql:latest"
     environment:
-      MYSQL_ROOT_PASSWORD: "12345"
+      MYSQL_ROOT_PASSWORD: "saSsd21-asd112A!1e14"
       MYSQL_DATABASE: h5p
 
     ports:
