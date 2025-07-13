@@ -7,7 +7,7 @@ services:
       MYSQL_DATABASE: h5p
 
     ports:
-      - "3306:3306"
+      - "3310:3306"
     restart: always
     volumes:
       - database_h5p:/var/lib/mysql
