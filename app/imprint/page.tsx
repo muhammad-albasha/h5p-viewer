@@ -69,7 +69,7 @@ export default function ImpressumPage() {
               </p>
             </div>
             <Link 
-              href={withBasePath("/")}
+              href={("/")}
               className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
