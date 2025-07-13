@@ -24,3 +24,14 @@ export function withoutBasePath(path: string): string {
   }
   return path;
 }
+
+export function getLogoutCallbackUrl(): string {
+  // In production, use the production URL
+  if (typeof window !== 'undefined') {
+    const { protocol, host } = window.location;
+    return `${protocol}//${host}${BASE_PATH}`;
+  }
+  
+  // Fallback for server-side rendering or when window is not available
+  return BASE_PATH || '/';
+}
