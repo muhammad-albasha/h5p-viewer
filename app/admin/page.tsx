@@ -188,25 +188,24 @@ export default function AdminDashboard() {
 
             {/* Responsive Admin Menu */}
             <div className="responsive-grid-admin-menu">
-              {/* Primary Action - Upload */}
               <Link
-                href="/admin/upload"
-                className="admin-menu-card admin-menu-card-primary"
+                href="/admin/contacts"
+                className="admin-menu-card"
               >
                 <svg
-                  className="w-5 h-5 sm:w-6 sm:h-6"
+                  className="w-4 h-4 sm:w-5 sm:h-5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
                   <path
                     fillRule="evenodd"
-                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                    d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-sm sm:text-base font-semibold">Inhalt hochladen</span>
+                <span className="text-sm sm:text-base font-medium">Kontakte</span>
               </Link>
-
+              
               {/* Security & Settings */}
               <Link
                 href="/admin/2fa"
@@ -265,22 +264,23 @@ export default function AdminDashboard() {
                 <span className="text-sm sm:text-base font-medium">Rechtliche Seiten</span>
               </Link>
 
+                            {/* Primary Action - Upload */}
               <Link
-                href="/admin/contacts"
-                className="admin-menu-card"
+                href="/admin/upload"
+                className="admin-menu-card admin-menu-card-primary"
               >
                 <svg
-                  className="w-4 h-4 sm:w-5 sm:h-5"
+                  className="w-5 h-5 sm:w-6 sm:h-6"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
                   <path
                     fillRule="evenodd"
-                    d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
+                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-sm sm:text-base font-medium">Kontakte</span>
+                <span className="text-sm sm:text-base font-semibold">Inhalt hochladen</span>
               </Link>
 
               <Link
