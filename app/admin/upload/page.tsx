@@ -136,7 +136,7 @@ export default function UploadH5P() {
       
       // Redirect to admin dashboard after successful upload
       setTimeout(() => {
-        router.push(withBasePath("/admin"));
+        router.push("/admin");
         router.refresh();
       }, 1000);
       

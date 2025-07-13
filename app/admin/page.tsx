@@ -91,7 +91,7 @@ export default function AdminDashboard() {
         )
       );
 
-      const response = await fetch(`/api/admin/featured/${contentId}`, {
+      const response = await fetch(withBasePath(`/api/admin/featured/${contentId}`), {
         method: "POST",
       });
 
@@ -652,7 +652,7 @@ export default function AdminDashboard() {
                                     );
 
                                     const response = await fetch(
-                                      `/api/admin/content/${content.id}`,
+                                      withBasePath(`/api/admin/content/${content.id}`),
                                       {
                                         method: "DELETE",
                                       }
