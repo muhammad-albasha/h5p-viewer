@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./PlayH5p.module.css";
+import { withBasePath } from "../utils/paths";
 
 declare global {
   interface Window {
@@ -52,9 +53,9 @@ function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
         // Loading H5P from specified path
 
         const h5p = new H5PConstructor(el, {
-          h5pJsonPath: correctPath, // Path to the directory containing h5p.json
-          frameJs: "/assets/frame.bundle.js",
-          frameCss: "/assets/styles/h5p.css",
+          h5pJsonPath: withBasePath(correctPath), // Path to the directory containing h5p.json
+          frameJs: withBasePath("/assets/frame.bundle.js"),
+          frameCss: withBasePath("/assets/styles/h5p.css"),
         });
 
         h5p
