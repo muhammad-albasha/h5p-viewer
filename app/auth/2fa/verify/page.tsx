@@ -42,7 +42,7 @@ function TwoFactorForm() {
       console.log("Completing 2FA verification with token:", token);
 
       // Complete the 2FA verification and update session
-      const response = await fetch("/api/auth/2fa/complete", {
+      const response = await fetch(withBasePath("/api/auth/2fa/complete"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

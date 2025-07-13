@@ -29,7 +29,7 @@ export default function TwoFactorManagementPage() {
 
   const checkTwoFactorStatus = async () => {
     try {
-      const response = await fetch("/api/auth/2fa");
+      const response = await fetch(withBasePath("/api/auth/2fa"));
       if (response.ok) {
         const data = await response.json();
         setIs2FAEnabled(data.enabled);
@@ -55,7 +55,7 @@ export default function TwoFactorManagementPage() {
     setSuccess("");
 
     try {
-      const response = await fetch("/api/auth/2fa", {
+      const response = await fetch(withBasePath("/api/auth/2fa"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

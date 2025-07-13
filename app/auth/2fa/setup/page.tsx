@@ -34,7 +34,7 @@ export default function TwoFactorSetupPage() {
     setError("");
 
     try {
-      const response = await fetch("/api/auth/2fa", {
+      const response = await fetch(withBasePath("/api/auth/2fa"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +66,7 @@ export default function TwoFactorSetupPage() {
     setError("");
 
     try {
-      const response = await fetch("/api/auth/2fa", {
+      const response = await fetch(withBasePath("/api/auth/2fa"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -330,7 +330,7 @@ export default function TwoFactorSetupPage() {
                 </div>
 
                 <button
-                  onClick={() => router.push(withBasePath("/admin"))}
+                  onClick={() => router.push("/admin")}
                   className="btn btn-primary"
                 >
                   Zum Admin-Bereich
