@@ -125,7 +125,7 @@ export default function SubjectAreasPage() {
       setIsSubmitting(true);
       setFormError(null);
       
-      const response = await fetch(`/api/admin/subject-areas/${editingAreaId}`, {
+      const response = await fetch(withBasePath(`/api/admin/subject-areas/${editingAreaId}`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -160,7 +160,7 @@ export default function SubjectAreasPage() {
   const handleDelete = async (id: number) => {
     if (confirm("Möchten Sie diesen Bereich wirklich löschen?")) {
       try {
-        const response = await fetch(`/api/admin/subject-areas/${id}`, {
+        const response = await fetch(withBasePath(`/api/admin/subject-areas/${id}`), {
           method: "DELETE",
         });
         

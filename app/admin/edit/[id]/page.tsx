@@ -67,7 +67,7 @@ export default function EditContent() {
         setIsLoading(true);
         setSaveError(null);
         setError(null);
-        const response = await fetch(`/api/admin/content/${contentId}`, {
+        const response = await fetch(withBasePath(`/api/admin/content/${contentId}`), {
           // Add cache: 'no-store' to prevent caching issues
           cache: "no-store",
           headers: {
@@ -142,7 +142,7 @@ export default function EditContent() {
       if (coverImage) {
         formData.append("coverImage", coverImage);
       }
-      const response = await fetch(`/api/admin/content/${contentId}`, {
+      const response = await fetch(withBasePath(`/api/admin/content/${contentId}`), {
         method: "PUT",
         body: formData,
       });
@@ -218,7 +218,7 @@ export default function EditContent() {
       try {
         setIsSaving(true);
 
-        const response = await fetch(`/api/admin/content/${contentId}`, {
+        const response = await fetch(withBasePath(`/api/admin/content/${contentId}`), {
           method: "DELETE",
         });
 

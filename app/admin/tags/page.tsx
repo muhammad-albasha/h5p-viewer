@@ -125,7 +125,7 @@ export default function TagsPage() {
       setIsSubmitting(true);
       setFormError(null);
       
-      const response = await fetch(`/api/admin/tags/${editingTagId}`, {
+      const response = await fetch(withBasePath(`/api/admin/tags/${editingTagId}`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -156,7 +156,7 @@ export default function TagsPage() {
   const handleDelete = async (id: number) => {
     if (confirm("Möchten Sie diesen Tag wirklich löschen?")) {
       try {
-        const response = await fetch(`/api/admin/tags/${id}`, {
+        const response = await fetch(withBasePath(`/api/admin/tags/${id}`), {
           method: "DELETE",
         });
         
