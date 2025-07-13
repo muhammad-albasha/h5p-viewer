@@ -26,9 +26,17 @@ export function withoutBasePath(path: string): string {
 }
 
 export function getLogoutCallbackUrl(): string {
-  // In production, use the production URL
+  // Always redirect to the specific production URL after logout
   if (typeof window !== 'undefined') {
-    const { protocol, host } = window.location;
+    const { host } = window.location;
+    
+    // If we're on the production domain, use the production URL
+    if (host === 'mathematik-didaktik.uni-wuppertal.de') {
+      return 'https://mathematik-didaktik.uni-wuppertal.de/h5p-viewer/';
+    }
+    
+    // For development or other environments, use the current domain
+    const { protocol } = window.location;
     return `${protocol}//${host}${BASE_PATH}`;
   }
   
