@@ -211,7 +211,7 @@ function LoginForm() {
                     Zurück zur{" "}
                     <Link
                       href="/"
-                      className="font-semibold text-blue-600 hover:text-blue-500 transition-colors duration-200"
+                      className="font-semibold text-black hover: transition-colors duration-200"
                     >
                       Startseite
                     </Link>
@@ -222,11 +222,6 @@ function LoginForm() {
           </div>
 
           {/* Footer */}
-          <div className="text-center mt-8">
-            <p className="text-sm text-gray-500">
-              © 2024 H5P Viewer. Alle Rechte vorbehalten.
-            </p>
-          </div>
         </div>
       </div>
     </main>
