@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { withBasePath } from "../../utils/paths";
 
 export default function Footer() {
@@ -20,40 +21,40 @@ export default function Footer() {
             <span className="footer-title text-fluid-lg font-semibold mb-2">
               Links
             </span>
-            <a href={withBasePath("/about")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
+            <Link href={withBasePath("/about")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
               Über uns
-            </a>
-            <a href={withBasePath("/contact")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
+            </Link>
+            <Link href={withBasePath("/contact")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
               Kontakt
-            </a>
-            <a href={withBasePath("/easy-language")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
+            </Link>
+            <Link href={withBasePath("/easy-language")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
               Leichte Sprache
-            </a>
+            </Link>
           </div>
           <div className="flex flex-col space-y-3">
             <span className="footer-title text-fluid-lg font-semibold mb-2">
               Ressourcen
             </span>
-            <a href={withBasePath("/h5p")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
+            <Link href={withBasePath("/h5p")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
               Alle Inhalte
-            </a>
-            <a href={withBasePath("/bereiche")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
+            </Link>
+            <Link href={withBasePath("/bereiche")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
               Bereiche
-            </a>
+            </Link>
           </div>
           <div className="flex flex-col space-y-3">
             <span className="footer-title text-fluid-lg font-semibold mb-2">
               Rechtliches
             </span>
-            <a href={withBasePath("/imprint")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
+            <Link href={withBasePath("/imprint")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
               Impressum
-            </a>
-            <a href={withBasePath("/privacy")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
+            </Link>
+            <Link href={withBasePath("/privacy")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
               Datenschutz
-            </a>
-            <a href={withBasePath("/copyright")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
+            </Link>
+            <Link href={withBasePath("/copyright")} className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
               Urheberrecht
-            </a>
+            </Link>
           </div>
         </div>
         {/* Footer Bottom */}
