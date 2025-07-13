@@ -146,7 +146,7 @@ export default function AdminDashboard() {
       <Header />
 
       {/* Modern Dashboard Header */}
-      <div className="bg-gradient-to-br from-primary via-secondary to-primary text-white relative overflow-hidden">
+      <div className="bg-primary text-white relative overflow-hidden dark:bg-black">
         {/* Background decorations */}
         <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 translate-y-12 -translate-x-12 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>

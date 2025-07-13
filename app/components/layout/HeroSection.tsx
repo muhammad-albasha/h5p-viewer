@@ -129,7 +129,7 @@ export default function HeroSection({
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-4">
               <a
                 href="/h5p"
-                className="btn btn-primary btn-lg px-6 md:px-8 py-3 text-base md:text-lg font-semibold btn-responsive"
+                className="btn bg-primary dark:bg-black text-white btn-lg px-6 md:px-8 py-3 text-base md:text-lg font-semibold btn-responsive"
               >
                 Jetzt entdecken
               </a>

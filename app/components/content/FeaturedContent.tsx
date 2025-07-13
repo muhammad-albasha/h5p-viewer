@@ -376,7 +376,7 @@ export default function FeaturedContent() {
             <div className="text-center">
               <Link
                 href="/h5p"
-                className="inline-flex items-center gap-2 px-8 py-3 bg-white/80 backdrop-blur-sm hover:bg-white/90 text-gray-700 hover:text-blue-600 font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-300 transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-white/80 backdrop-blur-sm hover:bg-white/90 text-gray-700 hover: font-semibold rounded-xl border-2 border-gray-200 hover: transition-all duration-200 hover:scale-105 hover:shadow-lg"
               >
                 <svg
                   className="w-5 h-5"

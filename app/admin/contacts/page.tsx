@@ -178,7 +178,7 @@ export default function ContactsAdmin() {
       <Header />
 
       {/* Header */}
-      <div className="bg-gradient-to-br from-primary via-secondary to-primary text-white relative overflow-hidden">
+      <div className="bg-primary text-white relative overflow-hidden dark:bg-black">
         <div className="relative z-10 container-fluid mx-auto  px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
