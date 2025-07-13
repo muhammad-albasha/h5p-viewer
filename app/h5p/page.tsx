@@ -45,6 +45,11 @@ function H5PContentPage() {
   const [subjectAreas, setSubjectAreas] = useState<SubjectArea[]>([]);
   const [selectedSubjectArea, setSelectedSubjectArea] = useState('');
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8);
+  const [paginatedContent, setPaginatedContent] = useState<H5PContent[]>([]);
+
   // Check if favorites parameter is in URL
   useEffect(() => {
     const favoritesParam = searchParams.get('favorites');
@@ -127,6 +132,23 @@ function H5PContentPage() {
     
     setFilteredContent(result);
   }, [content, searchQuery, selectedTags, selectedSubjectArea, showOnlyFavorites, favorites]);
+
+  // Pagination logic - update paginated content when filtered content or page changes
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    setPaginatedContent(filteredContent.slice(startIndex, endIndex));
+  }, [filteredContent, currentPage, itemsPerPage]);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedTags, selectedSubjectArea, showOnlyFavorites]);
+
+  // Calculate pagination info
+  const totalPages = Math.ceil(filteredContent.length / itemsPerPage);
+  const hasNextPage = currentPage < totalPages;
+  const hasPrevPage = currentPage > 1;
   
   const toggleTag = (tag: string) => {
     setSelectedTags(prev => 
@@ -134,6 +156,25 @@ function H5PContentPage() {
         ? prev.filter(t => t !== tag) 
         : [...prev, tag]
     );
+  };
+
+  // Pagination functions
+  const goToNextPage = () => {
+    if (hasNextPage) {
+      setCurrentPage(prev => prev + 1);
+    }
+  };
+
+  const goToPrevPage = () => {
+    if (hasPrevPage) {
+      setCurrentPage(prev => prev - 1);
+    }
+  };
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
     return (
     <>
@@ -372,10 +413,96 @@ function H5PContentPage() {
               </div>
             </div>
           ) : (
-            <ContentCardGrid 
-              contents={filteredContent}
-              loading={isLoading}
-            />
+            <div className="space-y-6">
+              {/* Results info */}
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="text-sm text-gray-600">
+                    Zeigt <span className="font-medium">{((currentPage - 1) * itemsPerPage) + 1}</span> bis{' '}
+                    <span className="font-medium">{Math.min(currentPage * itemsPerPage, filteredContent.length)}</span>{' '}
+                    von <span className="font-medium">{filteredContent.length}</span> Ergebnissen
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    Seite {currentPage} von {totalPages}
+                  </div>
+                </div>
+              </div>
+
+              {/* Content Grid */}
+              <ContentCardGrid 
+                contents={paginatedContent}
+                loading={false}
+              />
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    {/* Previous button */}
+                    <button
+                      onClick={goToPrevPage}
+                      disabled={!hasPrevPage}
+                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${
+                        hasPrevPage 
+                          ? 'bg-primary hover:bg-primary/80 text-white hover:scale-105 shadow-md' 
+                          : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      }`}
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                      </svg>
+                      Vorherige
+                    </button>
+
+                    {/* Page numbers */}
+                    <div className="flex items-center gap-2">
+                      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                        let pageNum;
+                        if (totalPages <= 5) {
+                          pageNum = i + 1;
+                        } else if (currentPage <= 3) {
+                          pageNum = i + 1;
+                        } else if (currentPage >= totalPages - 2) {
+                          pageNum = totalPages - 4 + i;
+                        } else {
+                          pageNum = currentPage - 2 + i;
+                        }
+                        
+                        return (
+                          <button
+                            key={pageNum}
+                            onClick={() => goToPage(pageNum)}
+                            className={`w-10 h-10 rounded-xl transition-all duration-200 ${
+                              currentPage === pageNum
+                                ? 'bg-primary text-white shadow-md'
+                                : 'bg-gray-100 hover:bg-gray-200 text-gray-700 hover:scale-105'
+                            }`}
+                          >
+                            {pageNum}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Next button */}
+                    <button
+                      onClick={goToNextPage}
+                      disabled={!hasNextPage}
+                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${
+                        hasNextPage 
+                          ? 'bg-primary hover:bg-primary/80 text-white hover:scale-105 shadow-md' 
+                          : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      }`}
+                    >
+                      Nächste
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           )}        </div>
       </div>
     </>

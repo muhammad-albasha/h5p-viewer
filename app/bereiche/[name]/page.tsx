@@ -48,6 +48,11 @@ const Bereich = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8);
+  const [paginatedContent, setPaginatedContent] = useState<SubjectAreaContent[]>([]);
+
   useEffect(() => {
     const fetchContent = async () => {
       try {
@@ -188,6 +193,42 @@ const Bereich = () => {
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
     );
+  };
+
+  // Pagination logic - update paginated content when filtered content or page changes
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    setPaginatedContent(filteredContent.slice(startIndex, endIndex));
+  }, [filteredContent, currentPage, itemsPerPage]);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedTags]);
+
+  // Calculate pagination info
+  const totalPages = Math.ceil(filteredContent.length / itemsPerPage);
+  const hasNextPage = currentPage < totalPages;
+  const hasPrevPage = currentPage > 1;
+
+  // Pagination functions
+  const goToNextPage = () => {
+    if (hasNextPage) {
+      setCurrentPage(prev => prev + 1);
+    }
+  };
+
+  const goToPrevPage = () => {
+    if (hasPrevPage) {
+      setCurrentPage(prev => prev - 1);
+    }
+  };
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
   return (
     <>
@@ -698,130 +739,215 @@ const Bereich = () => {
                     </div>
                   </div>
                 ) : (
-                  /* Content Grid */
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {filteredContent.map((item) => {
-                      // ...existing code...
-                      let imageUrl = item.coverImagePath;
+                  <div className="space-y-6">
+                    {/* Results info */}
+                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div className="text-sm text-gray-600">
+                          Zeigt <span className="font-medium">{((currentPage - 1) * itemsPerPage) + 1}</span> bis{' '}
+                          <span className="font-medium">{Math.min(currentPage * itemsPerPage, filteredContent.length)}</span>{' '}
+                          von <span className="font-medium">{filteredContent.length}</span> Ergebnissen
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          Seite {currentPage} von {totalPages}
+                        </div>
+                      </div>
+                    </div>
 
-                      if (!imageUrl) {
-                        if (item.slug) {
-                          imageUrl = `/api/h5p/cover/${item.slug}/content/images/cover.jpg`;
-                        } else {
-                          let pathSlug = item.path;
-                          if (pathSlug.startsWith("/h5p/")) {
-                            pathSlug = pathSlug.replace("/h5p/", "");
+                    {/* Content Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                      {paginatedContent.map((item) => {
+                        // ...existing code...
+                        let imageUrl = item.coverImagePath;
+
+                        if (!imageUrl) {
+                          if (item.slug) {
+                            imageUrl = `/api/h5p/cover/${item.slug}/content/images/cover.jpg`;
+                          } else {
+                            let pathSlug = item.path;
+                            if (pathSlug.startsWith("/h5p/")) {
+                              pathSlug = pathSlug.replace("/h5p/", "");
+                            }
+                            pathSlug = pathSlug
+                              .replace(/^\/?h5p\/?/, "")
+                              .replace(/\/+$/, "");
+                            imageUrl = `/api/h5p/cover/${pathSlug}/content/images/cover.jpg`;
                           }
-                          pathSlug = pathSlug
-                            .replace(/^\/?h5p\/?/, "")
-                            .replace(/\/+$/, "");
-                          imageUrl = `/api/h5p/cover/${pathSlug}/content/images/cover.jpg`;
                         }
-                      }
 
-                      return (
-                        <div
-                          key={item.id}
-                          className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl overflow-hidden border border-white/20 transition-all duration-300 hover:scale-105 group cursor-pointer"
-                          onClick={() => handleContentSelect(item)}
-                        >
-                          {/* Card Image */}
-                          <div className="relative h-48 bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden">
-                            <img
-                              src={imageUrl}
-                              alt={item.name}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                (e.currentTarget as HTMLImageElement).src =
-                                  withBasePath("/assets/placeholder-image.svg");
-                              }}
-                            />{" "}
-                            <div className="absolute top-3 right-3">
-                              <span className="px-3 py-1 bg-blue-500 text-white rounded-lg text-xs font-medium backdrop-blur-sm">
-                                {item.type}
-                              </span>
-                            </div>{" "}
-                            <div className="absolute top-3 left-3 flex items-center gap-2">
-                              <FavoriteButton content={item} variant="card" />
-                              {item.isPasswordProtected && (
-                                <div className="bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30">
-                                  <svg
-                                    className="w-4 h-4"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
+                        return (
+                          <div
+                            key={item.id}
+                            className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl overflow-hidden border border-white/20 transition-all duration-300 hover:scale-105 group cursor-pointer"
+                            onClick={() => handleContentSelect(item)}
+                          >
+                            {/* Card Image */}
+                            <div className="relative h-48 bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden">
+                              <img
+                                src={imageUrl}
+                                alt={item.name}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  (e.currentTarget as HTMLImageElement).src =
+                                    withBasePath("/assets/placeholder-image.svg");
+                                }}
+                              />{" "}
+                              <div className="absolute top-3 right-3">
+                                <span className="px-3 py-1 bg-blue-500 text-white rounded-lg text-xs font-medium backdrop-blur-sm">
+                                  {item.type}
+                                </span>
+                              </div>{" "}
+                              <div className="absolute top-3 left-3 flex items-center gap-2">
+                                <FavoriteButton content={item} variant="card" />
+                                {item.isPasswordProtected && (
+                                  <div className="bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30">
+                                    <svg
+                                      className="w-4 h-4"
+                                      fill="currentColor"
+                                      viewBox="0 0 20 20"
+                                    >
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                                        clipRule="evenodd"
+                                      />
+                                    </svg>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="p-6 space-y-4">
+                              {/* Subject Area Badge */}
+                              {item.subject_area && (
+                                <div className="flex justify-start">
+                                  <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-lg text-xs font-medium">
+                                    {item.subject_area.name}
+                                  </span>
                                 </div>
                               )}
+                              {/* Title */}
+                              <h3 className="text-xl font-bold text-gray-900 group-hover: transition-colors leading-tight">
+                                {item.name}
+                              </h3>
+                              {/* Description */}
+                              <p className="text-gray-600 text-sm leading-relaxed">
+                                Interaktiver {item.type}-Inhalt für optimales
+                                Lernen
+                              </p>{" "}
+                              {/* Tags */}
+                              <div className="flex flex-wrap gap-2">
+                                {item.tags
+                                  ?.slice()
+                                  .sort((a, b) => a.localeCompare(b))
+                                  .slice(0, 3)
+                                  .map((tag, idx) => (
+                                    <span
+                                      key={idx}
+                                      className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors"
+                                    >
+                                      {tag}
+                                    </span>
+                                  ))}
+                                {item.tags && item.tags.length > 3 && (
+                                  <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">
+                                    +{item.tags.length - 3} weitere
+                                  </span>
+                                )}
+                              </div>
+                              {/* Action Button */}
+                              <div className="pt-4 border-t border-gray-100">
+                                <button className="w-full bg-primary dark:bg-black hover: text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2">
+                                  <svg
+                                    className="w-5 h-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="2"
+                                      d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                    />
+                                  </svg>
+                                  Jetzt starten
+                                </button>
+                              </div>
                             </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Pagination */}
+                    {totalPages > 1 && (
+                      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                          {/* Previous button */}
+                          <button
+                            onClick={goToPrevPage}
+                            disabled={!hasPrevPage}
+                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${
+                              hasPrevPage 
+                                ? 'bg-primary hover:bg-primary/80 text-white hover:scale-105 shadow-md' 
+                                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                            }`}
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                            Vorherige
+                          </button>
+
+                          {/* Page numbers */}
+                          <div className="flex items-center gap-2">
+                            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                              let pageNum;
+                              if (totalPages <= 5) {
+                                pageNum = i + 1;
+                              } else if (currentPage <= 3) {
+                                pageNum = i + 1;
+                              } else if (currentPage >= totalPages - 2) {
+                                pageNum = totalPages - 4 + i;
+                              } else {
+                                pageNum = currentPage - 2 + i;
+                              }
+                              
+                              return (
+                                <button
+                                  key={pageNum}
+                                  onClick={() => goToPage(pageNum)}
+                                  className={`w-10 h-10 rounded-xl transition-all duration-200 ${
+                                    currentPage === pageNum
+                                      ? 'bg-primary text-white shadow-md'
+                                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700 hover:scale-105'
+                                  }`}
+                                >
+                                  {pageNum}
+                                </button>
+                              );
+                            })}
                           </div>
 
-                          <div className="p-6 space-y-4">
-                            {/* Subject Area Badge */}
-                            {item.subject_area && (
-                              <div className="flex justify-start">
-                                <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-lg text-xs font-medium">
-                                  {item.subject_area.name}
-                                </span>
-                              </div>
-                            )}
-                            {/* Title */}
-                            <h3 className="text-xl font-bold text-gray-900 group-hover: transition-colors leading-tight">
-                              {item.name}
-                            </h3>
-                            {/* Description */}
-                            <p className="text-gray-600 text-sm leading-relaxed">
-                              Interaktiver {item.type}-Inhalt für optimales
-                              Lernen
-                            </p>{" "}
-                            {/* Tags */}
-                            <div className="flex flex-wrap gap-2">
-                              {item.tags
-                                ?.slice()
-                                .sort((a, b) => a.localeCompare(b))
-                                .slice(0, 3)
-                                .map((tag, idx) => (
-                                  <span
-                                    key={idx}
-                                    className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors"
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
-                              {item.tags && item.tags.length > 3 && (
-                                <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">
-                                  +{item.tags.length - 3} weitere
-                                </span>
-                              )}
-                            </div>
-                            {/* Action Button */}
-                            <div className="pt-4 border-t border-gray-100">
-                              <button className="w-full bg-primary dark:bg-black hover: text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2">
-                                <svg
-                                  className="w-5 h-5"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                  />
-                                </svg>
-                                Jetzt starten
-                              </button>
-                            </div>
-                          </div>
+                          {/* Next button */}
+                          <button
+                            onClick={goToNextPage}
+                            disabled={!hasNextPage}
+                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${
+                              hasNextPage 
+                                ? 'bg-primary hover:bg-primary/80 text-white hover:scale-105 shadow-md' 
+                                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                            }`}
+                          >
+                            Nächste
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                          </button>
                         </div>
-                      );
-                    })}
+                      </div>
+                    )}
                   </div>
                 )}
               </>
