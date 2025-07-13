@@ -27,7 +27,7 @@ const BereichOverview = () => {
         setIsLoading(true);
 
         // Fetch subject areas
-        const response = await fetch(withBasePath("/api/admin/subject-areas"));
+        const response = await fetch(withBasePath("/api/subject-areas"));
         if (!response.ok) {
           throw new Error("Bereiche konnten nicht geladen werden");
         }

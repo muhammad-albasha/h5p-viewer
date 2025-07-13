@@ -73,7 +73,7 @@ function H5PContentPage() {
         setAvailableTags(Array.from(allTags));
         
         // Fetch subject areas
-        const subjectAreaResponse = await fetch(withBasePath('/api/admin/subject-areas'));
+        const subjectAreaResponse = await fetch(withBasePath('/api/subject-areas'));
         if (!subjectAreaResponse.ok) {
           throw new Error('Failed to fetch subject areas');
         }

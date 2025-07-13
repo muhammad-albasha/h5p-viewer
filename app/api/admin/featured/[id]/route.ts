@@ -9,8 +9,12 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    console.log('Featured API POST called with params:', params);
+    
     // Check authentication
     const session = await getServerSession(authOptions);
+    console.log('Session status:', session ? 'authenticated' : 'not authenticated');
+    
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
