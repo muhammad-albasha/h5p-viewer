@@ -26,20 +26,6 @@ export function withoutBasePath(path: string): string {
 }
 
 export function getLogoutCallbackUrl(): string {
-  // Always redirect to the specific production URL after logout
-  if (typeof window !== 'undefined') {
-    const { host } = window.location;
-    
-    // If we're on the production domain, use the production URL
-    if (host === 'mathematik-didaktik.uni-wuppertal.de') {
-      return 'https://mathematik-didaktik.uni-wuppertal.de/h5p-viewer/';
-    }
-    
-    // For development or other environments, use the current domain
-    const { protocol } = window.location;
-    return `${protocol}//${host}${BASE_PATH}`;
-  }
-  
-  // Fallback for server-side rendering or when window is not available
-  return BASE_PATH || '/';
+  // Always redirect to the production URL after logout
+  return 'https://mathematik-didaktik.uni-wuppertal.de/h5p-viewer/';
 }
