@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AppDataSource } from "@/app/lib/datasource";
 import { Contact } from "@/app/entities/Contact";
+import { withBasePath } from "@/app/utils/paths";
 
 export async function GET() {
   try {
@@ -16,7 +17,17 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(contacts);
+    // Normalize photo URLs to include basePath if needed
+    const normalizedContacts = contacts.map(contact => ({
+      ...contact,
+      photo: contact.photo.startsWith('/h5p-viewer/') 
+        ? contact.photo 
+        : contact.photo.startsWith('/') 
+          ? withBasePath(contact.photo)
+          : contact.photo
+    }));
+
+    return NextResponse.json(normalizedContacts);
   } catch (error) {
     console.error("Error fetching contacts:", error);
     return NextResponse.json(
@@ -60,7 +71,7 @@ export async function POST(request: NextRequest) {
       department,
       email,
       phone,
-      photo: photo || "/assets/placeholder-image.svg",
+      photo: photo || withBasePath("/assets/placeholder-image.svg"),
       bio,
       office,
       linkedin,

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AppDataSource } from "@/app/lib/datasource";
 import { Contact } from "@/app/entities/Contact";
+import { withBasePath } from "@/app/utils/paths";
 import { unlink } from "fs/promises";
 import path from "path";
 
@@ -23,7 +24,17 @@ export async function GET(
       return NextResponse.json({ error: "Contact not found" }, { status: 404 });
     }
 
-    return NextResponse.json(contact);
+    // Normalize photo URL to include basePath if needed
+    const normalizedContact = {
+      ...contact,
+      photo: contact.photo.startsWith('/h5p-viewer/') 
+        ? contact.photo 
+        : contact.photo.startsWith('/') 
+          ? withBasePath(contact.photo)
+          : contact.photo
+    };
+
+    return NextResponse.json(normalizedContact);
   } catch (error) {
     console.error("Error fetching contact:", error);
     return NextResponse.json(
@@ -78,7 +89,7 @@ export async function PUT(
     contact.department = department;
     contact.email = email;
     contact.phone = phone;
-    contact.photo = photo || "/assets/placeholder-image.svg";
+    contact.photo = photo || withBasePath("/assets/placeholder-image.svg");
     contact.bio = bio;
     contact.office = office;
     contact.linkedin = linkedin;
@@ -116,24 +127,29 @@ export async function DELETE(
     }
 
     // Lösche das zugehörige Foto falls es ein Upload-Foto ist
-    if (
-      contact.photo &&
-      contact.photo !== "/assets/placeholder-image.svg" &&
-      contact.photo.startsWith("/uploads/contacts/")
-    ) {
-      try {
-        const fileName = path.basename(contact.photo);
-        const filePath = path.join(
-          process.cwd(),
-          "public",
-          "uploads",
-          "contacts",
-          fileName
-        );
-        await unlink(filePath);
-      } catch (photoError) {
-        // Foto-Löschung fehlgeschlagen, aber Kontakt trotzdem löschen
-        console.warn("Failed to delete contact photo:", photoError);
+    if (contact.photo) {
+      const normalizedPhotoUrl = contact.photo.startsWith('/h5p-viewer/') 
+        ? contact.photo.replace('/h5p-viewer', '') 
+        : contact.photo;
+      
+      if (
+        normalizedPhotoUrl !== "/assets/placeholder-image.svg" &&
+        normalizedPhotoUrl.startsWith("/uploads/contacts/")
+      ) {
+        try {
+          const fileName = path.basename(contact.photo);
+          const filePath = path.join(
+            process.cwd(),
+            "public",
+            "uploads",
+            "contacts",
+            fileName
+          );
+          await unlink(filePath);
+        } catch (photoError) {
+          // Foto-Löschung fehlgeschlagen, aber Kontakt trotzdem löschen
+          console.warn("Failed to delete contact photo:", photoError);
+        }
       }
     }
 

@@ -14,10 +14,15 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
+    // Normalize photoUrl by removing basePath if present
+    const normalizedPhotoUrl = photoUrl.startsWith('/h5p-viewer/') 
+      ? photoUrl.replace('/h5p-viewer', '') 
+      : photoUrl;
+
     // Nur eigene Upload-Fotos löschen, nicht Placeholder
     if (
-      photoUrl === "/assets/placeholder-image.svg" ||
-      !photoUrl.startsWith("/uploads/contacts/")
+      normalizedPhotoUrl === "/assets/placeholder-image.svg" ||
+      !normalizedPhotoUrl.startsWith("/uploads/contacts/")
     ) {
       return NextResponse.json(
         { error: "Foto kann nicht gelöscht werden" },
@@ -26,7 +31,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Dateipfad erstellen
-    const fileName = path.basename(photoUrl);
+    const fileName = path.basename(normalizedPhotoUrl);
     const filePath = path.join(
       process.cwd(),
       "public",

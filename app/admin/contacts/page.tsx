@@ -37,7 +37,7 @@ export default function ContactsAdmin() {
     department: "",
     email: "",
     phone: "",
-    photo: "/assets/placeholder-image.svg",
+    photo: withBasePath("/assets/placeholder-image.svg"),
     bio: "",
     office: "",
     linkedin: "",
@@ -80,7 +80,7 @@ export default function ContactsAdmin() {
       department: "",
       email: "",
       phone: "",
-      photo: "/assets/placeholder-image.svg",
+      photo: withBasePath("/assets/placeholder-image.svg"),
       bio: "",
       office: "",
       linkedin: "",
@@ -96,7 +96,7 @@ export default function ContactsAdmin() {
       department: contact.department,
       email: contact.email,
       phone: contact.phone || "",
-      photo: contact.photo || "/assets/placeholder-image.svg",
+      photo: contact.photo || withBasePath("/assets/placeholder-image.svg"),
       bio: contact.bio || "",
       office: contact.office || "",
       linkedin: contact.linkedin || "",
@@ -111,8 +111,8 @@ export default function ContactsAdmin() {
 
     try {
       const url = editingContact
-        ? `/api/contacts/${editingContact.id}`
-        : "/api/contacts";
+        ? withBasePath(`/api/contacts/${editingContact.id}`)
+        : withBasePath("/api/contacts");
 
       const method = editingContact ? "PUT" : "POST";
 
@@ -151,7 +151,7 @@ export default function ContactsAdmin() {
     }
 
     try {
-      const response = await fetch(`/api/contacts/${id}`, {
+      const response = await fetch(withBasePath(`/api/contacts/${id}`), {
         method: "DELETE",
       });
 

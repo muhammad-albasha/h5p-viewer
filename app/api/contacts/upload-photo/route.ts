@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withBasePath } from "@/app/utils/paths";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
@@ -51,7 +52,7 @@ export async function POST(request: NextRequest) {
     await writeFile(filePath, buffer);
 
     // Rückgabe der URL für die Datenbank
-    const photoUrl = `/uploads/contacts/${fileName}`;
+    const photoUrl = withBasePath(`/uploads/contacts/${fileName}`);
 
     return NextResponse.json({
       success: true,
