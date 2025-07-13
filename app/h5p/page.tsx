@@ -234,8 +234,8 @@ function H5PContentPage() {
       </div>
       
       {/* Main Content */}
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-4 md:py-6 lg:py-8">
-        <div className="container-responsive space-y-6 md:space-y-8">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-5">
+        <div className="container-fluid mx-auto  px-4 space-y-8">
           
           {/* Content Filter */}
           <ContentFilter 
