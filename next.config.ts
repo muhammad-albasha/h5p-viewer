@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "/h5p-viewer";
+// Always use basePath for consistent routing
+const basePath = "/h5p-viewer";
+
 const nextConfig: NextConfig = {
   /* config options here */
   eslint: {

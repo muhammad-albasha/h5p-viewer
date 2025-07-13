@@ -146,7 +146,7 @@ const BereichOverview = () => {
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
-                href={withBasePath("/h5p")}
+                href="/h5p"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20"
               >
                 <svg
@@ -165,7 +165,7 @@ const BereichOverview = () => {
                 Alle Inhalte
               </Link>
               <Link
-                href={withBasePath("/")}
+                href="/"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20"
               >
                 <svg
@@ -258,7 +258,7 @@ const BereichOverview = () => {
                   Es wurden noch keine Bereiche angelegt.
                 </p>
                 <Link
-                  href={withBasePath("/admin/subject-areas")}
+                  href="/admin/subject-areas"
                   className="mt-4 px-6 py-2 bg-primary hover: text-white rounded-lg transition-all duration-200 hover:scale-105"
                 >
                   Bereiche verwalten
@@ -294,7 +294,7 @@ const BereichOverview = () => {
                     return (
                       <Link
                         key={area.id}
-                        href={withBasePath(`/bereiche/${area.slug}`)}
+                        href={`/bereiche/${area.slug}`}
                         className="group block"
                       >
                         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl overflow-hidden border border-white/20 transition-all duration-300 hover:scale-105 group">
