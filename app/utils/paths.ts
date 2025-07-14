@@ -11,9 +11,13 @@ export function withBasePath(pathStr: string): string {
     return pathStr;
   }
   
-  // Add basePath for API calls and assets (but not for page navigation)
+  // For API calls and static assets, always add basePath in browser context
   if (pathStr.startsWith('/api/') || pathStr.startsWith('/assets/') || pathStr.startsWith('/uploads/') || pathStr.startsWith('/h5p/')) {
-    return `${BASE_PATH}${pathStr}`;
+    // Check if basePath is already included
+    if (!pathStr.startsWith(BASE_PATH)) {
+      return `${BASE_PATH}${pathStr}`;
+    }
+    return pathStr;
   }
   
   // For regular navigation paths, return as-is since Next.js handles basePath
