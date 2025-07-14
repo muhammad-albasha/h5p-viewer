@@ -41,20 +41,25 @@ async function deleteH5PContentFolder(slug: string): Promise<void> {
       await fs.promises.rm(h5pFolder, { recursive: true, force: true });
       console.log(`Deleted H5P folder: ${h5pFolder}`);
     } else {
-      // Check for similar folders (case sensitivity issues)
+      // Check for similar folders (case sensitivity issues or variations)
       const h5pParentDir = getPublicPath("h5p");
       if (fs.existsSync(h5pParentDir)) {
         const allFolders = await fs.promises.readdir(h5pParentDir);
         const similarFolders = allFolders.filter(
           (folder) =>
             folder.toLowerCase() === slug.toLowerCase() ||
-            folder.includes(slug)
+            folder.includes(slug) ||
+            slug.includes(folder)
         );
 
         for (const folder of similarFolders) {
           const folderPath = path.join(h5pParentDir, folder);
-          await fs.promises.rm(folderPath, { recursive: true, force: true });
-          console.log(`Deleted similar H5P folder: ${folderPath}`);
+          try {
+            await fs.promises.rm(folderPath, { recursive: true, force: true });
+            console.log(`Deleted similar H5P folder: ${folderPath}`);
+          } catch (error) {
+            console.warn(`Failed to delete folder ${folderPath}:`, error);
+          }
         }
       }
     }

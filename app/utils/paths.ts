@@ -11,7 +11,15 @@ export function withBasePath(pathStr: string): string {
     return pathStr;
   }
   
-  // For API calls and static assets, always add basePath in browser context
+  // In production mode, ALWAYS add basePath for all paths that start with /
+  if (process.env.NODE_ENV === 'production') {
+    if (pathStr.startsWith('/') && !pathStr.startsWith(BASE_PATH)) {
+      return `${BASE_PATH}${pathStr}`;
+    }
+    return pathStr;
+  }
+  
+  // In development mode, handle specific cases
   if (pathStr.startsWith('/api/') || pathStr.startsWith('/assets/') || pathStr.startsWith('/uploads/') || pathStr.startsWith('/h5p/')) {
     // Check if basePath is already included
     if (!pathStr.startsWith(BASE_PATH)) {
@@ -20,7 +28,7 @@ export function withBasePath(pathStr: string): string {
     return pathStr;
   }
   
-  // For regular navigation paths, return as-is since Next.js handles basePath
+  // For regular navigation paths in dev, return as-is since Next.js handles basePath
   return pathStr;
 }
 
@@ -50,12 +58,46 @@ export function createSafePath(...segments: string[]): string {
  * Get the public directory path with cross-platform compatibility
  */
 export function getPublicPath(...segments: string[]): string {
-  return path.join(process.cwd(), 'public', ...segments);
+  const publicPath = path.join(process.cwd(), 'public', ...segments);
+  // Ensure the path uses forward slashes for consistency
+  return normalizePath(publicPath);
 }
 
 /**
  * Get uploads directory path with cross-platform compatibility
  */
 export function getUploadsPath(...segments: string[]): string {
-  return path.join(process.cwd(), 'public', 'uploads', ...segments);
+  const uploadsPath = path.join(process.cwd(), 'public', 'uploads', ...segments);
+  // Ensure the path uses forward slashes for consistency
+  return normalizePath(uploadsPath);
+}
+
+/**
+ * Get H5P folder path for a specific slug
+ */
+export function getH5PFolderPath(slug: string): string {
+  return getPublicPath('h5p', slug);
+}
+
+/**
+ * Get all H5P folders path
+ */
+export function getH5PBasePath(): string {
+  return getPublicPath('h5p');
+}
+
+/**
+ * Helper function to create proper asset URLs with basePath
+ */
+export function createAssetUrl(assetPath: string): string {
+  if (assetPath.startsWith('http://') || assetPath.startsWith('https://') || assetPath.startsWith('//')) {
+    return assetPath;
+  }
+  
+  // In production, ALL paths must have basePath
+  if (process.env.NODE_ENV === 'production' && assetPath.startsWith('/') && !assetPath.startsWith(BASE_PATH)) {
+    return `${BASE_PATH}${assetPath}`;
+  }
+  
+  return assetPath;
 }
