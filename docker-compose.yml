@@ -1,53 +1,27 @@
 
 services:
-  # H5P Viewer Application
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - DB_HOST=database
-      - DB_PORT=3306
-      - DB_USER=root
-      - DB_PASSWORD=saSsd21-asd112A!1e14
-      - DB_NAME=h5p
-      - NEXTAUTH_SECRET=your-super-secret-key-change-this-in-production
-      - NEXTAUTH_URL=http://localhost:3000/h5p-viewer
-    depends_on:
-      - database
-    volumes:
-      - h5p_uploads:/app/public/uploads
-      - h5p_content:/app/public/h5p
-    restart: unless-stopped
-
-  # MySQL Database
   database:
-    image: "mysql:8.0"
+    image: "mysql:latest"
     environment:
       MYSQL_ROOT_PASSWORD: "saSsd21-asd112A!1e14"
       MYSQL_DATABASE: h5p
+
     ports:
       - "3310:3306"
     restart: always
     volumes:
       - database_h5p:/var/lib/mysql
-    command: --default-authentication-plugin=mysql_native_password
 
-  # PHPMyAdmin for database management
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    restart: always
-    ports:
-      - "8080:80"
-    environment:
-      PMA_HOST: database
-      PMA_USER: root
-      PMA_PASSWORD: saSsd21-asd112A!1e14
-    depends_on:
-      - database
-
+      image: phpmyadmin
+      restart: always
+      ports:
+        - "8080:80"
+      environment:
+        PMA_HOST: database
+        PMA_USER: root
+        PMA_PASSWORD: 12345
+      depends_on:
+        - database
 volumes:
   database_h5p:
-  h5p_uploads:
-  h5p_content:
