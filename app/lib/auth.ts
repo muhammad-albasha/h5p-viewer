@@ -68,14 +68,30 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: "/h5p-viewer/login",
-    error: "/h5p-viewer/login",
+    signIn: "/login",
+    error: "/login",
   },
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET || "your-secret-key",
+  debug: process.env.NODE_ENV === 'development',
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === 'production' 
+        ? '__Secure-next-auth.session-token' 
+        : 'next-auth.session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: process.env.NODE_ENV === 'production' ? '/h5p-viewer' : '/',
+        secure: process.env.NODE_ENV === 'production',
+        // Don't set domain for localhost testing
+        domain: undefined,
+      },
+    },
+  },
 };
 
 // Extend the session and jwt types
