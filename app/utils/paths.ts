@@ -59,3 +59,17 @@ export function getPublicPath(...segments: string[]): string {
 export function getUploadsPath(...segments: string[]): string {
   return path.join(process.cwd(), 'public', 'uploads', ...segments);
 }
+
+/**
+ * Get H5P folder path for a specific slug
+ */
+export function getH5PFolderPath(slug: string): string {
+  return getPublicPath('h5p', slug);
+}
+
+/**
+ * Get all H5P folders path
+ */
+export function getH5PBasePath(): string {
+  return getPublicPath('h5p');
+}
