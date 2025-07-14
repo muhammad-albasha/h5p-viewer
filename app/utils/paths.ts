@@ -73,3 +73,19 @@ export function getH5PFolderPath(slug: string): string {
 export function getH5PBasePath(): string {
   return getPublicPath('h5p');
 }
+
+/**
+ * Helper function to create proper asset URLs with basePath
+ */
+export function createAssetUrl(assetPath: string): string {
+  if (assetPath.startsWith('http://') || assetPath.startsWith('https://') || assetPath.startsWith('//')) {
+    return assetPath;
+  }
+  
+  // For production, ensure assets have the correct basePath
+  if (process.env.NODE_ENV === 'production' && !assetPath.startsWith(BASE_PATH)) {
+    return `${BASE_PATH}${assetPath}`;
+  }
+  
+  return assetPath;
+}
