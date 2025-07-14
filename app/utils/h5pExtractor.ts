@@ -7,7 +7,12 @@ import AdmZip from "adm-zip";
  */
 export function ensureDirectoryExists(dirPath: string) {
   if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
+    try {
+      fs.mkdirSync(dirPath, { recursive: true, mode: 0o755 });
+    } catch (error) {
+      console.error(`Failed to create directory ${dirPath}:`, error);
+      throw error;
+    }
   }
 }
 

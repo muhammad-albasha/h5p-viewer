@@ -7,6 +7,7 @@ import fs from "fs";
 import crypto from "crypto";
 import AdmZip from "adm-zip";
 import { ensureDirectoryExists } from "@/app/utils/h5pExtractor";
+import { ensureRequiredDirectories, getSystemInfo } from "@/app/utils/systemUtils";
 
 // Helper function to create a slug from a title
 function createSlug(title: string): string {
@@ -19,6 +20,11 @@ function createSlug(title: string): string {
 export async function POST(req: NextRequest) {
   try {
     console.log("Upload API called");
+    console.log("System info:", getSystemInfo());
+    
+    // Ensure required directories exist
+    ensureRequiredDirectories();
+    
     // Check authentication
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "admin") {
@@ -77,7 +83,12 @@ export async function POST(req: NextRequest) {
 
     // Ensure the directory exists
     console.log("Ensuring upload directory exists...");
-    ensureDirectoryExists(uploadDir);
+    try {
+      ensureDirectoryExists(uploadDir);
+    } catch (dirError) {
+      console.error("Failed to create upload directory:", dirError);
+      throw new Error(`Cannot create upload directory: ${uploadDir}`);
+    }
 
     // Get file data as ArrayBuffer
     console.log("Reading file data...");
@@ -87,8 +98,13 @@ export async function POST(req: NextRequest) {
     // Write the file to disk (temporary location)
     const tempFilePath = path.join(uploadDir, fileName);
     console.log("Writing temp file to:", tempFilePath);
-    fs.writeFileSync(tempFilePath, fileBuffer);
-    console.log("Temp file written successfully");
+    try {
+      fs.writeFileSync(tempFilePath, fileBuffer, { mode: 0o644 });
+      console.log("Temp file written successfully");
+    } catch (writeError) {
+      console.error("Failed to write temp file:", writeError);
+      throw new Error(`Cannot write file to: ${tempFilePath}`);
+    }
 
     // Extract the H5P file to public/h5p directory
     try {

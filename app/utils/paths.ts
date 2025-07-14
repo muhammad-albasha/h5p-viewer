@@ -50,14 +50,18 @@ export function createSafePath(...segments: string[]): string {
  * Get the public directory path with cross-platform compatibility
  */
 export function getPublicPath(...segments: string[]): string {
-  return path.join(process.cwd(), 'public', ...segments);
+  const publicPath = path.join(process.cwd(), 'public', ...segments);
+  // Ensure the path uses forward slashes for consistency
+  return normalizePath(publicPath);
 }
 
 /**
  * Get uploads directory path with cross-platform compatibility
  */
 export function getUploadsPath(...segments: string[]): string {
-  return path.join(process.cwd(), 'public', 'uploads', ...segments);
+  const uploadsPath = path.join(process.cwd(), 'public', 'uploads', ...segments);
+  // Ensure the path uses forward slashes for consistency
+  return normalizePath(uploadsPath);
 }
 
 /**
