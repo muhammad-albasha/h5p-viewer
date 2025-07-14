@@ -6,7 +6,7 @@ import { FiSettings, FiLogOut } from "react-icons/fi";
 import { BiUserCircle } from "react-icons/bi";
 import { MdDashboard } from "react-icons/md";
 import { useSession, signOut } from "next-auth/react";
-import { withBasePath, getLogoutCallbackUrl } from '@/app/utils/paths';
+import { withBasePath } from '@/app/utils/paths';
 
 const Header = () => {
   const { data: session, status } = useSession();
@@ -155,7 +155,7 @@ const Header = () => {
                       <button
                         role="menuitem"
                         onClick={() => {
-                          signOut({ callbackUrl: getLogoutCallbackUrl() });
+                          signOut({ callbackUrl: "/h5p-viewer/" });
                           setIsDropdownOpen(false);
                         }}
                         className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-primary/10 transition-all duration-200 text-left"
@@ -224,7 +224,7 @@ const Header = () => {
                   </Link>
                   <button
                     onClick={() => {
-                      signOut({ callbackUrl: getLogoutCallbackUrl() });
+                      signOut({ callbackUrl: "/h5p-viewer/" });
                       setIsMobileMenuOpen(false);
                     }}
                     className="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-primary/10 transition-all duration-200 text-left w-full text-lg font-medium"

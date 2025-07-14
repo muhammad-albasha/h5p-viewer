@@ -24,8 +24,3 @@ export function withoutBasePath(path: string): string {
   }
   return path;
 }
-
-export function getLogoutCallbackUrl(): string {
-  // Always redirect to the production URL after logout
-  return 'https://mathematik-didaktik.uni-wuppertal.de/h5p-viewer/';
-}
