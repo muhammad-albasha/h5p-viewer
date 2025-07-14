@@ -24,14 +24,17 @@ export async function POST(req: NextRequest) {
     if (!session || session.user.role !== "admin") {
       console.log("Unauthorized access attempt");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    } // Parse the formData
+    }    // Parse the formData
+    console.log("Parsing form data...");
     const formData = await req.formData();
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
     const file = formData.get("file") as File;
     const subjectAreaId = formData.get("subjectAreaId") as string;
     const tagsString = formData.get("tags") as string;
-    const password = formData.get("password") as string; // Parse tags if provided
+    const password = formData.get("password") as string;
+    
+    console.log("Form data parsed:", { title, hasFile: !!file, subjectAreaId, tagsString });// Parse tags if provided
     const tagIds: number[] = [];
     if (tagsString) {
       try {
@@ -61,32 +64,45 @@ export async function POST(req: NextRequest) {
     }
 
     // Create unique slug and folder name
+    console.log("Creating slug...");
     const baseSlug = createSlug(title);
     const uniqueId = crypto.randomBytes(4).toString("hex");
     const slug = `${baseSlug}-${uniqueId}`;
+    console.log("Generated slug:", slug);
 
     // Create a name for the file in the public directory
     const fileName = `${slug}.h5p`;
     const uploadDir = path.join(process.cwd(), "public", "uploads", "h5p");
+    console.log("Upload directory:", uploadDir);
 
     // Ensure the directory exists
+    console.log("Ensuring upload directory exists...");
     ensureDirectoryExists(uploadDir);
 
     // Get file data as ArrayBuffer
+    console.log("Reading file data...");
     const fileArrayBuffer = await file.arrayBuffer();
     const fileBuffer = Buffer.from(fileArrayBuffer);
+    
     // Write the file to disk (temporary location)
     const tempFilePath = path.join(uploadDir, fileName);
+    console.log("Writing temp file to:", tempFilePath);
     fs.writeFileSync(tempFilePath, fileBuffer);
+    console.log("Temp file written successfully");
 
     // Extract the H5P file to public/h5p directory
     try {
+      console.log("Starting H5P extraction...");
       // Create directory for the H5P content in public/h5p
       const h5pDir = path.join(process.cwd(), "public", "h5p", slug);
+      console.log("H5P directory:", h5pDir);
       ensureDirectoryExists(h5pDir);
+      
       // Extract H5P file (which is a ZIP file) to the directory
+      console.log("Extracting ZIP file...");
       const zip = new AdmZip(tempFilePath);
-      zip.extractAllTo(h5pDir, true); // H5P file extracted successfully      // === Cover-Bild verarbeiten ===
+      zip.extractAllTo(h5pDir, true);
+      console.log("H5P file extracted successfully");      // === Cover-Bild verarbeiten ===
       let coverImagePath: string | undefined;
 
       // 1. Prüfen ob ein Cover-Bild hochgeladen wurde
