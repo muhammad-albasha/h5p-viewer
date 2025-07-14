@@ -93,7 +93,7 @@ const Bereich = () => {
     // Check if content is password protected
     try {
       const protectionResponse = await fetch(
-        `/api/h5p/check-protection/${item.id}`
+        withBasePath(`/api/h5p/check-protection/${item.id}`)
       );
       if (protectionResponse.ok) {
         const protectionData = await protectionResponse.json();
