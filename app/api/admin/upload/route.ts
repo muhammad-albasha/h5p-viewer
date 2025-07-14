@@ -17,9 +17,27 @@ function createSlug(title: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+// Test GET handler to check if API is reachable
+export async function GET(req: NextRequest) {
+  console.log("=== Upload API GET test ===");
+  console.log("Request URL:", req.url);
+  
+  const session = await getServerSession(authOptions);
+  
+  return NextResponse.json({
+    message: "Upload API is reachable",
+    authenticated: !!session,
+    role: session?.user?.role,
+    timestamp: new Date().toISOString(),
+    systemInfo: getSystemInfo()
+  });
+}
+
 export async function POST(req: NextRequest) {
   try {
-    console.log("Upload API called");
+    console.log("=== Upload API called ===");
+    console.log("Request URL:", req.url);
+    console.log("Request method:", req.method);
     console.log("System info:", getSystemInfo());
     
     // Ensure required directories exist
@@ -27,6 +45,8 @@ export async function POST(req: NextRequest) {
     
     // Check authentication
     const session = await getServerSession(authOptions);
+    console.log("Session check:", { hasSession: !!session, role: session?.user?.role });
+    
     if (!session || session.user.role !== "admin") {
       console.log("Unauthorized access attempt");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -196,11 +216,18 @@ export async function POST(req: NextRequest) {
           : String(extractError);
       throw new Error(`Failed to extract H5P file: ${errorMessage}`);
     }    } catch (error: any) {
-      console.error("Upload API error:", error);
+      console.error("=== Upload API error ===");
+      console.error("Error message:", error.message);
       console.error("Error stack:", error.stack);
+      console.error("Error details:", error);
+      console.error("========================");
+      
       // Error uploading H5P content
       return NextResponse.json(
-        { error: error.message || "Upload failed" },
+        { 
+          error: error.message || "Upload failed",
+          details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        },
         { status: 500 }
       );
     }
