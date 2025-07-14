@@ -8,10 +8,17 @@
     "start": "next start",
     "lint": "next lint",
     "setup": "node app/scripts/setup.js",
+    "docker:build": "docker-compose build",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:restart": "docker-compose restart",
     "prepare-h5p": "node app/scripts/prepare-h5p.js",
-    "start:all": "npm run docker:up && npm run setup && npm run prepare-h5p && npm run dev"
+    "cleanup:h5p": "node scripts/cleanup-h5p-linux.sh",
+    "deploy:linux": "./deploy-linux.sh",
+    "health:check": "curl -f http://localhost:3000/h5p-viewer/api/health || echo 'Health check failed'",
+    "start:all": "npm run docker:up && npm run setup && npm run prepare-h5p && npm run dev",
+    "start:production": "npm run docker:up && sleep 30 && npm run health:check"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.2",

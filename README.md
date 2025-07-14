@@ -20,14 +20,65 @@ Dieses Projekt ist ein einfaches Content-Management-System für H5P-Inhalte, das
 
 ## Installation und Start
 
-1. Klone dieses Repository
-2. Installiere die Abhängigkeiten:
+### Windows (Entwicklung)
 
+1. **Voraussetzungen installieren:**
+   - Node.js (18.x oder neuer)
+   - Docker Desktop
+   - Git
+
+2. **Repository klonen:**
+   ```bash
+   git clone <repository-url>
+   cd h5p-viewer
+   ```
+
+3. **Abhängigkeiten installieren:**
+   ```bash
+   npm install
+   ```
+
+4. **Datenbank starten:**
+   ```bash
+   npm run docker:up
+   ```
+
+5. **Anwendung entwickeln:**
+   ```bash
+   npm run dev
+   ```
+
+### Linux (Produktion)
+
+Für Linux-Server-Deployment siehe: [docs/LINUX-DEPLOYMENT.md](docs/LINUX-DEPLOYMENT.md)
+
+**Schnellstart:**
 ```bash
-npm install
+# Repository klonen
+git clone <repository-url>
+cd h5p-viewer
+
+# Automatisches Deployment
+chmod +x deploy-linux.sh
+./deploy-linux.sh
+
+# System testen
+chmod +x test-system.sh
+./test-system.sh
 ```
 
-3. Starte die Datenbank (MySQL in Docker):
+**Docker Compose (Produktion):**
+```bash
+# Produktionsumgebung starten
+docker-compose up -d
+
+# Status überprüfen
+docker-compose ps
+docker-compose logs -f
+
+# System-Health prüfen
+curl http://localhost:3000/h5p-viewer/api/health
+```
 
 ```bash
 npm run docker:up
