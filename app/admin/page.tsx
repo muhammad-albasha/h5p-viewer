@@ -334,29 +334,6 @@ export default function AdminDashboard() {
                 </svg>
                 <span className="text-sm sm:text-base font-medium">Benutzer</span>
               </Link>
-
-              <Link
-                href="/admin/cleanup-h5p"
-                className="admin-menu-card"
-              >
-                <svg
-                  className="w-4 h-4 sm:w-5 sm:h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"
-                    clipRule="evenodd"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    d="M10 5a2 2 0 00-2 2v6a2 2 0 002 2h7a2 2 0 002-2V7a2 2 0 00-2-2h-7zm3 5a1 1 0 11-2 0 1 1 0 012 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span className="text-sm sm:text-base font-medium">H5P Bereinigung</span>
-              </Link>
             </div>
           </div>
         </div>
