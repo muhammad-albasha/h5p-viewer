@@ -18,9 +18,11 @@ function createSlug(title: string): string {
 
 export async function POST(req: NextRequest) {
   try {
+    console.log("Upload API called");
     // Check authentication
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "admin") {
+      console.log("Unauthorized access attempt");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     } // Parse the formData
     const formData = await req.formData();
@@ -96,7 +98,7 @@ export async function POST(req: NextRequest) {
         ensureDirectoryExists(imagesDir);
         const coverPath = path.join(imagesDir, "cover.jpg");
         fs.writeFileSync(coverPath, coverBuffer);
-        coverImagePath = `/api/h5p/cover/${slug}/content/images/cover.jpg`;
+        coverImagePath = `/h5p-viewer/api/h5p/cover/${slug}/content/images/cover.jpg`;
       } else {
         // 2. Prüfen ob im extrahierten H5P bereits ein cover.jpg existiert
         const extractedCoverPath = path.join(
@@ -106,7 +108,7 @@ export async function POST(req: NextRequest) {
           "cover.jpg"
         );
         if (fs.existsSync(extractedCoverPath)) {
-          coverImagePath = `/api/h5p/cover/${slug}/content/images/cover.jpg`;
+          coverImagePath = `/h5p-viewer/api/h5p/cover/${slug}/content/images/cover.jpg`;
         }
       }
       // === ENDE Cover-Bild ===      // Parse h5p.json to get content type if it exists
@@ -161,12 +163,13 @@ export async function POST(req: NextRequest) {
           ? extractError.message
           : String(extractError);
       throw new Error(`Failed to extract H5P file: ${errorMessage}`);
+    }    } catch (error: any) {
+      console.error("Upload API error:", error);
+      console.error("Error stack:", error.stack);
+      // Error uploading H5P content
+      return NextResponse.json(
+        { error: error.message || "Upload failed" },
+        { status: 500 }
+      );
     }
-  } catch (error: any) {
-    // Error uploading H5P content
-    return NextResponse.json(
-      { error: error.message || "Upload failed" },
-      { status: 500 }
-    );
-  }
 }
