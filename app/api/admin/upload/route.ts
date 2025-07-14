@@ -7,7 +7,6 @@ import fs from "fs";
 import crypto from "crypto";
 import AdmZip from "adm-zip";
 import { ensureDirectoryExists } from "@/app/utils/h5pExtractor";
-import { withBasePath } from "@/app/utils/paths";
 
 // Helper function to create a slug from a title
 function createSlug(title: string): string {
@@ -97,7 +96,7 @@ export async function POST(req: NextRequest) {
         ensureDirectoryExists(imagesDir);
         const coverPath = path.join(imagesDir, "cover.jpg");
         fs.writeFileSync(coverPath, coverBuffer);
-        coverImagePath = withBasePath(`/api/h5p/cover/${slug}/content/images/cover.jpg`);
+        coverImagePath = `/api/h5p/cover/${slug}/content/images/cover.jpg`;
       } else {
         // 2. Prüfen ob im extrahierten H5P bereits ein cover.jpg existiert
         const extractedCoverPath = path.join(
@@ -107,7 +106,7 @@ export async function POST(req: NextRequest) {
           "cover.jpg"
         );
         if (fs.existsSync(extractedCoverPath)) {
-          coverImagePath = withBasePath(`/api/h5p/cover/${slug}/content/images/cover.jpg`);
+          coverImagePath = `/api/h5p/cover/${slug}/content/images/cover.jpg`;
         }
       }
       // === ENDE Cover-Bild ===      // Parse h5p.json to get content type if it exists
