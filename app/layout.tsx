@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./components/auth/AuthProvider";
@@ -27,7 +27,10 @@ export const metadata: Metadata = {
     ],
     apple: "/h5p-viewer/apple-touch-icon.png"
   },
-  manifest: "/h5p-viewer/manifest.json",
+  manifest: "/h5p-viewer/manifest.json"
+};
+
+export const viewport: Viewport = {
   themeColor: "#2563eb"
 };
 
