@@ -4,10 +4,8 @@ import Navbar from "@/app/components/layout/Navbar";
 import Header from "@/app/components/layout/Header";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import PlayH5p from "@/app/components/PlayH5p";
 import ContentFilter from "@/app/components/content/ContentFilter";
 import FavoriteButton from "@/app/components/common/FavoriteButton";
-import PasswordProtection from "@/app/components/common/PasswordProtection";
 import { withBasePath } from "../../utils/paths";
 
 interface SubjectAreaContent {
@@ -34,15 +32,6 @@ const Bereich = () => {
   const [subjectAreaName, setSubjectAreaName] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedContent, setSelectedContent] =
-    useState<SubjectAreaContent | null>(null);
-  const [viewMode, setViewMode] = useState<"list" | "view">("list");
-
-  // Password protection states
-  const [isPasswordProtected, setIsPasswordProtected] = useState(false);
-  const [isPasswordVerified, setIsPasswordVerified] = useState(false);
-  const [passwordError, setPasswordError] = useState<string>("");
-  const [passwordLoading, setPasswordLoading] = useState(false);
 
   // Filter states
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -86,76 +75,6 @@ const Bereich = () => {
 
     fetchContent();
   }, [subjectAreaSlug]);
-  const handleContentSelect = async (item: SubjectAreaContent) => {
-    setSelectedContent(item);
-    setViewMode("view");
-
-    // Check if content is password protected
-    try {
-      const protectionResponse = await fetch(
-        `/api/h5p/check-protection/${item.id}`
-      );
-      if (protectionResponse.ok) {
-        const protectionData = await protectionResponse.json();
-        if (protectionData.isPasswordProtected) {
-          setIsPasswordProtected(true);
-          setIsPasswordVerified(false);
-        } else {
-          setIsPasswordProtected(false);
-          setIsPasswordVerified(true);
-        }
-      } else {
-        setIsPasswordProtected(false);
-        setIsPasswordVerified(true);
-      }
-    } catch (error) {
-      // If protection check fails, assume no protection
-      setIsPasswordProtected(false);
-      setIsPasswordVerified(true);
-    }
-  };
-  const handleBackToList = () => {
-    setSelectedContent(null);
-    setViewMode("list");
-    // Reset password protection states
-    setIsPasswordProtected(false);
-    setIsPasswordVerified(false);
-    setPasswordError("");
-  };
-
-  const handlePasswordSubmit = async (enteredPassword: string) => {
-    setPasswordLoading(true);
-    setPasswordError("");
-
-    try {
-      const response = await fetch(withBasePath("/api/h5p/verify-password"), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contentId: selectedContent?.id,
-          password: enteredPassword,
-        }),
-      });
-
-      if (response.ok) {
-        setIsPasswordVerified(true);
-        setIsPasswordProtected(false);
-      } else {
-        const data = await response.json();
-        setPasswordError(
-          data.error || "Falsches Passwort. Bitte versuchen Sie es erneut."
-        );
-      }
-    } catch (error) {
-      setPasswordError(
-        "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
-      );
-    } finally {
-      setPasswordLoading(false);
-    }
-  };
 
   // Get available tags from content
   const availableTags = useMemo(() => {
@@ -234,8 +153,7 @@ const Bereich = () => {
     <>
       <Navbar />
       <Header />
-      {viewMode === "list" && (
-        <div className="relative overflow-hidden bg-primary dark:bg-black">
+      <div className="relative overflow-hidden bg-primary dark:bg-black">
           {/* Background decorative elements */}
           <div className="absolute inset-0">
             <div className=""></div>
@@ -369,16 +287,9 @@ const Bereich = () => {
             </div>
           </div>
         </div>
-      )}
 
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-5">
-        <div
-          className={`${
-            viewMode === "view"
-              ? "w-full px-4"
-              : "container-fluid mx-auto  px-4"
-          } space-y-8`}
-        >
+        <div className="container-fluid mx-auto px-4 space-y-8">
           {isLoading ? (
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
               <div className="flex flex-col items-center justify-center p-12">
@@ -421,7 +332,7 @@ const Bereich = () => {
                 </button>
               </div>
             </div>
-          ) : viewMode === "list" && content.length === 0 ? (
+          ) : content.length === 0 ? (
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
               <div className="flex flex-col items-center justify-center p-12">
                 <div className="p-4 bg-primary/10 rounded-full mb-4">
@@ -453,177 +364,19 @@ const Bereich = () => {
                 </Link>
               </div>
             </div>
-          ) : viewMode === "view" && selectedContent ? (
-            <>
-              {/* Password Protection Check */}
-              {isPasswordProtected && !isPasswordVerified ? (
-                <PasswordProtection
-                  title={selectedContent.name}
-                  onPasswordSubmit={handlePasswordSubmit}
-                  error={passwordError}
-                  loading={passwordLoading}
-                />
-              ) : (
-                <>
-                  {/* Enhanced Header for View Mode */}
-                  <div className="relative overflow-hidden bg-primary dark:bg-black rounded-2xl -mx-4 -mt-12 mb-8">
-                    <div className="absolute inset-0">
-                      <div className=""></div>
-                      <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full translate-x-48 translate-y-48 backdrop-blur-3xl"></div>
-                    </div>
-
-                    <div className="relative container-fluid mx-auto  px-4 py-4">
-                      {/* Breadcrumb Navigation */}
-                      <nav className="flex items-center space-x-2 text-sm mb-8 text-blue-100">
-                        <Link
-                          href={withBasePath("/")}
-                          className="hover:text-white transition-colors"
-                        >
-                          Startseite
-                        </Link>
-                        <span>•</span>
-                        <Link
-                          href={withBasePath("/bereiche")}
-                          className="hover:text-white transition-colors"
-                        >
-                          Bereiche
-                        </Link>
-                        <span>•</span>
-                        <button
-                          onClick={handleBackToList}
-                          className="hover:text-white transition-colors"
-                        >
-                          {subjectAreaName}
-                        </button>
-                        <span>•</span>
-                        <span className="text-white font-medium">
-                          {selectedContent.name}
-                        </span>
-                      </nav>
-
-                      <div className="grid lg:grid-cols-12 gap-2 items-center">
-                        <div className="lg:col-span-8 space-y-6 text-white">
-                          <div className="flex items-center gap-3 mb-4">
-                            <span className="px-4 py-2 bg-white/20 text-white rounded-lg text-sm font-medium backdrop-blur-sm">
-                              {selectedContent.type}
-                            </span>
-                          </div>
-                          <h1 className="text-4xl lg:text-6xl font-bold tracking-tight leading-tight">
-                            {selectedContent.name}
-                          </h1>
-                          <p className="text-blue-100 text-xl leading-relaxed max-w-2xl">
-                            Interaktiver {selectedContent.type}-Inhalt für
-                            optimales Lernen
-                          </p>{" "}
-                          {/* Tags */}
-                          {selectedContent.tags &&
-                            selectedContent.tags.length > 0 && (
-                              <div className="flex flex-wrap gap-2">
-                                {selectedContent.tags
-                                  .slice()
-                                  .sort((a, b) => a.localeCompare(b))
-                                  .map((tag, idx) => (
-                                    <span
-                                      key={idx}
-                                      className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium hover:bg-white/30 transition-all duration-200 border border-white/30"
-                                    >
-                                      #{tag}
-                                    </span>
-                                  ))}
-                              </div>
-                            )}
-                        </div>
-
-                        <div className="lg:col-span-4 flex flex-col gap-3">
-                          <button
-                            onClick={handleBackToList}
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-xl backdrop-blur-sm transition-all duration-200 hover:scale-105 border border-white/20"
-                          >
-                            <svg
-                              className="w-5 h-5"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                              />
-                            </svg>
-                            Zurück zur Übersicht
-                          </button>{" "}
-                          <div className="grid grid-cols-2 gap-2">
-                            <div className="flex items-center gap-2">
-                              <FavoriteButton
-                                content={selectedContent}
-                                variant="header"
-                                showText={true}
-                              />{" "}
-                              {selectedContent.isPasswordProtected && (
-                                <div className="bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30">
-                                  <svg
-                                    className="w-4 h-4"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
-                                </div>
-                              )}
-                            </div>
-                            <button className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg backdrop-blur-sm transition-all duration-200 text-sm">
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
-                                />
-                              </svg>
-                              Teilen
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* H5P Content Player */}
-                  <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
-                    <div className="p-6">
-                      <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-                        <PlayH5p h5pJsonPath={selectedContent.path} />
-                      </div>
-                    </div>{" "}
-                  </div>
-                </>
-              )}
-            </>
           ) : (
-            viewMode === "list" && (
-              <>
-                {/* Content Filter */}
-                <ContentFilter
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                  selectedTags={selectedTags}
-                  availableTags={availableTags}
-                  toggleTag={toggleTag}
-                />
+            <>
+              {/* Content Filter */}
+              <ContentFilter
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                selectedTags={selectedTags}
+                availableTags={availableTags}
+                toggleTag={toggleTag}
+              />
 
-                {/* Results Summary */}
-                {(searchQuery || selectedTags.length > 0) && (
+              {/* Results Summary */}
+              {(searchQuery || selectedTags.length > 0) && (
                   <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20 p-6">
                     <div className="flex items-center justify-between">
                       <div>
@@ -776,10 +529,10 @@ const Bereich = () => {
                         }
 
                         return (
-                          <div
+                          <Link
                             key={item.id}
-                            className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl overflow-hidden border border-white/20 transition-all duration-300 hover:scale-105 group cursor-pointer"
-                            onClick={() => handleContentSelect(item)}
+                            href={withBasePath(`/bereiche/${subjectAreaSlug}/content?id=${item.id}`)}
+                            className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl overflow-hidden border border-white/20 transition-all duration-300 hover:scale-105 group cursor-pointer block"
                           >
                             {/* Card Image */}
                             <div className="relative h-48 bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden">
@@ -875,7 +628,7 @@ const Bereich = () => {
                                 </button>
                               </div>
                             </div>
-                          </div>
+                          </Link>
                         );
                       })}
                     </div>
@@ -951,7 +704,6 @@ const Bereich = () => {
                   </div>
                 )}
               </>
-            )
           )}
         </div>
       </div>
