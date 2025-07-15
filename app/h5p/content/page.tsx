@@ -40,6 +40,27 @@ function H5PContentViewer() {
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
   const [passwordError, setPasswordError] = useState<string>("");
   const [passwordLoading, setPasswordLoading] = useState(false);
+  const [shareSuccess, setShareSuccess] = useState(false);
+
+  const handleShare = async () => {
+    try {
+      const currentUrl = window.location.href;
+      await navigator.clipboard.writeText(currentUrl);
+      setShareSuccess(true);
+      setTimeout(() => setShareSuccess(false), 2000);
+    } catch (error) {
+      console.error('Fehler beim Kopieren der URL:', error);
+      // Fallback für ältere Browser
+      const textArea = document.createElement('textarea');
+      textArea.value = window.location.href;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setShareSuccess(true);
+      setTimeout(() => setShareSuccess(false), 2000);
+    }
+  };
 
   useEffect(() => {
     const fetchContentDetails = async () => {
@@ -237,7 +258,10 @@ function H5PContentViewer() {
                     showText={true}
                   />
                 )}
-                <button className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg backdrop-blur-sm transition-all duration-200 text-sm">
+                <button 
+                  onClick={handleShare}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg backdrop-blur-sm transition-all duration-200 text-sm relative"
+                >
                   <svg
                     className="w-4 h-4"
                     fill="none"
@@ -251,7 +275,14 @@ function H5PContentViewer() {
                       d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
                     />
                   </svg>
-                  Teilen
+                  {shareSuccess ? 'Kopiert!' : 'Teilen'}
+                  
+                  {/* Success notification */}
+                  {shareSuccess && (
+                    <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-3 py-1 rounded-lg text-xs whitespace-nowrap shadow-lg animate-fade-in-out">
+                      URL kopiert!
+                    </div>
+                  )}
                 </button>
               </div>
 

@@ -42,6 +42,27 @@ const ContentView = () => {
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
   const [passwordError, setPasswordError] = useState<string>("");
   const [passwordLoading, setPasswordLoading] = useState(false);
+  const [shareSuccess, setShareSuccess] = useState(false);
+
+  const handleShare = async () => {
+    try {
+      const currentUrl = window.location.href;
+      await navigator.clipboard.writeText(currentUrl);
+      setShareSuccess(true);
+      setTimeout(() => setShareSuccess(false), 2000);
+    } catch (error) {
+      console.error('Fehler beim Kopieren der URL:', error);
+      // Fallback für ältere Browser
+      const textArea = document.createElement('textarea');
+      textArea.value = window.location.href;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setShareSuccess(true);
+      setTimeout(() => setShareSuccess(false), 2000);
+    }
+  };
 
   useEffect(() => {
     if (!contentId) {
@@ -309,30 +330,17 @@ const ContentView = () => {
                     </svg>
                     Zurück zur Übersicht
                   </Link>
+
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="flex items-center gap-2">
-                      <FavoriteButton
-                        content={content}
-                        variant="header"
-                        showText={true}
-                      />
-                      {content.isPasswordProtected && (
-                        <div className="bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30">
-                          <svg
-                            className="w-4 h-4"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </div>
-                      )}
-                    </div>
-                    <button className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg backdrop-blur-sm transition-all duration-200 text-sm">
+                    <FavoriteButton
+                      content={content}
+                      variant="header"
+                      showText={true}
+                    />
+                    <button 
+                      onClick={handleShare}
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg backdrop-blur-sm transition-all duration-200 text-sm relative"
+                    >
                       <svg
                         className="w-4 h-4"
                         fill="none"
@@ -346,9 +354,27 @@ const ContentView = () => {
                           d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
                         />
                       </svg>
-                      Teilen
+                      {shareSuccess ? 'Kopiert!' : 'Teilen'}
+                      
+                      {/* Success notification */}
+                      {shareSuccess && (
+                        <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-3 py-1 rounded-lg text-xs whitespace-nowrap shadow-lg animate-fade-in-out">
+                          URL kopiert!
+                        </div>
+                      )}
                     </button>
                   </div>
+
+                  {content && content.subject_area && (
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                      <div className="text-blue-100 text-sm font-medium mb-1">
+                        Bereich
+                      </div>
+                      <div className="text-white font-semibold">
+                        {content.subject_area.name}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -356,8 +382,14 @@ const ContentView = () => {
 
           {/* H5P Content */}
           <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 py-5">
-            <div className="w-full px-4">
-              <PlayH5p h5pJsonPath={content.path} />
+            <div className="w-full px-4 space-y-8">
+              <div className="w-full bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
+                <div className="p-2">
+                  <div className="bg-gray-50 rounded-xl p-2 w-full">
+                    <PlayH5p h5pJsonPath={content.path} />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </>
