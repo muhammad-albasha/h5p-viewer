@@ -100,7 +100,14 @@ function H5PContentViewer() {
             setIsPasswordVerified(true);
           }
         } else {
-          setError(`Content mit ID "${id}" nicht gefunden`);
+          // Content not found - check if we should redirect to homepage or show error
+          if (contents.length === 0) {
+            // No content available at all
+            setError("Momentan sind keine H5P-Inhalte verfügbar. Bitte versuchen Sie es später erneut.");
+          } else {
+            // Specific content not found but others exist
+            setError(`Content mit ID "${id}" wurde nicht gefunden. Möglicherweise wurde es gelöscht oder die ID ist ungültig.`);
+          }
         }
       } catch (error) {
         // Error fetching content details

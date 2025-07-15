@@ -70,7 +70,14 @@ function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
           })
           .catch((err: Error) => {
             // H5P initialization error
-            setError(err.message);
+            console.error("H5P loading error:", err);
+            
+            // Check if this is a 404 error (content not found)
+            if (err.message.includes("404") || err.message.includes("Not Found")) {
+              setError("Der angeforderte H5P-Inhalt wurde nicht gefunden. Möglicherweise wurde er gelöscht oder ist temporär nicht verfügbar.");
+            } else {
+              setError(`Fehler beim Laden des H5P-Inhalts: ${err.message}`);
+            }
             setLoading(false);
           });
       } catch (e) {
