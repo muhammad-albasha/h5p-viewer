@@ -58,9 +58,9 @@ function LoginForm() {
     }
   };
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
       {/* Background decoration */}
-      <div className="absolute inset-0 bg-grid-slate-200 opacity-30"></div>
+      <div className="absolute inset-0 bg-grid-slate-200 dark:bg-grid-slate-800 opacity-30"></div>
       <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full opacity-10 blur-3xl"></div>
       <div className="absolute bottom-0 left-0 translate-y-12 -translate-x-12 w-96 h-96 bg-gradient-to-tr from-emerald-400 to-cyan-500 rounded-full opacity-10 blur-3xl"></div>
 
@@ -81,20 +81,20 @@ function LoginForm() {
                 />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
               Administrator Login
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               Melden Sie sich an, um H5P-Inhalte zu verwalten
             </p>
           </div>
 
           {/* Login Card */}
-          <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/20 overflow-hidden">
             <div className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {error && (
-                  <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
+                  <div className="bg-red-50 dark:bg-red-900/30 border-l-4 border-red-400 p-4 rounded-lg">
                     <div className="flex">
                       <div className="flex-shrink-0">
                         <svg
@@ -110,7 +110,7 @@ function LoginForm() {
                         </svg>
                       </div>
                       <div className="ml-3">
-                        <p className="text-sm text-red-700">{error}</p>
+                        <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
                       </div>
                     </div>
                   </div>
@@ -118,13 +118,13 @@ function LoginForm() {
 
                 <div className="space-y-5">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       E-Mail-Adresse
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg
-                          className="h-5 w-5 text-gray-400"
+                          className="h-5 w-5 text-gray-400 dark:text-gray-500"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -136,20 +136,20 @@ function LoginForm() {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur transition-all duration-200 hover:bg-white/70"
+                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 dark:bg-gray-700/50 backdrop-blur transition-all duration-200 hover:bg-white/70 dark:hover:bg-gray-700/70 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                         placeholder="admin@example.com"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       Passwort
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg
-                          className="h-5 w-5 text-gray-400"
+                          className="h-5 w-5 text-gray-400 dark:text-gray-500"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -164,7 +164,7 @@ function LoginForm() {
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur transition-all duration-200 hover:bg-white/70"
+                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 dark:bg-gray-700/50 backdrop-blur transition-all duration-200 hover:bg-white/70 dark:hover:bg-gray-700/70 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                         placeholder="••••••••"
                       />
                     </div>
@@ -206,12 +206,12 @@ function LoginForm() {
                   )}
                 </button>
 
-                <div className="text-center pt-4 border-t border-gray-200">
-                  <p className="text-sm text-gray-600">
+                <div className="text-center pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     Zurück zur{" "}
                     <Link
                       href="/"
-                      className="font-semibold text-black hover: transition-colors duration-200"
+                      className="font-semibold text-black dark:text-white hover: transition-colors duration-200"
                     >
                       Startseite
                     </Link>
@@ -231,8 +231,8 @@ function LoginForm() {
 // Fallback component for Suspense
 function LoginFormFallback() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
-      <div className="absolute inset-0 bg-grid-slate-200 opacity-30"></div>
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
+      <div className="absolute inset-0 bg-grid-slate-200 dark:bg-grid-slate-800 opacity-30"></div>
       <div className="relative z-10 container-fluid mx-auto max-w-lg py-12 px-4 min-h-screen flex items-center">
         <div className="w-full">
           <div className="text-center mb-8">
@@ -249,13 +249,13 @@ function LoginFormFallback() {
                 />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
               Administrator Login
             </h1>
-            <p className="text-gray-600">Lade Anmeldeformular...</p>
+            <p className="text-gray-600 dark:text-gray-300">Lade Anmeldeformular...</p>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/20 overflow-hidden">
             <div className="p-8 flex justify-center">
               <svg
                 className="animate-spin h-8 w-8 text-blue-500"
