@@ -16,6 +16,25 @@
   --color-error: 239 68 68; /* Red 500 */
   --color-info: 14 165 233; /* Sky 500 */
 
+  /* Hintergrundfarben - Hell Theme (Light Mode) */
+  --bg-primary: 255 255 255; /* Weiß */
+  --bg-secondary: 249 250 251; /* Sehr helles Grau */
+  --bg-tertiary: 243 244 246; /* Helles Grau */
+  --bg-elevated: 255 255 255; /* Weiß für erhöhte Elemente */
+
+  /* Textfarben - Hell Theme (Light Mode) */
+  --text-primary: 17 24 39; /* Dunkelgrau */
+  --text-secondary: 75 85 99; /* Mittleres Grau */
+  --text-tertiary: 156 163 175; /* Helles Grau */
+  --text-inverse: 255 255 255; /* Weiß für dunkle Hintergründe */
+  --text-muted: 107 114 128; /* Gedämpftes Grau */
+
+  /* Rahmenfarben - Hell Theme (Light Mode) */
+  --border-primary: 229 231 235; /* Helles Grau */
+  --border-secondary: 209 213 219; /* Mittleres Grau */
+  --border-focus: 59 130 246; /* Blau für Focus */
+  --border-hover: 156 163 175; /* Grau für Hover */
+
   /* Schatten System */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
@@ -70,6 +89,39 @@
   --z-popover: 1060;
   --z-tooltip: 1070;
   --z-toast: 1080;
+}
+
+/* === DUNKEL THEME (DARK MODE) === */
+[data-theme="dark"] {
+  /* Hintergrundfarben - Dunkel Theme (Dark Mode) */
+  --bg-primary: 17 24 39; /* Dunkles Grau */
+  --bg-secondary: 31 41 55; /* Mittleres Dunkelgrau */
+  --bg-tertiary: 51 65 85; /* Helleres Dunkelgrau */
+  --bg-elevated: 31 41 55; /* Mittleres Dunkelgrau für erhöhte Elemente */
+
+  /* Textfarben - Dunkel Theme (Dark Mode) */
+  --text-primary: 249 250 251; /* Sehr helles Grau (fast weiß) */
+  --text-secondary: 209 213 219; /* Helles Grau */
+  --text-tertiary: 156 163 175; /* Mittleres Grau */
+  --text-inverse: 17 24 39; /* Dunkelgrau für helle Hintergründe */
+  --text-muted: 156 163 175; /* Gedämpftes Grau */
+
+  /* Rahmenfarben - Dunkel Theme (Dark Mode) */
+  --border-primary: 75 85 99; /* Mittleres Grau */
+  --border-secondary: 107 114 128; /* Helleres Grau */
+  --border-focus: 59 130 246; /* Blau für Focus */
+  --border-hover: 156 163 175; /* Helles Grau für Hover */
+
+  /* Schatten System für Dark Mode */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4),
+    0 2px 4px -1px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5),
+    0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6),
+    0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3);
 }
 
 /* === GRUNDLEGENDE STYLES === */
@@ -212,6 +264,33 @@ body {
 
 .nav-link:hover::after {
   width: 80%;
+}
+
+/* Dark Mode Navigation Overrides */
+[data-theme="dark"] .nav-link {
+  color: rgb(var(--text-primary)); /* Weiß im Dark Mode */
+}
+
+[data-theme="dark"] .nav-link:hover {
+  color: rgb(var(--color-primary));
+  background-color: rgba(var(--color-primary), 0.2);
+}
+
+/* Ensure navbar text is white in dark mode */
+[data-theme="dark"] .navbar,
+[data-theme="dark"] .navbar-start,
+[data-theme="dark"] .navbar-center,
+[data-theme="dark"] .navbar-end {
+  color: rgb(var(--text-primary));
+}
+
+[data-theme="dark"] .btn-ghost {
+  color: rgb(var(--text-primary));
+}
+
+[data-theme="dark"] .btn-ghost:hover {
+  color: rgb(var(--color-primary));
+  background-color: rgba(var(--color-primary), 0.1);
 }
 
 /* Moderne Buttons */
@@ -970,8 +1049,24 @@ html {
   }
 
   [data-theme="dark"] {
-    --border-primary: 255 255 255;
-    --border-secondary: 255 255 255;
+    /* Hintergrundfarben - Dunkel Theme (Dark Mode) */
+    --bg-primary: 17 24 39; /* Dunkles Grau */
+    --bg-secondary: 31 41 55; /* Mittleres Dunkelgrau */
+    --bg-tertiary: 51 65 85; /* Helleres Dunkelgrau */
+    --bg-elevated: 31 41 55; /* Mittleres Dunkelgrau für erhöhte Elemente */
+
+    /* Textfarben - Dunkel Theme (Dark Mode) */
+    --text-primary: 249 250 251; /* Sehr helles Grau */
+    --text-secondary: 209 213 219; /* Helles Grau */
+    --text-tertiary: 156 163 175; /* Mittleres Grau */
+    --text-inverse: 17 24 39; /* Dunkelgrau für helle Hintergründe */
+    --text-muted: 107 114 128; /* Gedämpftes Grau */
+
+    /* Rahmenfarben - Dunkel Theme (Dark Mode) */
+    --border-primary: 75 85 99; /* Mittleres Grau */
+    --border-secondary: 107 114 128; /* Helleres Grau */
+    --border-focus: 59 130 246; /* Blau für Focus */
+    --border-hover: 156 163 175; /* Helles Grau für Hover */
   }
 }
 

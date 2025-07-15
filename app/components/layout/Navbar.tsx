@@ -6,34 +6,12 @@ import { FiSun, FiMoon, FiLogOut } from "react-icons/fi";
 import { BiFont, BiUserCircle } from "react-icons/bi";
 import { TbLanguage } from "react-icons/tb";
 import { useSession, signOut } from "next-auth/react";
+import { useTheme } from "../theme/ThemeProvider";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    // Check if user has a theme preference in localStorage
-    const storedTheme = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-
-    if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
-      setDarkMode(true);
-      document.documentElement.setAttribute("data-theme", "dark");
-    } else {
-      setDarkMode(false);
-      document.documentElement.setAttribute("data-theme", "light");
-    }
-  }, []);
-
-  const toggleDarkMode = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    const theme = newMode ? "dark" : "light";
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  };
+  const { theme, toggleTheme, isHydrated } = useTheme();
+  const isDarkMode = theme === 'dark';
 
   const increaseFontSize = () => {
     document.documentElement.style.fontSize =
@@ -85,14 +63,14 @@ const Navbar = () => {
             </button>
             <button
               className="btn btn-sm btn-ghost normal-case p-2 md:p-3"
-              onClick={toggleDarkMode}
+              onClick={toggleTheme}
               aria-label={
-                darkMode
+                isDarkMode
                   ? "Zum hellen Modus wechseln"
                   : "Zum dunklen Modus wechseln"
               }
             >
-              {darkMode ? <FiSun /> : <FiMoon />}
+              {isHydrated ? (isDarkMode ? <FiSun /> : <FiMoon />) : <FiMoon />}
               <span className="hidden md:inline ml-1 text-fluid-sm">Kontrast</span>
             </button>
             <Link

@@ -476,5 +476,7 @@ export default {
     styled: true,
     utils: true,
     logs: true,
+    prefix: "",
+    themes: ["light", "dark"],
   },
 } satisfies Config;
