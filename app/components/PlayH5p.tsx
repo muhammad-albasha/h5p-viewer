@@ -50,10 +50,15 @@ function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
         if (correctPath.endsWith("/h5p.json")) {
           correctPath = correctPath.substring(0, correctPath.length - 9); // Remove '/h5p.json'
         }
-        // Loading H5P from specified path
 
+        // Remove leading /h5p/ if present to get just the content directory name
+        if (correctPath.startsWith("/h5p/")) {
+          correctPath = correctPath.substring(5); // Remove '/h5p/'
+        }
+
+        // Loading H5P from specified path using our API route
         const h5p = new H5PConstructor(el, {
-          h5pJsonPath: withBasePath(correctPath), // Path to the directory containing h5p.json
+          h5pJsonPath: withBasePath(`/api/h5p/${correctPath}`), // Path to the directory containing h5p.json via API
           frameJs: withBasePath("/assets/frame.bundle.js"),
           frameCss: withBasePath("/assets/styles/h5p.css"),
         });
