@@ -264,23 +264,30 @@ export default function AdminDashboard() {
                 <span className="text-sm sm:text-base font-medium">Rechtliche Seiten</span>
               </Link>
 
-                            {/* Primary Action - Upload */}
               <Link
-                href="/admin/upload"
-                className="admin-menu-card admin-menu-card-primary"
+                href="/admin/uploads"
+                className="admin-menu-card"
               >
                 <svg
-                  className="w-5 h-5 sm:w-6 sm:h-6"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
+                  className="w-4 h-4 sm:w-5 sm:h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
                   <path
-                    fillRule="evenodd"
-                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                    clipRule="evenodd"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"
                   />
                 </svg>
-                <span className="text-sm sm:text-base font-semibold">Inhalt hochladen</span>
+                <span className="text-sm sm:text-base font-medium">Upload-Verwaltung</span>
               </Link>
 
               <Link
@@ -335,31 +342,25 @@ export default function AdminDashboard() {
                 <span className="text-sm sm:text-base font-medium">Benutzer</span>
               </Link>
 
+              {/* Primary Action - Upload */}
               <Link
-                href="/admin/uploads"
-                className="admin-menu-card"
+                href="/admin/upload"
+                className="admin-menu-card admin-menu-card-primary"
               >
                 <svg
-                  className="w-4 h-4 sm:w-5 sm:h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                  className="w-5 h-5 sm:w-6 sm:h-6"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
                 >
                   <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"
+                    fillRule="evenodd"
+                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                    clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-sm sm:text-base font-medium">Upload-Verwaltung</span>
+                <span className="text-sm sm:text-base font-semibold">Inhalt hochladen</span>
               </Link>
+
             </div>
           </div>
         </div>
