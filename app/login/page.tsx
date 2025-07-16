@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/app/components/layout/Navbar";
@@ -41,9 +41,23 @@ function LoginForm() {
       if (result?.error) {
         setError("Ungültige E-Mail-Adresse oder Passwort");
       } else if (result?.ok) {
-        // Login successful, redirect immediately
-        console.log("Login successful, redirecting to:", callbackUrl);
-        router.push(callbackUrl);
+        // Login successful, check if 2FA is required
+        console.log("Login successful, checking session...");
+        
+        // Get the updated session to check 2FA status
+        const session = await getSession();
+        
+        console.log("Session after login:", session);
+        
+        if (session?.user?.requiresTwoFactor) {
+          // User has 2FA enabled, redirect to 2FA verification
+          console.log("2FA required, redirecting to verification page");
+          router.push(`/auth/2fa/verify?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+        } else {
+          // No 2FA required, redirect to original destination
+          console.log("No 2FA required, redirecting to:", callbackUrl);
+          router.push(callbackUrl);
+        }
       } else {
         setError("Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.");
       }
