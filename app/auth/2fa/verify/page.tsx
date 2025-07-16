@@ -11,7 +11,11 @@ import { withBasePath } from "../../../utils/paths";
 function TwoFactorForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || withBasePath("/admin");
+  const rawCallbackUrl = searchParams.get("callbackUrl") || withBasePath("/h5p");
+  // If the callback URL is just the root path, redirect to H5P viewer instead
+  const callbackUrl = rawCallbackUrl === "/" || rawCallbackUrl === withBasePath("/") 
+    ? withBasePath("/h5p") 
+    : rawCallbackUrl;
 
   const [token, setToken] = useState("");
   const [error, setError] = useState("");
