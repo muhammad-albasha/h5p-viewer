@@ -40,7 +40,7 @@ const Navbar = () => {
   };
   return (
     <nav className="bg-base-100 shadow-md py-2 px-4 sticky top-0 z-50 responsive-hide-print">
-      <div className="container-responsive flex justify-end items-center">
+      <div className="container flex justify-end items-center">
         <div className="flex gap-2 md:gap-3">
           <div className="flex items-center gap-1">
             <button
