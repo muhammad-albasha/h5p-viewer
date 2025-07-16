@@ -2,6 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { AppDataSource } from "@/app/lib/datasource";
 import { Contact } from "@/app/entities/Contact";
 import { withBasePath } from "@/app/utils/paths";
+import fs from 'fs';
+import path from 'path';
+
+// Helper function to check if image exists
+function imageExists(imagePath: string): boolean {
+  try {
+    // Remove basePath and leading slash for local file check
+    const cleanPath = imagePath.replace('/h5p-viewer', '').replace(/^\//, '');
+    const fullPath = path.join(process.cwd(), 'public', cleanPath);
+    return fs.existsSync(fullPath);
+  } catch (error) {
+    console.error('Error checking image existence:', error);
+    return false;
+  }
+}
 
 export async function GET() {
   try {
@@ -17,15 +32,26 @@ export async function GET() {
       },
     });
 
-    // Normalize photo URLs to include basePath if needed
-    const normalizedContacts = contacts.map(contact => ({
-      ...contact,
-      photo: contact.photo.startsWith('/h5p-viewer/') 
-        ? contact.photo 
-        : contact.photo.startsWith('/') 
-          ? withBasePath(contact.photo)
-          : contact.photo
-    }));
+    // Normalize photo URLs and check if images exist
+    const normalizedContacts = contacts.map(contact => {
+      let photo = contact.photo;
+      
+      // Normalize photo URL to include basePath if needed
+      if (!photo.startsWith('/h5p-viewer/') && photo.startsWith('/')) {
+        photo = withBasePath(photo);
+      }
+      
+      // Check if image exists, if not use placeholder
+      if (!imageExists(photo)) {
+        console.warn(`Contact image not found: ${photo}, using placeholder for contact ${contact.id}`);
+        photo = withBasePath("/assets/placeholder-image.svg");
+      }
+      
+      return {
+        ...contact,
+        photo
+      };
+    });
 
     return NextResponse.json(normalizedContacts);
   } catch (error) {

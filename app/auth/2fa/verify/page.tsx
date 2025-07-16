@@ -11,10 +11,10 @@ import { withBasePath } from "../../../utils/paths";
 function TwoFactorForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const rawCallbackUrl = searchParams.get("callbackUrl") || withBasePath("/h5p");
+  const rawCallbackUrl = searchParams.get("callbackUrl") || withBasePath("/h5p-viewer");
   // If the callback URL is just the root path, redirect to H5P viewer instead
   const callbackUrl = rawCallbackUrl === "/" || rawCallbackUrl === withBasePath("/") 
-    ? withBasePath("/h5p") 
+    ? withBasePath("/h5p-viewer") 
     : rawCallbackUrl;
 
   const [token, setToken] = useState("");

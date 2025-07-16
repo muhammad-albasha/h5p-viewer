@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/app/components/layout/Navbar";
@@ -19,6 +21,62 @@ interface Contact {
   bio?: string;
   linkedin?: string;
   office?: string;
+}
+
+// Client component for handling image errors
+function ContactImage({ contact }: { contact: Contact }) {
+  const [imageError, setImageError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  const handleImageError = () => {
+    setImageError(true);
+    setIsLoading(false);
+  };
+  
+  const handleImageLoad = () => {
+    setIsLoading(false);
+  };
+  
+  // Get initials for fallback
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+  
+  return (
+    <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-white/50 shadow-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+      {!imageError ? (
+        <>
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+              <div className="w-8 h-8 border-2 border-blue-300 border-t-blue-600 rounded-full animate-spin"></div>
+            </div>
+          )}
+          <Image
+            src={contact.photo}
+            alt={contact.name}
+            width={128}
+            height={128}
+            className={`w-full h-full object-cover transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+            unoptimized
+            onError={handleImageError}
+            onLoad={handleImageLoad}
+          />
+        </>
+      ) : (
+        <div className="text-white text-center">
+          <div className="text-2xl font-bold mb-1">
+            {getInitials(contact.name)}
+          </div>
+          <div className="text-xs opacity-80">Foto nicht verfügbar</div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 async function getContacts(): Promise<Contact[]> {
@@ -145,16 +203,7 @@ export default async function ContactPage() {
                 <div className="relative h-64 bg-gradient-to-br from-primary to-secondary">
                   <div className="absolute inset-0 bg-black/20"></div>
                   <div className="relative z-10 flex items-center justify-center h-full">
-                    <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white/50 shadow-xl">
-                      <Image
-                        src={contact.photo}
-                        alt={contact.name}
-                        width={128}
-                        height={128}
-                        className="w-full h-full object-cover"
-                        unoptimized
-                      />
-                    </div>
+                    <ContactImage contact={contact} />
                   </div>
                 </div>
 
