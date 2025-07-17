@@ -2,6 +2,13 @@
 
 Dieses Projekt ist ein einfaches Content-Management-System für H5P-Inhalte, das es ermöglicht, H5P-Dateien hochzuladen, anzuzeigen und zu verwalten. Es bietet ein Administratorsystem ohne Registrierungsprozess.
 
+## 🚀 Schnellzugriff auf Dokumentation
+
+- [Linux-Deployment](docs/LINUX-DEPLOYMENT.md) - Anleitung für Linux-Server
+- [Uni Wuppertal Server](docs/UNI-WUPPERTAL-SERVER.md) - Spezifische Anleitung für Uni Wuppertal
+- [Nginx Konfiguration](docs/nginx-uni-wuppertal.conf) - Beispiel Nginx-Konfiguration
+- [Apache Konfiguration](docs/apache-uni-wuppertal.conf) - Beispiel Apache-Konfiguration
+
 ## Funktionen
 
 - Einfaches Login-System mit vordefiniertem Administratorkonto
@@ -47,6 +54,31 @@ Dieses Projekt ist ein einfaches Content-Management-System für H5P-Inhalte, das
    ```bash
    npm run dev
    ```
+
+## Problembehandlung
+
+### 404-Fehler bei Foto-Uploads
+
+Wenn hochgeladene Kontakt-Fotos nicht angezeigt werden können (404-Fehler):
+
+1. **Verzeichnisberechtigungen überprüfen**
+   ```bash
+   # Stellen Sie sicher, dass die Verzeichnisse existieren
+   mkdir -p ./public/uploads/contacts
+   
+   # Setzen Sie korrekte Berechtigungen
+   chmod -R 755 ./public/uploads
+   ```
+
+2. **Server-Konfiguration prüfen**
+   - Für Nginx: [Nginx-Konfiguration](docs/nginx-uni-wuppertal.conf)
+   - Für Apache: [Apache-Konfiguration](docs/apache-uni-wuppertal.conf)
+   
+3. **Debug-Endpoint verwenden**
+   - Zugriff auf `/api/debug/check-photo?filename=your-file-name.jpg` um zu prüfen, ob die Datei auf dem Server existiert
+
+4. **Weitergehende Diagnose**
+   - Vollständige Anleitung in [UNI-WUPPERTAL-SERVER.md](docs/UNI-WUPPERTAL-SERVER.md)
 
 ### Linux (Produktion)
 

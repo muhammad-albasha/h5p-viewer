@@ -110,7 +110,25 @@ export default function PhotoUpload({
       if (typeof window !== 'undefined') {
         const img = document.createElement('img');
         img.onload = () => console.log("Image loaded successfully");
-        img.onerror = () => console.warn("Image failed to load:", photoUrl);
+        img.onerror = () => {
+          console.warn("Image failed to load:", photoUrl);
+          
+          // Extract the filename from the URL
+          const filename = photoUrl.split('/').pop();
+          
+          // Call the debug endpoint to check if the file exists on the server
+          if (filename) {
+            console.log("Running server-side check for file:", filename);
+            fetch(`/api/debug/check-photo?filename=${encodeURIComponent(filename)}`)
+              .then(res => res.json())
+              .then(data => {
+                console.log("Server file check results:", data);
+              })
+              .catch(err => {
+                console.error("Error checking file on server:", err);
+              });
+          }
+        };
         img.src = photoUrl;
       }
     } catch (error) {
