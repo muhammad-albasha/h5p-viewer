@@ -97,8 +97,22 @@ export default function PhotoUpload({
 
       // Erfolgreich hochgeladen
       console.log("Upload successful, new photo URL:", result.photoUrl);
-      onPhotoChange(result.photoUrl);
-      setPreviewUrl(result.photoUrl);
+      
+      // Make sure the photo URL is properly formatted
+      const photoUrl = result.photoUrl.startsWith('http') || result.photoUrl.startsWith('/') 
+        ? result.photoUrl 
+        : `/${result.photoUrl}`;
+        
+      onPhotoChange(photoUrl);
+      setPreviewUrl(photoUrl);
+      
+      // Verify the image can be loaded (client-side only)
+      if (typeof window !== 'undefined') {
+        const img = document.createElement('img');
+        img.onload = () => console.log("Image loaded successfully");
+        img.onerror = () => console.warn("Image failed to load:", photoUrl);
+        img.src = photoUrl;
+      }
     } catch (error) {
       console.error("Upload error:", error);
       setUploadError(

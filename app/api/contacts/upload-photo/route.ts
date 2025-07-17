@@ -62,9 +62,16 @@ export async function POST(request: NextRequest) {
     console.log(`[Upload Photo API] File saved to: ${filePath}`);
     
     // Return the URL to the uploaded file
-    const photoUrl = withBasePath(`/uploads/contacts/${fileName}`);
+    const relativePath = `/uploads/contacts/${fileName}`;
+    const photoUrl = withBasePath(relativePath);
     
-    return NextResponse.json({ photoUrl });
+    console.log(`[Upload Photo API] File uploaded. Relative path: ${relativePath}, Full URL: ${photoUrl}`);
+    
+    return NextResponse.json({ 
+      photoUrl,
+      fileName,
+      uploadedTo: relativePath
+    });
   } catch (error) {
     console.error("[Upload Photo API] Error handling photo upload:", error);
     return NextResponse.json(

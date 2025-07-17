@@ -8,9 +8,14 @@
 ## 2. File Permissions für Linux
 # Stelle sicher, dass diese Verzeichnisse existieren und die richtigen Permissions haben:
 sudo mkdir -p /var/www/app/h5p-viewer/public/uploads/h5p
+sudo mkdir -p /var/www/app/h5p-viewer/public/uploads/contacts
 sudo mkdir -p /var/www/app/h5p-viewer/public/h5p
 sudo chown -R vclass:vclass /var/www/app/h5p-viewer/public/
 sudo chmod -R 755 /var/www/app/h5p-viewer/public/
+
+# Alternative: Unser Permissions-Fix-Script verwenden
+chmod +x ./scripts/fix-uploads-permissions.sh
+sudo ./scripts/fix-uploads-permissions.sh vclass vclass
 
 ## 3. Node.js Permissions
 # Stelle sicher, dass der vclass User Schreibrechte hat:
