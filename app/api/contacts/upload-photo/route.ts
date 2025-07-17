@@ -67,11 +67,22 @@ export async function POST(request: NextRequest) {
     
     console.log(`[Upload Photo API] File uploaded. Relative path: ${relativePath}, Full URL: ${photoUrl}`);
     
-    return NextResponse.json({ 
+    // Create response with CORS and cache control headers to help with university proxies
+    const response = NextResponse.json({ 
       photoUrl,
       fileName,
-      uploadedTo: relativePath
+      uploadedTo: relativePath,
+      timestamp: new Date().toISOString(),
     });
+    
+    // Add headers that may help with proxy servers
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With');
+    response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    response.headers.set('X-Content-Type-Options', 'nosniff');
+    
+    return response;
   } catch (error) {
     console.error("[Upload Photo API] Error handling photo upload:", error);
     return NextResponse.json(
@@ -90,6 +101,10 @@ export async function OPTIONS(request: NextRequest) {
     status: 200,
     headers: {
       'Allow': 'POST, OPTIONS',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, X-Requested-With, Accept',
+      'Access-Control-Max-Age': '86400', // 24 hours
     },
   });
 }

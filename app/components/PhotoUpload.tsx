@@ -201,13 +201,42 @@ export default function PhotoUpload({
           // Extract the filename from the URL
           const filename = photoUrl.split('/').pop();
           
-          // Call the debug endpoint to check if the file exists on the server
           if (filename) {
+            console.log("Original image failed to load, trying debug endpoints...");
+            
+            // First, check if the file exists on the server
             console.log("Running server-side check for file:", filename);
-            fetch(`/api/debug/check-photo?filename=${encodeURIComponent(filename)}`)
-              .then(res => res.json())
+            fetch(withBasePath(`/api/debug/check-photo?filename=${encodeURIComponent(filename)}`))
+              .then(res => {
+                if (!res.ok) {
+                  console.warn(`Debug endpoint returned status ${res.status}`);
+                  return res.text().then(text => {
+                    try {
+                      return JSON.parse(text);
+                    } catch (e) {
+                      return { error: `Status ${res.status}`, message: text };
+                    }
+                  });
+                }
+                return res.json();
+              })
               .then(data => {
                 console.log("Server file check results:", data);
+                
+                // If file exists on server, try to load via API
+                if (data.fileExists) {
+                  console.log("File exists on server, trying direct API access");
+                  
+                  // Try to load the image via our direct API endpoint
+                  const debugPhotoUrl = withBasePath(`/api/debug/photo?filename=${encodeURIComponent(filename)}`);
+                  console.log("Loading image through API:", debugPhotoUrl);
+                  
+                  // Update the preview with the debug URL
+                  setPreviewUrl(debugPhotoUrl);
+                  
+                  // Also update the parent component if needed
+                  onPhotoChange(debugPhotoUrl);
+                }
               })
               .catch(err => {
                 console.error("Error checking file on server:", err);
