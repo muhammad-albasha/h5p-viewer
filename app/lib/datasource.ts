@@ -34,14 +34,32 @@ let isInitialized = false;
 
 export async function getDataSource(): Promise<DataSource> {
   if (!isInitialized) {
-    try {
-      await AppDataSource.initialize();
-      isInitialized = true;
-      console.log("Data Source has been initialized!");
-    } catch (err) {
-      console.error("Error during Data Source initialization:", err);
-      throw err;
+    const maxRetries = 3;
+    let retries = 0;
+    let lastError;
+
+    while (retries < maxRetries) {
+      try {
+        await AppDataSource.initialize();
+        isInitialized = true;
+        console.log("Data Source has been initialized successfully!");
+        return AppDataSource;
+      } catch (err) {
+        retries++;
+        lastError = err;
+        console.error(`Error during Data Source initialization (attempt ${retries}/${maxRetries}):`, err);
+        
+        if (retries < maxRetries) {
+          // Wait before retrying (exponential backoff)
+          const delay = retries * 1000; // 1s, 2s, 3s
+          console.log(`Retrying in ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
     }
+    
+    console.error("Failed to initialize database after multiple attempts");
+    throw lastError;
   }
   return AppDataSource;
 }

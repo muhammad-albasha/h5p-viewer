@@ -2,28 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { AppDataSource } from "@/app/lib/datasource";
 import { Contact } from "@/app/entities/Contact";
 import { withBasePath } from "@/app/utils/paths";
-import fs from 'fs';
-import path from 'path';
-
-// Helper function to check if image exists
-function imageExists(imagePath: string): boolean {
-  try {
-    // Remove basePath and leading slash for local file check
-    const cleanPath = imagePath.replace('/h5p-viewer', '').replace(/^\//, '');
-    const fullPath = path.join(process.cwd(), 'public', cleanPath);
-    return fs.existsSync(fullPath);
-  } catch (error) {
-    console.error('Error checking image existence:', error);
-    return false;
-  }
-}
 
 export async function GET() {
   try {
+    console.log("[Contacts API] Processing GET request");
+    
     if (!AppDataSource.isInitialized) {
-      await AppDataSource.initialize();
+      try {
+        console.log("[Contacts API] Initializing database connection");
+        await AppDataSource.initialize();
+        console.log("[Contacts API] Database initialized successfully");
+      } catch (dbInitError) {
+        console.error("[Contacts API] Failed to initialize database:", dbInitError);
+        throw dbInitError;
+      }
     }
 
+    console.log("[Contacts API] Querying contacts");
     const contactRepository = AppDataSource.getRepository(Contact);
     const contacts = await contactRepository.find({
       order: {
@@ -32,32 +27,30 @@ export async function GET() {
       },
     });
 
-    // Normalize photo URLs and check if images exist
-    const normalizedContacts = contacts.map(contact => {
-      let photo = contact.photo;
-      
-      // Normalize photo URL to include basePath if needed
-      if (!photo.startsWith('/h5p-viewer/') && photo.startsWith('/')) {
-        photo = withBasePath(photo);
-      }
-      
-      // Check if image exists, if not use placeholder
-      if (!imageExists(photo)) {
-        console.warn(`Contact image not found: ${photo}, using placeholder for contact ${contact.id}`);
-        photo = withBasePath("/assets/placeholder-image.svg");
-      }
-      
-      return {
-        ...contact,
-        photo
-      };
-    });
+    console.log(`[Contacts API] Found ${contacts.length} contacts`);
 
+    // Normalize photo URLs to include basePath if needed
+    const normalizedContacts = contacts.map(contact => ({
+      ...contact,
+      photo: contact.photo.startsWith('/h5p-viewer/') 
+        ? contact.photo 
+        : contact.photo.startsWith('/') 
+          ? withBasePath(contact.photo)
+          : contact.photo
+    }));
+
+    console.log("[Contacts API] Returning normalized contacts");
     return NextResponse.json(normalizedContacts);
   } catch (error) {
-    console.error("Error fetching contacts:", error);
+    console.error("[Contacts API] Error fetching contacts:", error);
+    
+    // Include more details about the error in development
+    const errorMessage = process.env.NODE_ENV === 'development' 
+      ? `Failed to fetch contacts: ${error instanceof Error ? error.message : 'Unknown error'}`
+      : "Failed to fetch contacts";
+      
     return NextResponse.json(
-      { error: "Failed to fetch contacts" },
+      { error: errorMessage, stack: process.env.NODE_ENV === 'development' ? (error as Error).stack : undefined },
       { status: 500 }
     );
   }

@@ -72,18 +72,31 @@ export default function PhotoUpload({
       const formData = new FormData();
       formData.append("photo", file);
 
-      const response = await fetch(withBasePath("/api/contacts/upload-photo"), {
+      const uploadUrl = withBasePath("/api/contacts/upload-photo");
+      console.log("Uploading photo to:", uploadUrl);
+
+      const response = await fetch(uploadUrl, {
         method: "POST",
         body: formData,
       });
 
-      const result = await response.json();
+      // Handle non-JSON responses
+      const responseText = await response.text();
+      let result;
+      
+      try {
+        result = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error("Failed to parse response as JSON:", responseText);
+        throw new Error("Server returned an invalid response format");
+      }
 
       if (!response.ok) {
         throw new Error(result.error || "Upload fehlgeschlagen");
       }
 
       // Erfolgreich hochgeladen
+      console.log("Upload successful, new photo URL:", result.photoUrl);
       onPhotoChange(result.photoUrl);
       setPreviewUrl(result.photoUrl);
     } catch (error) {

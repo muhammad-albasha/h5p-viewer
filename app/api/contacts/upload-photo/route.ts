@@ -1,69 +1,88 @@
 import { NextRequest, NextResponse } from "next/server";
 import { withBasePath } from "@/app/utils/paths";
 import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { join } from "path";
+import { existsSync } from "fs";
+import { v4 as uuidv4 } from "uuid";
 
+/**
+ * API route for uploading contact photos
+ */
 export async function POST(request: NextRequest) {
   try {
-    const formData = await request.formData();
-    const file = formData.get("photo") as File;
-
-    if (!file) {
-      return NextResponse.json(
-        { error: "Keine Datei ausgewählt" },
-        { status: 400 }
-      );
-    }
-
-    // Validierung der Dateigröße (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      return NextResponse.json(
-        { error: "Datei ist zu groß. Maximum 5MB erlaubt." },
-        { status: 400 }
-      );
-    }
-
-    // Validierung des Dateityps
-    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-    if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json(
-        { error: "Ungültiger Dateityp. Nur JPEG, PNG und WebP sind erlaubt." },
-        { status: 400 }
-      );
-    }
-
-    // Erstelle Upload-Verzeichnis falls es nicht existiert
-    const uploadDir = path.join(process.cwd(), "public", "uploads", "contacts");
-    try {
+    console.log("[Upload Photo API] Starting photo upload process");
+    
+    // Make sure the uploads directory exists
+    const uploadDir = join(process.cwd(), "public", "uploads", "contacts");
+    if (!existsSync(uploadDir)) {
+      console.log(`[Upload Photo API] Creating directory: ${uploadDir}`);
       await mkdir(uploadDir, { recursive: true });
-    } catch (error) {
-      // Verzeichnis existiert bereits
     }
-
-    // Generiere eindeutigen Dateinamen
-    const timestamp = Date.now();
-    const fileExtension = path.extname(file.name);
-    const fileName = `contact-${timestamp}${fileExtension}`;
-    const filePath = path.join(uploadDir, fileName);
-
-    // Konvertiere File zu Buffer und speichere
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    await writeFile(filePath, buffer);
-
-    // Rückgabe der URL für die Datenbank
+    
+    // Parse multipart form data
+    const formData = await request.formData();
+    const photo = formData.get("photo");
+    
+    if (!photo || !(photo instanceof File)) {
+      console.error("[Upload Photo API] No valid photo file in request");
+      return NextResponse.json(
+        { error: "No photo file provided" },
+        { status: 400 }
+      );
+    }
+    
+    // Validate file
+    if (photo.size > 5 * 1024 * 1024) {
+      console.error("[Upload Photo API] File too large:", photo.size);
+      return NextResponse.json(
+        { error: "File is too large. Maximum 5MB allowed." },
+        { status: 400 }
+      );
+    }
+    
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(photo.type)) {
+      console.error("[Upload Photo API] Invalid file type:", photo.type);
+      return NextResponse.json(
+        { error: "Invalid file type. Only JPEG, PNG and WebP are allowed." },
+        { status: 400 }
+      );
+    }
+    
+    // Generate unique filename with original extension
+    const fileExtension = photo.name.split('.').pop() || 'jpg';
+    const fileName = `${uuidv4()}.${fileExtension}`;
+    const filePath = join(uploadDir, fileName);
+    
+    // Read the file
+    const fileBuffer = Buffer.from(await photo.arrayBuffer());
+    
+    // Write the file
+    await writeFile(filePath, fileBuffer);
+    console.log(`[Upload Photo API] File saved to: ${filePath}`);
+    
+    // Return the URL to the uploaded file
     const photoUrl = withBasePath(`/uploads/contacts/${fileName}`);
-
-    return NextResponse.json({
-      success: true,
-      photoUrl,
-      message: "Foto erfolgreich hochgeladen",
-    });
+    
+    return NextResponse.json({ photoUrl });
   } catch (error) {
-    console.error("Error uploading photo:", error);
+    console.error("[Upload Photo API] Error handling photo upload:", error);
     return NextResponse.json(
-      { error: "Fehler beim Hochladen des Fotos" },
+      { 
+        error: "Failed to upload photo",
+        details: process.env.NODE_ENV === 'development' ? String(error) : undefined
+      },
       { status: 500 }
     );
   }
+}
+
+// Add OPTIONS method to handle CORS preflight requests
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Allow': 'POST, OPTIONS',
+    },
+  });
 }
