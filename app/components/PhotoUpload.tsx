@@ -10,6 +10,70 @@ interface PhotoUploadProps {
   className?: string;
 }
 
+/**
+ * Resize an image file to a maximum width while maintaining aspect ratio
+ * This helps reduce upload size and prevents server-side size limitations
+ */
+async function resizeImage(file: File, maxWidth: number): Promise<File> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (readerEvent) => {
+      const image = new window.Image();
+      image.onload = () => {
+        // Don't resize if image is already smaller
+        if (image.width <= maxWidth) {
+          resolve(file);
+          return;
+        }
+        
+        const canvas = document.createElement('canvas');
+        const ratio = maxWidth / image.width;
+        canvas.width = maxWidth;
+        canvas.height = image.height * ratio;
+        
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(file); // Fall back to original if canvas context fails
+          return;
+        }
+        
+        // Draw resized image
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        
+        // Convert to blob with reduced quality
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            resolve(file); // Fall back to original if blob conversion fails
+            return;
+          }
+          
+          // Create a new file from the blob
+          const resizedFile = new File([blob], file.name, {
+            type: file.type,
+            lastModified: Date.now(),
+          });
+          
+          resolve(resizedFile);
+        }, file.type, 0.85); // 85% quality for JPEG/WebP
+      };
+      image.onerror = () => {
+        // If image loading fails, use original
+        resolve(file);
+      };
+      
+      if (readerEvent.target?.result) {
+        image.src = readerEvent.target.result as string;
+      } else {
+        resolve(file); // Fall back to original
+      }
+    };
+    reader.onerror = () => {
+      reject(new Error('Failed to read file for resizing'));
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 export default function PhotoUpload({
   currentPhoto = withBasePath("/assets/placeholder-image.svg"),
   onPhotoChange,
@@ -69,8 +133,23 @@ export default function PhotoUpload({
     setUploadError(null);
 
     try {
+      // Create a smaller preview image before uploading
+      const resizedImage = await resizeImage(file, 800); // Max width 800px
+      console.log("Image resized for upload:", resizedImage.size, "bytes");
+      
       const formData = new FormData();
-      formData.append("photo", file);
+      formData.append("photo", resizedImage, file.name);
+
+      // Try to get server status first to verify connectivity
+      try {
+        const statusResponse = await fetch(withBasePath("/api/debug/status"));
+        if (statusResponse.ok) {
+          const statusData = await statusResponse.json();
+          console.log("Server status before upload:", statusData);
+        }
+      } catch (statusError) {
+        console.warn("Could not check server status:", statusError);
+      }
 
       const uploadUrl = withBasePath("/api/contacts/upload-photo");
       console.log("Uploading photo to:", uploadUrl);
@@ -78,6 +157,12 @@ export default function PhotoUpload({
       const response = await fetch(uploadUrl, {
         method: "POST",
         body: formData,
+        // Add specific headers to help with university proxy servers
+        headers: {
+          // Remove content-type to let the browser set it with the boundary
+          "X-Requested-With": "XMLHttpRequest",
+          "Accept": "application/json"
+        },
       });
 
       // Handle non-JSON responses
