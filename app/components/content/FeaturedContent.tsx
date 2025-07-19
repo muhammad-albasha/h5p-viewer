@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import FavoriteButton from "@/app/components/common/FavoriteButton";
 import { withBasePath } from '@/app/utils/paths';
+import styles from "./ContentCard.module.css";
 
 interface H5PContent {
   id: number;
@@ -203,7 +204,7 @@ export default function FeaturedContent() {
 
   return (
     <section className="py-8 sm:py-12 md:py-16 lg:py-20 px-4 bg-gradient-to-br from-gray-50 via-gray-50 to-gray-50">
-      <div className="container-responsive">
+      <div className="container-responsive max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-fluid-2xl md:text-fluid-3xl font-bold text-gray-900 mb-4">
@@ -261,11 +262,11 @@ export default function FeaturedContent() {
         ) : (
           <>
             {/* Featured Content Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-12">
-              {featuredContents.map((content) => (
+            <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-12 justify-items-center">
+              {featuredContents.slice(0, 4).map((content) => (
                 <div
                   key={content.id}
-                  className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl overflow-hidden border border-white/20 transition-all duration-300 hover:scale-105 group cursor-pointer"
+                  className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl overflow-hidden border border-white/20 transition-all duration-300 hover:scale-105 group cursor-pointer w-full max-w-sm mx-auto"
                 >
                   {/* Card Image */}
                   <div className="relative h-48 bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden">
@@ -324,7 +325,7 @@ export default function FeaturedContent() {
                     </h3>
 
                     {/* Description */}
-                    <p className="text-gray-600 text-sm leading-relaxed">
+                    <p className={`text-gray-600 text-sm leading-relaxed ${styles.descriptionTruncate}`}>
                       {content.description ||
                         `Interaktiver ${content.type}-Inhalt für optimales Lernen`}
                     </p>
@@ -374,10 +375,10 @@ export default function FeaturedContent() {
             </div>
 
             {/* View All Button */}
-            <div className="text-center">
+            <div className="text-center mt-6">
               <Link
                 href="/h5p"
-                className="inline-flex items-center gap-2 px-8 py-3 bg-white/80 backdrop-blur-sm hover:bg-white/90 text-gray-700 hover: font-semibold rounded-xl border-2 border-gray-200 hover: transition-all duration-200 hover:scale-105 hover:shadow-lg"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-white/80 backdrop-blur-sm hover:bg-white/90 text-gray-700 hover: font-semibold rounded-xl border-2 border-gray-200 hover: transition-all duration-200 hover:scale-105 hover:shadow-lg mx-auto"
               >
                 <svg
                   className="w-5 h-5"

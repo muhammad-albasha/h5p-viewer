@@ -280,7 +280,7 @@ const BereichOverview = () => {
                 </div>
               </div>{" "}
               {/* Subject Areas Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {subjectAreas
                   .slice()
                   .sort((a, b) => a.name.localeCompare(b.name))

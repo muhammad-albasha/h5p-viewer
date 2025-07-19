@@ -7,6 +7,7 @@ export function getBasePath(): string {
 }
 
 export function withBasePath(pathStr: string): string {
+  // Always return external URLs as-is without modifications
   if (pathStr.startsWith('http://') || pathStr.startsWith('https://') || pathStr.startsWith('//')) {
     return pathStr;
   }

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useFavorites } from "@/app/hooks/useFavorites";
 import FavoriteButton from "@/app/components/common/FavoriteButton";
 import { withBasePath } from '@/app/utils/paths';
+import styles from "./ContentCard.module.css";
 
 const FavoritesSection: React.FC = () => {
   const { favorites, isLoading, clearAllFavorites } = useFavorites();
@@ -23,7 +24,7 @@ const FavoritesSection: React.FC = () => {
           </div>
 
           {/* Loading skeleton */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
@@ -145,7 +146,7 @@ const FavoritesSection: React.FC = () => {
         </div>
 
         {/* Favorites Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
           {favorites.map((content) => {
             // Determine image URL
             let imageUrl = content.coverImagePath;
@@ -222,7 +223,7 @@ const FavoritesSection: React.FC = () => {
                   </h3>
 
                   {/* Description */}
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <p className={`text-gray-600 text-sm leading-relaxed ${styles.descriptionTruncate}`}>
                     {content.description ||
                       `Interaktiver ${content.type || 'H5P'}-Inhalt für optimales Lernen`}
                   </p>

@@ -48,7 +48,7 @@ export default function Footer() {
             <Link href="/imprint" className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
               Impressum
             </Link>
-            <Link href="/https://www.uni-wuppertal.de/de/datenschutz/" className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
+            <Link href="https://www.uni-wuppertal.de/de/datenschutz/" target="_blank" rel="noopener noreferrer" className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
               Datenschutz
             </Link>
             <Link href="/copyright" className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
@@ -58,14 +58,16 @@ export default function Footer() {
         </div>
         {/* Footer Bottom */}
         <div className="mt-6 md:mt-8 border-t border-base-200 pt-4 md:pt-6 text-center text-fluid-sm opacity-60">
-          <p>
+          <p suppressHydrationWarning={true}>
             © {new Date().getFullYear()} H5P-Viewer powered by{" "}
-            <a
+            <Link
               href="https://medialab-projekte.uni-wuppertal.de/user/Home/Privacy"
               className="link link-hover opacity-80 hover:opacity-100 transition-opacity"
+              target="_blank" 
+              rel="noopener noreferrer"
             >
               Medialab
-            </a>
+            </Link>
           </p>
         </div>
       </div>

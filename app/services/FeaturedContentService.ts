@@ -22,7 +22,7 @@ export class FeaturedContentService {
       h5pRepo: this.h5pContentRepository,
     };
   }
-  async getFeaturedContent(limit: number = 3): Promise<H5PContent[]> {
+  async getFeaturedContent(limit: number = 4): Promise<H5PContent[]> {
     const { featuredRepo } = await this.getRepositories();
 
     const featuredItems = await featuredRepo.find({

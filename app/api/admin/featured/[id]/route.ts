@@ -50,14 +50,14 @@ export async function POST(
         message: "Aus Featured entfernt",
       });
     } else {
-      // Check if we already have 3 featured items
-      const featuredContent = await featuredService.getFeaturedContent(3);
+      // Check if we already have 4 featured items
+      const featuredContent = await featuredService.getFeaturedContent(4);
 
-      if (featuredContent.length >= 3) {
+      if (featuredContent.length >= 4) {
         return NextResponse.json(
           {
             error:
-              "Maximal 3 Featured-Inhalte möglich. Bitte entfernen Sie erst einen anderen.",
+              "Maximal 4 Featured-Inhalte möglich. Bitte entfernen Sie erst einen anderen.",
           },
           { status: 400 }
         );

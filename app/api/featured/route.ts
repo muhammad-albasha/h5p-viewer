@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch featured H5P content from database
-    const featuredContent = await featuredService.getFeaturedContent(3);
+    const featuredContent = await featuredService.getFeaturedContent(4);
     const h5pContents = featuredContent.map((content) => ({
       id: content.id,
       name: content.title,
