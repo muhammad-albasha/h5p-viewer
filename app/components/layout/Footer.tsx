@@ -48,7 +48,7 @@ export default function Footer() {
             <Link href="/imprint" className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
               Impressum
             </Link>
-            <Link href="/privacy" className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
+            <Link href="/https://www.uni-wuppertal.de/de/datenschutz/" className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
               Datenschutz
             </Link>
             <Link href="/copyright" className="link link-hover text-fluid-sm opacity-80 hover:opacity-100 transition-opacity">
