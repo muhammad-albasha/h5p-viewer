@@ -2,6 +2,7 @@ import Link from "next/link";
 import React from "react";
 import FavoriteButton from "@/app/components/common/FavoriteButton";
 import { withBasePath } from "../../utils/paths";
+import styles from "./ContentCard.module.css";
 
 interface H5PContent {
   id: number;
@@ -150,7 +151,7 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
                 </h3>
 
                 {/* Description */}
-                <p className="text-gray-600 text-sm leading-relaxed">
+                <p className={`text-gray-600 text-sm leading-relaxed ${styles.descriptionTruncate}`}>
                   {content.description ||
                     `Interaktiver ${content.type}-Inhalt für optimales Lernen`}
                 </p>

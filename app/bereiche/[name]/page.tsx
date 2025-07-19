@@ -7,6 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import ContentFilter from "@/app/components/content/ContentFilter";
 import FavoriteButton from "@/app/components/common/FavoriteButton";
 import SortToggle from "@/app/components/content/SortToggle";
+import styles from "@/app/components/content/ContentCard.module.css";
 import { withBasePath } from "../../utils/paths";
 
 interface SubjectAreaContent {
@@ -22,6 +23,7 @@ interface SubjectAreaContent {
   tags: string[];
   slug?: string;
   coverImagePath?: string;
+  description?: string;
   isPasswordProtected?: boolean;
 }
 
@@ -598,9 +600,9 @@ const Bereich = () => {
                                 {item.name}
                               </h3>
                               {/* Description */}
-                              <p className="text-gray-600 text-sm leading-relaxed">
-                                Interaktiver {item.type}-Inhalt für optimales
-                                Lernen
+                              <p className={`text-gray-600 text-sm leading-relaxed ${styles.descriptionTruncate}`}>
+                                {item.description || 
+                                  `Interaktiver ${item.type}-Inhalt für optimales Lernen`}
                               </p>{" "}
                               {/* Tags */}
                               <div className="flex flex-wrap gap-2">
