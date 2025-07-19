@@ -6,6 +6,7 @@ import Navbar from '@/app/components/layout/Navbar';
 import Header from '@/app/components/layout/Header';
 import ContentFilter from '@/app/components/content/ContentFilter';
 import ContentCardGrid from '@/app/components/content/ContentCardGrid';
+import SortToggle from "@/app/components/content/SortToggle";
 import { useFavorites } from '@/app/hooks/useFavorites';
 import Link from 'next/link';
 import { withBasePath } from '../utils/paths';
@@ -44,6 +45,7 @@ function H5PContentPage() {
   const [availableTags, setAvailableTags] = useState<string[]>([]);
   const [subjectAreas, setSubjectAreas] = useState<SubjectArea[]>([]);
   const [selectedSubjectArea, setSelectedSubjectArea] = useState('');
+  const [sortOption, setSortOption] = useState<"alphabetical" | "date">("alphabetical");
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -130,8 +132,16 @@ function H5PContentPage() {
       );
     }
     
+    // Sort results based on selected sort option
+    if (sortOption === "alphabetical") {
+      result.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortOption === "date") {
+      // Sort by ID in reverse order (newer content has higher IDs)
+      result.sort((a, b) => b.id - a.id);
+    }
+    
     setFilteredContent(result);
-  }, [content, searchQuery, selectedTags, selectedSubjectArea, showOnlyFavorites, favorites]);
+  }, [content, searchQuery, selectedTags, selectedSubjectArea, showOnlyFavorites, favorites, sortOption]);
 
   // Pagination logic - update paginated content when filtered content or page changes
   useEffect(() => {
@@ -279,16 +289,22 @@ function H5PContentPage() {
         <div className="container-fluid mx-auto  px-4 space-y-8">
           
           {/* Content Filter */}
-          <ContentFilter 
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            selectedTags={selectedTags}
-            availableTags={availableTags}
-            toggleTag={toggleTag}
-            subjectAreas={subjectAreas}
-            selectedSubjectArea={selectedSubjectArea}
-            setSelectedSubjectArea={setSelectedSubjectArea}
-          />
+          <div>
+            <ContentFilter 
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              selectedTags={selectedTags}
+              availableTags={availableTags}
+              toggleTag={toggleTag}
+              subjectAreas={subjectAreas}
+              selectedSubjectArea={selectedSubjectArea}
+              setSelectedSubjectArea={setSelectedSubjectArea}
+            />
+            {/* Sorting below the filter */}
+            <div className="mt-4 flex justify-end">
+              <SortToggle sortOption={sortOption} setSortOption={setSortOption} />
+            </div>
+          </div>
           
           {/* Results Summary */}
           {(searchQuery || selectedTags.length > 0 || selectedSubjectArea) && (

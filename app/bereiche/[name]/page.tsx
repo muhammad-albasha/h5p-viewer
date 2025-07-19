@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import ContentFilter from "@/app/components/content/ContentFilter";
 import FavoriteButton from "@/app/components/common/FavoriteButton";
+import SortToggle from "@/app/components/content/SortToggle";
 import { withBasePath } from "../../utils/paths";
 
 interface SubjectAreaContent {
@@ -36,6 +37,7 @@ const Bereich = () => {
   // Filter states
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [sortOption, setSortOption] = useState<"alphabetical" | "date">("alphabetical");
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -104,8 +106,15 @@ const Bereich = () => {
 
         return matchesSearch && matchesTags;
       })
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, [content, searchQuery, selectedTags]);
+      .sort((a, b) => {
+        if (sortOption === "alphabetical") {
+          return a.name.localeCompare(b.name);
+        } else {
+          // Sort by ID in reverse order (newer content has higher IDs)
+          return b.id - a.id;
+        }
+      });
+  }, [content, searchQuery, selectedTags, sortOption]);
 
   // Toggle tag selection
   const toggleTag = (tag: string) => {
@@ -162,7 +171,7 @@ const Bereich = () => {
           </div>
 
           <div className="relative container-fluid mx-auto  px-4 py-4">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="text-white">
                 <div className="flex items-center gap-3 mb-4">
                   <Link
@@ -367,13 +376,18 @@ const Bereich = () => {
           ) : (
             <>
               {/* Content Filter */}
-              <ContentFilter
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                selectedTags={selectedTags}
-                availableTags={availableTags}
-                toggleTag={toggleTag}
-              />
+              <div className="mb-6">
+                <ContentFilter
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  selectedTags={selectedTags}
+                  availableTags={availableTags}
+                  toggleTag={toggleTag}
+                />
+                <div className="mt-4 flex justify-end">
+                  <SortToggle sortOption={sortOption} setSortOption={setSortOption} />
+                </div>
+              </div>
 
               {/* Results Summary */}
               {(searchQuery || selectedTags.length > 0) && (

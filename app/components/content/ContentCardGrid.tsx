@@ -74,8 +74,6 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {contents
-        .slice()
-        .sort((a, b) => a.name.localeCompare(b.name))
         .map((content, index) => {
           // Determine image URL - prioritize coverImagePath from database
           let imageUrl = content.coverImagePath;
