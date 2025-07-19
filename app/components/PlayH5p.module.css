@@ -48,6 +48,47 @@
 }
 
 /* Ensure iframe and canvas elements use full width */
+
+/* Fullscreen styling */
+.h5pStyleWrapper:fullscreen {
+  padding: 1rem;
+  background-color: white;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.h5pStyleWrapper:-webkit-full-screen {
+  padding: 1rem;
+  background-color: white;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.h5pStyleWrapper:-moz-full-screen {
+  padding: 1rem;
+  background-color: white;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.h5pStyleWrapper:-ms-fullscreen {
+  padding: 1rem;
+  background-color: white;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .h5pStyleWrapper :global(iframe),
 .h5pStyleWrapper :global(canvas),
 .h5pStyleWrapper :global(.h5p-standalone-container-fluid) {

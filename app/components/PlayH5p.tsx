@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { FiMaximize, FiMinimize } from "react-icons/fi";
 import styles from "./PlayH5p.module.css";
 import { withBasePath } from "../utils/paths";
 
@@ -22,8 +23,10 @@ interface PlayH5pProps {
 
 function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
   const h5pContainer = useRef(null);
+  const h5pWrapperRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     const loadH5P = async () => {
@@ -89,11 +92,62 @@ function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
 
     loadH5P();
   }, [h5pJsonPath]);
+  // Toggle fullscreen function
+  const toggleFullscreen = () => {
+    if (!h5pWrapperRef.current) return;
+    
+    if (!isFullscreen) {
+      if (h5pWrapperRef.current.requestFullscreen) {
+        h5pWrapperRef.current.requestFullscreen();
+      } else if ((h5pWrapperRef.current as any).mozRequestFullScreen) {
+        (h5pWrapperRef.current as any).mozRequestFullScreen();
+      } else if ((h5pWrapperRef.current as any).webkitRequestFullscreen) {
+        (h5pWrapperRef.current as any).webkitRequestFullscreen();
+      } else if ((h5pWrapperRef.current as any).msRequestFullscreen) {
+        (h5pWrapperRef.current as any).msRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if ((document as any).mozCancelFullScreen) {
+        (document as any).mozCancelFullScreen();
+      } else if ((document as any).webkitExitFullscreen) {
+        (document as any).webkitExitFullscreen();
+      } else if ((document as any).msExitFullscreen) {
+        (document as any).msExitFullscreen();
+      }
+    }
+  };
+
+  // Monitor fullscreen state changes
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(
+        document.fullscreenElement === h5pWrapperRef.current ||
+        (document as any).mozFullScreenElement === h5pWrapperRef.current ||
+        (document as any).webkitFullscreenElement === h5pWrapperRef.current ||
+        (document as any).msFullscreenElement === h5pWrapperRef.current
+      );
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+    };
+  }, []);
+
   return (
     <div
-      className={`${styles.h5pStyleWrapper} w-full bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 shadow-lg`}
+      ref={h5pWrapperRef}
+      className={`${styles.h5pStyleWrapper} w-full bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 shadow-lg relative`}
     >
-      {" "}
       {loading && (
         <div className="flex flex-col items-center justify-center min-h-[300px] space-y-8 p-12 bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 rounded-xl">
           {/* Modern H5P Loading Animation */}
@@ -211,6 +265,22 @@ function PlayH5p({ h5pJsonPath }: PlayH5pProps) {
             : styles.h5pcontainerFluid
         }`}
       ></div>
+      
+      {/* Fullscreen Toggle Button */}
+      {!loading && !error && (
+        <button
+          onClick={toggleFullscreen}
+          className={`absolute top-2 right-2 z-20 p-2 bg-white/80 hover:bg-white text-gray-700 rounded-lg shadow-md backdrop-blur-sm transition-all hover:scale-105 border border-gray-200 ${isFullscreen ? 'bg-blue-100' : ''}`}
+          aria-label={isFullscreen ? "Vollbildmodus beenden" : "Vollbildmodus"}
+          title={isFullscreen ? "Vollbildmodus beenden" : "Vollbildmodus"}
+        >
+          {isFullscreen ? (
+            <FiMinimize className="w-5 h-5" />
+          ) : (
+            <FiMaximize className="w-5 h-5" />
+          )}
+        </button>
+      )}
     </div>
   );
 }
