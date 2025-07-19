@@ -71,7 +71,7 @@ export default function FeaturedContent() {
           {
             id: 1,
             name: "For or Since",
-            path: "/h5p/content?id=1",
+            path: "/h5p/content?id=1", // ID now explicitly matches content id
             type: "Quiz",
             tags: ["Grammatik", "Übungen"],
             slug: "for-or-since",
@@ -79,7 +79,7 @@ export default function FeaturedContent() {
           {
             id: 2,
             name: "Test Questionnaire",
-            path: "/h5p/content?id=2",
+            path: "/h5p/content?id=2", // ID now explicitly matches content id
             type: "Questionnaire",
             tags: ["Fragen", "Interaktiv"],
             slug: "test-questionnaire",
@@ -87,7 +87,7 @@ export default function FeaturedContent() {
           {
             id: 3,
             name: "Interactive Exercise",
-            path: "/h5p/content?id=3",
+            path: "/h5p/content?id=3", // ID now explicitly matches content id
             type: "Exercise",
             tags: ["Interaktiv", "Lernen"],
             slug: "interactive-exercise",

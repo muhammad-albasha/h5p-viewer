@@ -21,14 +21,14 @@ const H5PContentRedirect = () => {
         }
 
         const contents = await response.json();
-        const contentIndex = contents.findIndex(
+        const foundContent = contents.find(
           (content: any) =>
             content.name.toLowerCase() === decodedName.toLowerCase()
         );
 
-        // If content found, redirect to new URL with the index + 1 as ID
-        if (contentIndex !== -1) {
-          router.replace(`/h5p/content?id=${contentIndex + 1}`);
+        // If content found, redirect to new URL with the content's actual ID
+        if (foundContent) {
+          router.replace(`/h5p/content?id=${foundContent.id}`);
         } else {
           // If not found, redirect to home or show error
           router.replace("/");

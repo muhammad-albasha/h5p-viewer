@@ -79,10 +79,8 @@ function H5PContentViewer() {
         }
 
         const contents = await response.json(); // We look for content with the corresponding ID
-        const contentIndex = parseInt(id) - 1; // ID starts at 1, array at 0
-        const content =
-          contents[contentIndex] ||
-          contents.find((item: H5PContentDetails) => item.id.toString() === id);
+        // Find content only by its ID - not by array index
+        const content = contents.find((item: H5PContentDetails) => item.id.toString() === id);
         if (content) {
           setContentDetails(content);
           // Check if content is password protected using API

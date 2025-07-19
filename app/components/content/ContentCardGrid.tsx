@@ -181,7 +181,7 @@ const ContentCardGrid = ({ contents, loading }: ContentCardGridProps) => {
                 {/* Action Button */}
                 <div className="pt-4 border-t border-gray-100">
                   <Link
-                    href={`/h5p/content?id=${content.id || index + 1}`}
+                    href={`/h5p/content?id=${content.id}`}
                     className="w-full bg-primary dark:bg-black hover:from-primary-dark hover:to-secondary text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2"
                   >
                     <svg
