@@ -79,10 +79,17 @@ function H5PContentViewer() {
         }
 
         const contents = await response.json(); // We look for content with the corresponding ID
-        const contentIndex = parseInt(id) - 1; // ID starts at 1, array at 0
-        const content =
-          contents[contentIndex] ||
-          contents.find((item: H5PContentDetails) => item.id.toString() === id);
+        
+        // First, try to find content by exact ID match
+        let content = contents.find((item: H5PContentDetails) => item.id.toString() === id);
+        
+        // If not found by ID, try fallback to index (for filesystem-based H5P)
+        if (!content) {
+          const contentIndex = parseInt(id) - 1; // ID starts at 1, array at 0
+          content = contents[contentIndex];
+        }
+        
+        console.log("Selected H5P content:", content ? `${content.name} (ID: ${content.id})` : "Not found");
         if (content) {
           setContentDetails(content);
           // Check if content is password protected using API
@@ -392,7 +399,7 @@ function H5PContentViewer() {
               <div className="w-full bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-white/20">
                 <div className="p-2">
                   <div className="bg-gray-50 rounded-xl p-2 w-full">
-                    <PlayH5p h5pJsonPath={contentDetails.path} />
+                    <PlayH5p h5pJsonPath={contentDetails.slug || contentDetails.path} />
                   </div>
                 </div>
               </div>
